@@ -1,3 +1,4 @@
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using WaterProject.API.Data;
@@ -6,6 +7,7 @@ namespace WaterProject.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
+    [Authorize]
     public class WaterController : ControllerBase
     {
         private WaterDbContext _waterContext;
