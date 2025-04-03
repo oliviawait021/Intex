@@ -6,7 +6,7 @@ interface FetchProjectsResponse {
   totalNumProjects: number;
 }
 
-const API_URL = 'https://waterprojectoliviabackend.azurewebsites.net/water';
+const API_URL = 'https://localhost:5000/water';
 
 export const fetchProjects = async (
   pageSize: number,
@@ -19,7 +19,10 @@ export const fetchProjects = async (
       .join('&');
 
     const response = await fetch(
-      `${API_URL}/allprojects?pageHowMany=${pageSize}&pageNum=${pageNum}${selectedCategories.length ? `&${categoryParams}` : ''}`
+      `${API_URL}/allprojects?pageHowMany=${pageSize}&pageNum=${pageNum}${selectedCategories.length ? `&${categoryParams}` : ''}`,
+      {
+        credentials: "include"
+      }
     );
 
     if (!response.ok) {
@@ -41,6 +44,7 @@ export const addProject = async (newProject: Project): Promise<Project> => {
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: "include",
       body: JSON.stringify(newProject),
     });
 
@@ -65,6 +69,7 @@ export const updateProject = async (
       headers: {
         'Content-Type': 'application/json',
       },
+      credentials: "include",
       body: JSON.stringify(updatedProject),
     });
 
@@ -84,6 +89,7 @@ export const deleteProject = async (projectId: number): Promise<void> => {
         headers: {
           'Content-Type': 'application/json',
         },
+        credentials: "include"
       }
     );
 
