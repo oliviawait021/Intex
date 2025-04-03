@@ -1,0 +1,4 @@
+{
+    "appService.defaultWebAppToDeploy": "undefined/subscriptions/1a7e9e5e-4e3e-45d9-a145-65fb84209f31/resourceGroups/appsvc_windows_centralus/providers/Microsoft.Web/sites/WaterProjectOliviaBackend",
+    "appService.deploySubpath": "backend/WaterProject.API/publish"
+}
