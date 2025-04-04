@@ -28,8 +28,8 @@ const AdminProjectsPage = () => {
             
                setProjects(data.projects);
                setTotalPages(
-                 Number.isFinite(data.totalNumProjects) && pageSize > 0
-                   ? Math.ceil(data.totalNumProjects / pageSize)
+                 Number.isFinite(data.totalNumber) && pageSize > 0
+                   ? Math.ceil(data.totalNumber / pageSize)
                    : 0
                );
            } catch (error) {
