@@ -45,3 +45,5 @@ backend/**/WaterProject.API.csproj.user
 # Git itself
 file-structure.txt
 
+**/bin/
+**/obj/
