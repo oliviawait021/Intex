@@ -2,7 +2,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.Options;
 
-namespace WaterProject.API.Services;
+namespace cineNiche.API.Services;
 
 public class CustomUserClaimsPrincipalFactory : UserClaimsPrincipalFactory<IdentityUser>
 {

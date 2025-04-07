@@ -1,6 +1,6 @@
 using Microsoft.EntityFrameworkCore;
 
-namespace WaterProject.API.Data;
+namespace cineNiche.API.Data;
 
 public class WaterDbContext : DbContext
 {

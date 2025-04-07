@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace WaterProject.API.Data;
+namespace cineNiche.API.Data;
 
 public partial class MoviesUser
 {

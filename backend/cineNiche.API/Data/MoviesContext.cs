@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 
-namespace WaterProject.API.Data;
+namespace cineNiche.API.Data;
 
 public partial class MoviesContext : DbContext
 {

@@ -1,6 +1,6 @@
 using System.ComponentModel.DataAnnotations;
 
-namespace WaterProject.API.Data;
+namespace cineNiche.API.Data;
 
 public class Project
 {

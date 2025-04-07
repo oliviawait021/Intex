@@ -2,8 +2,8 @@ using System.Collections.Immutable;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
-using WaterProject.API.Services;
-using WaterProject.API.Data;
+using cineNiche.API.Services;
+using cineNiche.API.Data;
 
 var builder = WebApplication.CreateBuilder(args);
 

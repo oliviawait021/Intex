@@ -2,7 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace WaterProject.API.Data;
+namespace cineNiche.API.Data;
 
 public class ApplicationDbContext : IdentityDbContext<IdentityUser>
 {
