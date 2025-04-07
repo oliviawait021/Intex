@@ -149,6 +149,10 @@ const AdminMoviesPage = () => {
             setPageNum(1);
           }}
         />
+
+        <button className="btn btn-danger" onClick={() => navigate('/movies')}>
+          Return to Movie Page
+        </button>
       </AuthorizeView>
     </>
   );
