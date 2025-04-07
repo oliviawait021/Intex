@@ -1,0 +1,47 @@
+# Default ignored files
+/shelf/
+/workspace.xml
+# Rider ignored files
+/contentModel.xml
+/.idea.WaterProject.iml
+/modules.xml
+/projectSettingsUpdater.xml
+# Editor-based HTTP Client requests
+/httpRequests/
+# Datasource local storage ignored files
+/dataSources/
+/dataSources.local.xml
+# macOS
+.DS_Store
+
+# Node/Vite (frontend)
+frontend/node_modules/
+frontend/dist/
+frontend/.vite/
+frontend/.next/
+frontend/.parcel-cache/
+
+# ASP.NET (backend)
+backend/**/*.obj/
+backend/**/*.bin/
+backend/**/publish/
+backend/**/*.user
+backend/**/*.vspscc
+backend/**/*.dbmdl
+backend/**/WaterProject.API.csproj.user
+
+# Rider / IntelliJ / VSCode
+.idea/
+.vscode/
+*.suo
+*.user
+*.userosscache
+*.sln.docstates
+
+# Build logs
+*.log
+
+
+# Git itself
+file-structure.txt
+
