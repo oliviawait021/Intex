@@ -1,6 +1,6 @@
 body {
-  background: #007bff;
-  background: linear-gradient(to right, #0062e6, #33aeff);
+  background: #0B061B;
+  background: linear-gradient(to right, #0B061B, #0B061B);
 }
 
 .btn-login {
@@ -9,18 +9,8 @@ body {
   padding: 0.75rem 1rem;
 }
 
-.btn-google {
-  color: white !important;
-  background-color: #ea4335 !important;
-}
-
-.btn-facebook {
-  color: white !important;
-  background-color: #3b5998 !important;
-}
-
 .card-body {
-  min-width: 400px;
+  min-width: 600px;
 }
 
 .error {
@@ -28,4 +18,59 @@ body {
   font-weight: bold;
   text-align: center;
   margin-top: 10px;
+}
+
+.auth-wrapper {
+  background-color: #0a0617;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.auth-card {
+  background-color: white;
+  padding: 2rem;
+  border-radius: 8px;
+  width: 100%;
+  max-width: 800px;
+}
+
+.auth-title {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 1.5rem;
+}
+
+.auth-input-group {
+  margin-bottom: 1rem;
+}
+
+.auth-input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+}
+
+.auth-input-group input {
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: 1px solid #ccc;
+}
+
+.auth-button {
+  background-color: #0a0617;
+  color: white;
+  width: 100%;
+  padding: 0.5rem;
+  border-radius: 4px;
+  border: none;
+  margin-bottom: 0.5rem;
+}
+
+.auth-link {
+  font-size: 0.9rem;
+  text-align: center;
+  text-decoration: underline;
+  display: block;
 }
