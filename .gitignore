@@ -47,3 +47,5 @@ file-structure.txt
 
 **/bin/
 **/obj/
+
+node_modules/
