@@ -185,7 +185,9 @@ const HomePage: React.FC = () => {
                 </button>
                 <div
                   className="movie-container"
-                  ref={(el) => (movieContainerRefs.current[index] = el)} // Assigning ref without type issue
+                  ref={(el) => {
+                    movieContainerRefs.current[index] = el;
+                  }} // Assigning ref without type issue
                 >
                   {movieData.map((movie, movieIndex) => (
                     <div className="movie-item" key={movieIndex}>
