@@ -78,10 +78,13 @@ const AdminMoviesPage = () => {
           <NewMovieForm
             onSuccess={() => {
               setShowForm(false);
-              setPageNum(1);
               fetchMovies(pageSize, pageNum, []).then((data) => {
                 setMovies(data.movies);
-                setTotalPages(Math.ceil(totalPages / pageSize));
+                setTotalPages(
+                  Number.isFinite(data.totalNumber) && pageSize > 0
+                    ? Math.ceil(data.totalNumber / pageSize)
+                    : 0
+                );
               });
             }}
             onCancel={() => setShowForm(false)}
@@ -93,9 +96,14 @@ const AdminMoviesPage = () => {
             movie={editingMovie}
             onSuccess={() => {
               setEditingMovie(null);
-              fetchMovies(pageSize, pageNum, []).then((data) =>
-                setMovies(data.movies)
-              );
+              fetchMovies(pageSize, pageNum, []).then((data) => {
+                setMovies(data.movies);
+                setTotalPages(
+                  Number.isFinite(data.totalNumber) && pageSize > 0
+                    ? Math.ceil(data.totalNumber / pageSize)
+                    : 0
+                );
+              });
             }}
             onCancel={() => setEditingMovie(null)}
           />

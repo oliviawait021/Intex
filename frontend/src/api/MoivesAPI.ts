@@ -6,7 +6,7 @@ interface FetchMoviesResponse {
   totalNumMovies: number;
 }
 
-const API_URL = 'https://localhost:5000/movie';
+const API_URL = 'https://localhost:5000/Movie';
 
 export const fetchMovies = async (
   pageSize: number,
@@ -73,7 +73,23 @@ export const updateMovie = async (
       body: JSON.stringify(updatedMovie),
     });
 
-    return await response.json();
+    const contentType = response.headers.get('Content-Type');
+
+    if (!response.ok) {
+      const errorText = await response.text();
+      if (response.status === 403) {
+        console.warn('Access denied: Admin privileges required to update movie.');
+      } else if (response.status === 401) {
+        console.warn('Unauthorized: User is not logged in.');
+      }
+      throw new Error(`Failed to update movie: ${response.status} - ${errorText} - ${showId}`);
+    }
+
+    if (contentType && contentType.includes('application/json')) {
+      return await response.json();
+    } else {
+      throw new Error('Unexpected response format. Expected JSON.');
+    }
   } catch (error) {
     console.error('Error updating movie:', error);
     throw error;
@@ -83,7 +99,7 @@ export const updateMovie = async (
 export const deleteMovie = async (showId: string): Promise<void> => {
   try {
     const response = await fetch(
-      `https://localhost:5000/movie/DeleteMovie/${showId}`,
+      `https://localhost:5000/Movie/DeleteMovie/${showId}`,
       {
         method: 'DELETE',
         headers: {
@@ -98,7 +114,7 @@ export const deleteMovie = async (showId: string): Promise<void> => {
     );
 
     if (!response.ok) {
-      throw new Error(`Failed to delete movie: ${response.status}`);
+      throw new Error(`Failed to delete movie: ${showId} ${response.status}`);
     }
   } catch (error) {
     console.error('Error deleting movie:', error);

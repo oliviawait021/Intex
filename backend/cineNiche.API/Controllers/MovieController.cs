@@ -19,6 +19,7 @@ namespace cineNiche.API.Controllers
             _movieContext = temp;
         }
         
+        // AllMovies api endpoint
         [HttpGet("AllMovies")]
         public IActionResult Get(int pageHowMany = 10, int pageNum = 15,  [FromQuery] List<string>? movieTypes = null)
         {
@@ -27,26 +28,6 @@ namespace cineNiche.API.Controllers
             if (movieTypes != null && movieTypes.Any())
             {
                 query = query.Where(m => movieTypes.Contains(m.Type));
-            }
-            
-            HttpContext.Response.Cookies.Append("FavoriteMovieType", "Movie", new CookieOptions
-            {
-                HttpOnly = true,
-                Secure = true,
-                SameSite = SameSiteMode.None,
-                Expires = DateTime.Now.AddMinutes(5),
-                
-            });
-            
-            string? favMovieType = Request.Cookies["FavoriteMovieType"];
-            
-            if (string.IsNullOrEmpty(favMovieType))
-            {
-                Console.WriteLine("-----Cookie----- \n No cookie found.");
-            }
-            else
-            {
-                Console.WriteLine("-----Cookie----- \n" + favMovieType);
             }
             var something = query
                 .Skip((pageNum -1) * pageHowMany)
@@ -62,6 +43,7 @@ namespace cineNiche.API.Controllers
             });
         }
 
+        // Movie Type API Endpoint
         [HttpGet("GetMovieTypes")]
         public IActionResult GetMovieTypes()
         {
@@ -71,8 +53,10 @@ namespace cineNiche.API.Controllers
                 .ToList();
             return Ok(movieTypes);
         }
-
+        
+        // Add Movie API endpoint
         [HttpPost("AddMovie")]
+        [Authorize(Roles = "Admin")]
         public IActionResult AddMovie ( [FromBody] MoviesTitle newMovie )
         {
             _movieContext.MoviesTitles.Add(newMovie);
@@ -80,11 +64,19 @@ namespace cineNiche.API.Controllers
             
             return Ok(newMovie);
         }
-
+        
+        // Update Movie API endpoint
         [HttpPut("UpdateMovie/{showId}")]
-        public IActionResult UpdateMovie(int showId, [FromBody] MoviesTitle updatedMovie)
+        [Authorize(Roles = "Admin")]
+        public IActionResult UpdateMovie(string showId, [FromBody] MoviesTitle updatedMovie)
         {
+            Console.WriteLine($"Looking for movie with ID: {showId}");
             var existingMovie = _movieContext.MoviesTitles.Find(showId);
+            
+            if (existingMovie == null)
+            {
+                return NotFound(new { message = "Movie not found" });
+            }
             
             existingMovie.Type = updatedMovie.Type;
             existingMovie.Title = updatedMovie.Title;
@@ -102,8 +94,10 @@ namespace cineNiche.API.Controllers
             return Ok(updatedMovie);
         }
 
+        // Delete API Endpoint
         [HttpDelete("DeleteMovie/{showId}")]
-        public IActionResult DeleteMovie(int showId)
+        [Authorize(Roles = "Admin")]
+        public IActionResult DeleteMovie(string showId)
         {
             var movie = _movieContext.MoviesTitles.Find(showId);
 

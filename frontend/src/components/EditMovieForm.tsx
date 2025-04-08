@@ -14,8 +14,15 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
   };
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await updateMovie(formData.showId, formData);
-    onSuccess();
+    try {
+      await updateMovie(formData.showId, formData);
+      console.log(formData.showId)
+      alert('Movie updated successfully!');
+      onSuccess();
+    } catch (error) {
+      console.error("Failed to update movie:", error);
+      alert("There was an error updating the movie.");
+    }
   };
   return (
     <form onSubmit={handleSubmit}>
@@ -103,7 +110,7 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
           />
         </label>
 
-        <button type="submit">Edit Project</button>
+        <button type="submit">Update Movie</button>
         <button type="button" onClick={onCancel}>
           Cancel
         </button>

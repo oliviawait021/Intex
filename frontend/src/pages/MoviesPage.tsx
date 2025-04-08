@@ -16,7 +16,6 @@ function MoviesPage() {
         <Logout>
           Logout <AuthorizedUser value="email" />
         </Logout>
-        <button onClick={() => navigate('/adminmovies')}>Manage Movies</button>
         <div className="container mt-4">
           <WelcomeBand />
           <div className="row">

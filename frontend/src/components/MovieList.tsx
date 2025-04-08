@@ -12,6 +12,14 @@ function MovieList({ selectedCategories }: { selectedCategories: string[] }) {
   const navigate = useNavigate();
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
+  const [userRole, setUserRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    const role = localStorage.getItem('userRole');
+    setUserRole(role);
+  }, []);
+
+  console.log('Current user role:', userRole);
 
   useEffect(() => {
     const loadMovies = async () => {
@@ -37,6 +45,16 @@ function MovieList({ selectedCategories }: { selectedCategories: string[] }) {
   return (
     <>
       <br />
+      {userRole?.toLowerCase() === 'admin' && (
+        <div className="text-right mb-4">
+          <button
+            className="btn btn-warning"
+            onClick={() => navigate('/adminMovies')}
+          >
+            Manage Movies
+          </button>
+        </div>
+      )}
       {movies.map((m) => (
         <div id="movieCard" className="card" key={m.showId}>
           <h3 className="card-title">{m.title}</h3>
