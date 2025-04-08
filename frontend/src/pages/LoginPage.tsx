@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Identity.css';
 import '@fortawesome/fontawesome-free/css/all.css';
@@ -34,6 +34,7 @@ function LoginPage() {
     e.preventDefault();
     setError(''); // Clear any previous errors
 
+    // basic validation
     if (!email || !password) {
       setError('Please fill in all fields.');
       return;
@@ -67,20 +68,22 @@ function LoginPage() {
         window.location.reload();
       }, 200); // short delay to ensure cookies/session updates are processed
     } catch (error: any) {
+      // handle network or fetch error
       setError(error.message || 'Error logging in.');
       console.error('Fetch attempt failed:', error);
     }
   };
 
   return (
-    <div style={{ backgroundColor: '#0a0617', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '8px', width: '400px', maxWidth: '400px' }}>
-        <h2 style={{ textAlign: 'center', fontWeight: 'bold', marginBottom: '1.5rem' }}>Sign in</h2>
+    <div className="auth-wrapper">
+      <div className="auth-card">
+        <h2 className="auth-title">Sign in to continue</h2>
         <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '1rem' }}>
-            <label htmlFor="email" style={{ display: 'block', marginBottom: '0.5rem',  textAlign: 'left' }}>Username</label>
+          {/* Email field */}
+          <div className="auth-input-group">
+            <label htmlFor="email">Username</label>
             <input
-              style={{ width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }}
+              className="auth-input"
               type="email"
               id="email"
               name="email"
@@ -88,10 +91,12 @@ function LoginPage() {
               onChange={handleChange}
             />
           </div>
-          <div style={{ marginBottom: '1rem' }}>
-            <label htmlFor="password" style={{ display: 'block', marginBottom: '0.5rem',  textAlign: 'left' }}>Password</label>
+
+          {/* Password field */}
+          <div className="auth-input-group">
+            <label htmlFor="password">Password</label>
             <input
-              style={{ width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }}
+              className="auth-input"
               type="password"
               id="password"
               name="password"
@@ -99,7 +104,9 @@ function LoginPage() {
               onChange={handleChange}
             />
           </div>
-          <div style={{ marginBottom: '1rem' }}>
+
+          {/* Remember me checkbox */}
+          <div className="auth-input-group" style={{ fontSize: '1rem' }}>
             <input
               type="checkbox"
               id="rememberme"
@@ -107,33 +114,29 @@ function LoginPage() {
               checked={rememberme}
               onChange={handleChange}
             />
-            <label htmlFor="rememberme" style={{ marginLeft: '0.5rem' }}>Remember me?</label>
+            <label htmlFor="rememberme" style={{ marginLeft: '0.5rem' }}>
+              Remember me?
+            </label>
           </div>
-          <button
-            type="submit"
-            style={{
-              backgroundColor: '#0a0617',
-              color: 'white',
-              width: '100%',
-              padding: '0.5rem',
-              borderRadius: '4px',
-              border: 'none',
-              marginBottom: '0.5rem'
-            }}
-          >
+
+          {/* Submit button */}
+          <button type="submit" className="auth-button">
             Sign In
           </button>
-          <div style={{ fontSize: '0.9rem', textAlign: 'center' }}>
-            <p style={{ marginBottom: '0.5rem' }}>
-              <a href="#" style={{ textDecoration: 'underline' }}>Forgot password?</a>
-            </p>
+
+          {/* Register link */}
+          <div className="auth-footer">
             <p>
               Don’t have an account?{' '}
-              <a href="#" onClick={handleRegisterClick} style={{ textDecoration: 'underline' }}>Sign up here</a>
+              <a href="#" onClick={handleRegisterClick} className="auth-link">
+                Sign up here
+              </a>
             </p>
           </div>
         </form>
-        {error && <p className="error" style={{ color: 'red', marginTop: '1rem' }}>{error}</p>}
+
+        {/* Error message display */}
+        {error && <p className="error">{error}</p>}
       </div>
     </div>
   );

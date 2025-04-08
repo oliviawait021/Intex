@@ -1,5 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import './identity.css';
 
 function Register() {
   // state variables for email and passwords
@@ -26,6 +27,7 @@ function Register() {
   // handle submit event for the form
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
+
     // validate email and passwords
     if (!email || !password || !confirmPassword) {
       setError('Please fill in all fields.');
@@ -36,6 +38,7 @@ function Register() {
     } else {
       // clear error message
       setError('');
+
       // post data to the /register api
       fetch('https://localhost:5000/register', {
         method: 'POST',
@@ -63,14 +66,15 @@ function Register() {
   };
 
   return (
-    <div style={{ backgroundColor: '#0a0617', height: '100vh', display: 'flex', justifyContent: 'center', alignItems: 'center' }}>
-      <div style={{ backgroundColor: 'white', padding: '2rem', borderRadius: '8px', width: '400px', maxWidth: '800px' }}>
-        <h2 style={{ textAlign: 'center', fontWeight: 'bold', marginBottom: '1.5rem' }}>Register</h2>
+    <div className="auth-wrapper">
+      <div className="auth-card">
+        <h2 className="auth-title">Register</h2>
         <form onSubmit={handleSubmit}>
-          <div style={{ marginBottom: '1rem' }}>
-            <label htmlFor="email" style={{ display: 'block', marginBottom: '0.5rem',  textAlign: 'left' }}>Username</label>
+          {/* Email field */}
+          <div className="auth-input-group">
+            <label htmlFor="email">Username</label>
             <input
-              style={{ width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }}
+              className="auth-input"
               type="email"
               id="email"
               name="email"
@@ -78,10 +82,12 @@ function Register() {
               onChange={handleChange}
             />
           </div>
-          <div style={{ marginBottom: '1rem' }}>
-            <label htmlFor="password" style={{ display: 'block', marginBottom: '0.5rem',  textAlign: 'left' }}>Password</label>
+
+          {/* Password field */}
+          <div className="auth-input-group">
+            <label htmlFor="password">Password</label>
             <input
-              style={{ width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }}
+              className="auth-input"
               type="password"
               id="password"
               name="password"
@@ -89,10 +95,12 @@ function Register() {
               onChange={handleChange}
             />
           </div>
-          <div style={{ marginBottom: '1rem' }}>
-            <label htmlFor="confirmPassword" style={{ display: 'block', marginBottom: '0.5rem',  textAlign: 'left' }}>Confirm Password</label>
+
+          {/* Confirm password field */}
+          <div className="auth-input-group">
+            <label htmlFor="confirmPassword">Confirm Password</label>
             <input
-              style={{ width: '100%', padding: '0.5rem', borderRadius: '4px', border: '1px solid #ccc' }}
+              className="auth-input"
               type="password"
               id="confirmPassword"
               name="confirmPassword"
@@ -100,27 +108,25 @@ function Register() {
               onChange={handleChange}
             />
           </div>
-          <button
-            type="submit"
-            style={{
-              backgroundColor: '#0a0617',
-              color: 'white',
-              width: '100%',
-              padding: '0.5rem',
-              borderRadius: '4px',
-              border: 'none',
-              marginBottom: '0.5rem'
-            }}
-          >
+
+          {/* Submit button */}
+          <button type="submit" className="auth-button">
             Register
           </button>
-          <div style={{ fontSize: '0.9rem', textAlign: 'center' }}>
+
+          {/* Login link */}
+          <div className="auth-footer">
             <p>
-              <a href="#" onClick={handleLoginClick} style={{ textDecoration: 'underline' }}>Return to Login</a>
+              Already have an account?{' '}
+              <a href="#" onClick={handleLoginClick} className="auth-link">
+                Return to Login
+              </a>
             </p>
           </div>
         </form>
-        {error && <p className="error" style={{ color: 'red', marginTop: '1rem' }}>{error}</p>}
+
+        {/* Error message display */}
+        {error && <p className="error">{error}</p>}
       </div>
     </div>
   );
