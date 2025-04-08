@@ -5,6 +5,9 @@ import RegisterPage from './pages/RegisterPage';
 import CookieConsent from 'react-cookie-consent';
 import MoviesPage from './pages/MoviesPage';
 import AdminMoviesPage from './pages/AdminMoviesPage';
+import HomePage from './pages/HomePage';
+import MovieDetailPage from './pages/MovieDetailPage';
+import PrivacyPage from './pages/PrivacyPage';
 
 function App() {
   return (
@@ -16,6 +19,9 @@ function App() {
           <Route path="/adminmovies" element={<AdminMoviesPage />} />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
+          <Route path="/home" element={<HomePage />} />
+          <Route path="/details" element={<MovieDetailPage />} />
+          <Route path="/privacy" element={<PrivacyPage />} />
         </Routes>
 
         <CookieConsent
