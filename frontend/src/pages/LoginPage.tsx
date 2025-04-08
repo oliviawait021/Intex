@@ -64,6 +64,9 @@ function LoginPage() {
       }
 
       navigate('/movies');
+      setTimeout(() => {
+        window.location.reload();
+      }, 200); // short delay to ensure cookies/session updates are processed
     } catch (error: any) {
       // handle network or fetch error
       setError(error.message || 'Error logging in.');
