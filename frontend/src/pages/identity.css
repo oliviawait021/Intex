@@ -1,76 +1,85 @@
+/* Global background */
 body {
-  background: #0B061B;
-  background: linear-gradient(to right, #0B061B, #0B061B);
+  background: linear-gradient(to right, #0b061b, #0b061b);
 }
 
-.btn-login {
-  font-size: 0.9rem;
-  letter-spacing: 0.05rem;
-  padding: 0.75rem 1rem;
-}
-
-.card-body {
-  min-width: 600px;
-}
-
-.error {
-  color: red;
-  font-weight: bold;
-  text-align: center;
-  margin-top: 10px;
-}
-
+/* Wrapper around the form */
 .auth-wrapper {
   background-color: #0a0617;
   height: 100vh;
   display: flex;
   justify-content: center;
   align-items: center;
+  padding: 2rem;
 }
 
+/* The white card */
 .auth-card {
   background-color: white;
-  padding: 2rem;
-  border-radius: 8px;
-  width: 100%;
-  max-width: 800px;
+  padding: 3rem;
+  border-radius: 16px;
+  width: 600px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
+/* Title/header */
 .auth-title {
   text-align: center;
   font-weight: bold;
-  margin-bottom: 1.5rem;
+  margin-bottom: 2rem;
+  font-size: 2rem;
 }
 
+/* Input group (label + input) */
 .auth-input-group {
-  margin-bottom: 1rem;
+  margin-bottom: 1.5rem;
 }
 
 .auth-input-group label {
   display: block;
   margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  text-align: left;
 }
 
 .auth-input-group input {
   width: 100%;
-  padding: 0.5rem;
-  border-radius: 4px;
+  padding: 0.75rem 1rem;
+  font-size: 1rem;
+  border-radius: 6px;
   border: 1px solid #ccc;
 }
 
+/* Button */
 .auth-button {
   background-color: #0a0617;
   color: white;
   width: 100%;
-  padding: 0.5rem;
-  border-radius: 4px;
+  padding: 0.75rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 6px;
   border: none;
-  margin-bottom: 0.5rem;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+/* Footer link */
+.auth-footer {
+  font-size: 1rem;
+  text-align: center;
 }
 
 .auth-link {
-  font-size: 0.9rem;
-  text-align: center;
   text-decoration: underline;
-  display: block;
+  color: #333;
+}
+
+/* Error message */
+.error {
+  color: red;
+  margin-top: 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
 }
