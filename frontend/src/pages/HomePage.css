@@ -1,0 +1,288 @@
+/* Container for movie scrolling */
+.movie-scroll-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  position: relative;
+  overflow: hidden; /* Hide the scrollbars */
+  border-radius: 10px; /* Rounded corners for the container */
+}
+
+/* Left and Right Scroll Arrows (Smaller and Less Prominent) */
+.scroll-arrow {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.3); /* Reduced opacity */
+  color: white;
+  font-size: 1.5rem; /* Smaller arrow size */
+  border: none;
+  padding: 8px 12px;
+  cursor: pointer;
+  z-index: 1;
+  border-radius: 50%; /* Make the arrows round */
+  transition: background-color 0.2s ease-in-out;
+}
+
+.scroll-arrow:hover {
+  background-color: rgba(0, 0, 0, 0.6); /* More prominent on hover */
+}
+
+.left {
+  left: 10px;
+}
+
+.right {
+  right: 10px;
+}
+
+/* Movie container for horizontal scroll */
+.movie-container {
+  display: flex;
+  gap: 20px;
+  padding: 20px 0;
+  overflow-x: hidden; /* Hide horizontal scrollbar */
+  scroll-snap-type: x mandatory; /* Snap-to scrolling behavior */
+  width: 100%;
+}
+
+/* Movie item container */
+.movie-item {
+  flex-shrink: 0; /* Prevent items from shrinking */
+  width: 150px; /* Set the width for each movie item */
+  text-align: center;
+  scroll-snap-align: start; /* Make each item snap to the start */
+  border-radius: 10px; /* Rounded corners for each movie item */
+  overflow: hidden; /* Ensure content inside the item doesn't overflow */
+}
+
+/* Movie poster */
+.movie-poster {
+  width: 100%;
+  height: 200px;
+  object-fit: cover; /* Maintain aspect ratio and cover container */
+  border-radius: 8px; /* Rounded corners for images */
+}
+
+/* Movie title */
+.movie-title {
+  margin-top: 10px;
+  font-size: 1.2rem;
+  font-weight: 500;
+  color: white;
+}
+
+/* Section titles */
+.section-title {
+  color: white;
+  font-size: 2rem;
+  font-weight: 600;
+  text-align: left; /* Left align the title */
+  margin: 20px 0;
+}
+
+/* FAQ section */
+.faq-container {
+  max-width: 1000px;
+  margin: 40px auto;
+  padding: 0 30px;
+  background-color: #0b061b;
+  border-radius: 10px; /* Rounded corners for the FAQ container */
+  overflow: hidden; /* Ensure content does not exceed rounded corners */
+}
+
+/* FAQ Title */
+.faq-title {
+  font-size: 2rem;
+  font-weight: 600;
+  margin-bottom: 30px;
+  text-align: center;
+  color: white;
+}
+
+/* FAQ Item Styling */
+.faq-item {
+  width: 100%;
+  min-height: 60px;
+  border: 1px solid #444;
+  border-radius: 10px; /* Rounded corners for FAQ items */
+  margin-bottom: 15px;
+  background-color: #28262f;
+  transition: box-shadow 0.3s ease-in-out;
+  box-shadow: 0 0 0 transparent;
+  color: white;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden; /* Prevent content from sticking out */
+}
+
+.faq-item.open {
+  box-shadow: 0 4px 8px rgba(255, 255, 255, 0.05);
+}
+
+/* FAQ Question */
+.faq-question {
+  background-color: #28262f;
+  padding: 15px 25px;
+  cursor: pointer;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  transition: background-color 0.2s ease-in-out;
+  color: white;
+}
+
+.faq-question:hover {
+  background-color: #33313d;
+}
+
+.faq-toggle {
+  font-size: 1.5rem;
+  color: white;
+}
+
+.faq-answer {
+  width: 100%;
+  padding: 15px 25px;
+  background-color: #28262f;
+  border-top: 1px solid #444;
+  line-height: 1.6;
+  color: white;
+  box-sizing: border-box;
+}
+
+/* Footer-style Links */
+.faq-links {
+  display: flex;
+  justify-content: center;
+  gap: 40px;
+  margin-top: 50px;
+  padding-bottom: 60px;
+}
+
+.faq-link {
+  color: #4a3dbd;
+  font-weight: 500;
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: color 0.2s ease-in-out;
+}
+
+.faq-link:hover,
+.faq-link:focus {
+  color: #6f5df5;
+}
+
+/* Style for the Account Buttons */
+.account-buttons {
+  display: flex;
+  justify-content: center;
+  gap: 250px; /* Adjusted gap to add more space between the buttons */
+  margin-top: 20px;
+  margin-bottom: 40px;
+}
+
+.account-button {
+  background-color: #4a3dbd; /* Default button color */
+  color: white;
+  font-weight: 500;
+  text-decoration: none;
+  padding: 10px 20px;
+  font-size: 1.1rem;
+  border-radius: 50px; /* Rounded shape */
+  transition: background-color 0.2s ease-in-out;
+  text-align: center;
+}
+
+.account-button:hover,
+.account-button:focus {
+  background-color: #6f5df5; /* Change color on hover */
+}
+
+.account-button:active {
+  background-color: #3e2fa2; /* Slightly darker on active */
+}
+
+.collage-container {
+  position: relative;
+  overflow: hidden;
+  width: 100%;
+  height: 620px;
+}
+
+.collage-scroll {
+  display: flex;
+  flex-wrap: nowrap;
+  animation: scrollPosters 40s linear infinite;
+}
+
+.poster {
+  width: 200px;
+  height: 300px;
+  object-fit: cover;
+  margin: 5px;
+  border-radius: 10px;
+}
+
+.scroll-row-1 {
+  animation: scroll-left 30s linear infinite;
+}
+
+.scroll-row-2 {
+  animation: scroll-right 45s linear infinite;
+}
+
+@keyframes scroll-left {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes scroll-right {
+  0% {
+    transform: translateX(-50%);
+  }
+  100% {
+    transform: translateX(0);
+  }
+}
+
+.collage-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 10;
+  height: 100%;
+  width: 100%;
+  background: rgba(0, 0, 0, 0.6);
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  color: white;
+}
+
+.title {
+  font-size: 5rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.cta {
+  margin-top: 20px;
+  padding: 12px 24px;
+  font-size: 1.2rem;
+  background: #005af0;
+  color: white;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+}
+
+.cta:hover {
+  background: #003bb5;
+}
