@@ -1,10 +1,10 @@
-Microsoft Visual Studio Solution File, Format Version 12.00
+﻿Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.5.2.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend", "backend", "{1AE8ACA6-933B-BF2A-3671-3E2EAC007D16}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "backend", "backend", "{2D5922C9-281F-4801-AF99-55D45E6A6868}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WaterProject.API", "backend\WaterProject.API\WaterProject.API.csproj", "{215099A0-ECC5-D47A-8CC1-484D302D864E}"
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "cineNiche.API", "backend\cineNiche.API\cineNiche.API.csproj", "{6049EF05-74BA-47E5-B1FC-2CDEF4C240A6}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -12,18 +12,18 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
-		{215099A0-ECC5-D47A-8CC1-484D302D864E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{215099A0-ECC5-D47A-8CC1-484D302D864E}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{215099A0-ECC5-D47A-8CC1-484D302D864E}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{215099A0-ECC5-D47A-8CC1-484D302D864E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6049EF05-74BA-47E5-B1FC-2CDEF4C240A6}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6049EF05-74BA-47E5-B1FC-2CDEF4C240A6}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6049EF05-74BA-47E5-B1FC-2CDEF4C240A6}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6049EF05-74BA-47E5-B1FC-2CDEF4C240A6}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{215099A0-ECC5-D47A-8CC1-484D302D864E} = {1AE8ACA6-933B-BF2A-3671-3E2EAC007D16}
-	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {5ABECBA8-A443-4718-BF21-C7B526F2E8D2}
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{6049EF05-74BA-47E5-B1FC-2CDEF4C240A6} = {2D5922C9-281F-4801-AF99-55D45E6A6868}
 	EndGlobalSection
 EndGlobal
