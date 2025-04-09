@@ -20,7 +20,7 @@ export const fetchMovies = async (
       .join('&');
 
     const response = await fetch(
-      `${API_URL}/allmovies?pageHowMany=${pageSize}&pageNum=${pageNum}${
+      `${API_URL}/allmovies?pageSize=${pageSize}&pageNum=${pageNum}${
         selectedCategories.length ? `&${categoryParams}` : ''
       }`,
       { credentials: 'include' }

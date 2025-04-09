@@ -22,7 +22,7 @@ namespace cineNiche.API.Controllers
 
         // Get paginated and filtered movies
         [HttpGet("AllMovies")]
-        public IActionResult Get(int pageHowMany = 10, int pageNum = 1, [FromQuery] List<string>? movieTypes = null)
+        public IActionResult Get(int pageSize = 10, int pageNum = 1, [FromQuery] List<string>? movieTypes = null)
         {
             HttpContext.Response.Cookies.Append("favMovieType", "Movie", new CookieOptions()
             {
@@ -40,8 +40,8 @@ namespace cineNiche.API.Controllers
             }
 
             var movies = query
-                .Skip((pageNum - 1) * pageHowMany)
-                .Take(pageHowMany)
+                .Skip((pageNum - 1) * pageSize)
+                .Take(pageSize)
                 .ToList();
 
             var totalNumber = query.Count();
