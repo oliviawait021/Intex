@@ -126,3 +126,21 @@ export const getNextShowId = async (): Promise<string> => {
 
   return await response.text();
 };
+
+export interface UserInfo {
+  isAuthenticated: boolean;
+  isAdmin: boolean;
+  userName: string;
+}
+
+export const fetchUserInfo = async (): Promise<UserInfo> => {
+  const res = await fetch('https://localhost:5000/api/auth/userinfo', {
+    credentials: 'include',
+  });
+
+  if (!res.ok) {
+    throw new Error('Failed to fetch user info');
+  }
+
+  return await res.json();
+};

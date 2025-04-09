@@ -19,7 +19,6 @@ body {
     flex-direction: column;
     justify-content: space-between;
     padding: 1rem 2rem;
-    background-color: #0b061b;
   }
   
   .admin-header h1 {
@@ -68,6 +67,7 @@ body {
     border-radius: 8px;
     height: 100px;
     width: 800px;
+    color: white;
     box-shadow: 0 4px 8px 444(0, 0, 0, 0.3);
     transition: transform 0.2s ease, box-shadow 0.2s ease;
     position: relative;
@@ -211,3 +211,20 @@ body {
     border: 1px solid #ccc;
     height: 3rem; 
   }
+  /* Movie item container */
+.movie-item {
+  flex-shrink: 0; /* Prevent items from shrinking */
+  width: 50px; /* Set the width for each movie item */
+  text-align: center;
+  scroll-snap-align: start; /* Make each item snap to the start */
+  border-radius: 10px; /* Rounded corners for each movie item */
+  overflow: hidden; /* Ensure content inside the item doesn't overflow */
+}
+
+/* Movie poster */
+.movie-poster {
+  width: 50px;
+  height: 150px;
+  object-fit: cover; /* Maintain aspect ratio and cover container */
+  border-radius: 8px; /* Rounded corners for images */
+}
