@@ -221,10 +221,18 @@ body {
   overflow: hidden; /* Ensure content inside the item doesn't overflow */
 }
 
-/* Movie poster */
+.movie-poster-container {
+  margin-right: 1rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 .movie-poster {
-  width: 50px;
-  height: 150px;
-  object-fit: cover; /* Maintain aspect ratio and cover container */
-  border-radius: 8px; /* Rounded corners for images */
+  max-width: 60px;
+  max-height: 90px;
+  width: auto;
+  height: auto;
+  object-fit: contain;
+  border-radius: 1px;
 }

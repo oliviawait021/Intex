@@ -103,6 +103,8 @@ const AdminMoviesPage = () => {
                       className="add-movie-button"
                       onClick={() => {
                         console.log("CLICKED ADD MOVIE");
+                        console.log("admin: "+  userInfo.isAdmin);
+                        console.log("auth: " + userInfo.isAuthenticated);
                         setShowForm(true);
                       }}
                     >
@@ -153,6 +155,9 @@ const AdminMoviesPage = () => {
           )
           .map((m) => (
             <div key={m.showId} className="movie-card">
+              <div className="movie-poster-container">
+                <img src="/images/avatar.jpg" alt="Movie Poster" className="movie-poster" />
+              </div>
               <div className="movie-info">
                 <h2>{m.title}</h2>
                 <p>ID: {m.showId} - {m.type} - {m.releaseYear}</p>
