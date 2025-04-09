@@ -19,15 +19,15 @@ using Microsoft.AspNetCore.Authentication.Google;
 var builder = WebApplication.CreateBuilder(args);
 
 // 👇 Add this section to configure HTTPS with your custom cert
-builder.WebHost.ConfigureKestrel(serverOptions =>
-{
-    serverOptions.ListenLocalhost(5000, listenOptions =>
-    {
-        listenOptions.UseHttps(
-            "/Users/oliviafowler/Desktop/Intex/frontend/localhost.pfx", 
-            "1234");
-    });
-});
+// builder.WebHost.ConfigureKestrel(serverOptions =>
+// {
+//     serverOptions.ListenLocalhost(5000, listenOptions =>
+//     {
+//         listenOptions.UseHttps(
+//             "/Users/oliviafowler/Desktop/Intex/frontend/localhost.pfx", 
+//             "1234");
+//     });
+// });
 
 // Add services to the container.
 
