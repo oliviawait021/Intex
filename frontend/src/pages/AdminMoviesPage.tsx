@@ -19,6 +19,7 @@ const AdminMoviesPage = () => {
   const [loading, setLoading] = useState(true);
   const [showform, setShowForm] = useState(false);
   const [editingMovie, setEditingMovie] = useState<Movie | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
 
   useEffect(() => {
     const loadMovies = async () => {
@@ -42,6 +43,10 @@ const AdminMoviesPage = () => {
     loadMovies();
   }, [pageSize, pageNum]);
 
+  useEffect(() => {
+    console.log("showform state changed:", showform);
+  }, [showform]); // Runs when showform changes
+
   const handleDelete = async (showId: string) => {
     const confirmDelete = window.confirm('Are you sure you want to delete?');
     if (!confirmDelete) return;
@@ -64,35 +69,61 @@ const AdminMoviesPage = () => {
           Logout <AuthorizedUser value="email" />
         </Logout>
 
-        <div className="admin-header">
-          <div className="header-content">
-            <h1>Manage Movie Collection</h1>
-            <button className="add-movie-button" onClick={() => setShowForm(true)}>
-              Add Movie
-            </button>
+        <div className="admin-controls">
+          <div className="admin-header">
+              <h1>Manage Movie Collection</h1>
+              <div className="admin-controls-row">
+                <button
+                  className="add-movie-button"
+                  onClick={() => {
+                    console.log("CLICKED ADD MOVIE");
+                    setShowForm(true);
+                  }}
+                >
+                  Add Movie
+                </button>
+                <div className="search-bar-container">
+                  <div className="search-bar">
+                    <input
+                      type="text"
+                      placeholder="Search for a movie..."
+                      value={searchTerm}
+                      onChange={(e) => setSearchTerm(e.target.value)}
+                    />
+                  </div>
+                </div>
+              </div>
           </div>
         </div>
 
         {editingMovie && (
-          <EditMovieForm
-            movie={editingMovie}
-            onSuccess={() => {
-              setEditingMovie(null);
-              fetchMovies(pageSize, pageNum, []).then((data) => {
-                setMovies(data.movies);
-                setTotalPages(
-                  Number.isFinite(data.totalNumber) && pageSize > 0
-                    ? Math.ceil(data.totalNumber / pageSize)
-                    : 0
-                );
-              });
-            }}
-            onCancel={() => setEditingMovie(null)}
-          />
+          <div className="modal-backdrop">
+            <div className="modal-content">
+              <EditMovieForm
+                movie={editingMovie}
+                onSuccess={() => {
+                  setEditingMovie(null);
+                  fetchMovies(pageSize, pageNum, []).then((data) => {
+                    setMovies(data.movies);
+                    setTotalPages(
+                      Number.isFinite(data.totalNumber) && pageSize > 0
+                        ? Math.ceil(data.totalNumber / pageSize)
+                        : 0
+                    );
+                  });
+                }}
+                onCancel={() => setEditingMovie(null)}
+              />
+            </div>
+          </div>
         )}
 
         <div className="movie-list">
-          {movies.map((m) => (
+        {movies
+          .filter((m) =>
+            m.title.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+          .map((m) => (
             <div key={m.showId} className="movie-card">
               <div className="movie-info">
                 <h2>{m.title}</h2>
@@ -100,8 +131,8 @@ const AdminMoviesPage = () => {
                 <p>Status: Active</p>
               </div>
               <div className="movie-actions">
-                <button onClick={() => handleDelete(m.showId)} className="delete-btn">🗑️</button>
-                <button onClick={() => setEditingMovie(m)} className="edit-btn">✏️</button>
+                <button onClick={() => setEditingMovie(m)} className="edit-btn"><img src="/icons/editing.png" alt="Edit" /></button>
+                <button onClick={() => handleDelete(m.showId)} className="delete-btn"><img src="/icons/bin.png" alt="Delete" /></button>
               </div>
             </div>
           ))}
@@ -123,20 +154,24 @@ const AdminMoviesPage = () => {
         </button>
 
         {showform && (
-          <NewMovieForm
-            onSuccess={() => {
-              setShowForm(false);
-              fetchMovies(pageSize, pageNum, []).then((data) => {
-                setMovies(data.movies);
-                setTotalPages(
-                  Number.isFinite(data.totalNumber) && pageSize > 0
-                    ? Math.ceil(data.totalNumber / pageSize)
-                    : 0
-                );
-              });
-            }}
-            onCancel={() => setShowForm(false)}
-          />
+          <div className="modal-backdrop">
+            <div className="modal-content">
+              <NewMovieForm
+                onSuccess={() => {
+                  setShowForm(false);
+                  fetchMovies(pageSize, pageNum, []).then((data) => {
+                    setMovies(data.movies);
+                    setTotalPages(
+                      Number.isFinite(data.totalNumber) && pageSize > 0
+                        ? Math.ceil(data.totalNumber / pageSize)
+                        : 0
+                    );
+                  });
+                }}
+                onCancel={() => setShowForm(false)}
+              />
+            </div>
+          </div>
         )}
       </AuthorizeView>
     </>

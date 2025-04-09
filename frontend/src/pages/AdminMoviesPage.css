@@ -16,9 +16,7 @@ body {
   
   .admin-header {
     display: flex;
-    justify-content: center;
-    align-items: center;
-    position: relative;
+    flex-direction: column;
     justify-content: space-between;
     padding: 1rem 2rem;
     background-color: #0b061b;
@@ -28,18 +26,26 @@ body {
     margin: 0;
     font-size: 1.5rem;
     color: white;
+    text-align: center;
+    margin-bottom: 1rem;
 }
   
+  .admin-controls-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+  }
+
   .add-movie-button {
     padding: 0.5rem 1rem;
-    background-color: #444;
+    background-color: #28262F;
     color: white;
+    width: 150px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     transition: background-color 0.2s;
-    position: absolute;
-    right: 2rem;
   }
 
   
@@ -104,15 +110,27 @@ body {
     color: white;
     text-align: left;
   }
-  
-  .modal-backdrop {
-    position: fixed;
-    inset: 0; /* shorthand for top: 0; right: 0; bottom: 0; left: 0; */
-    background-color: rgba(0, 0, 0, 0.5); /* dim the background */
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    z-index: 9999; /* make sure it's on top */
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Dim background */
+  z-index: 9999; /* Ensure it's on top */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+    background-color: #28262f;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 800px;
+    color: white;
+    z-index: 10000; /* Ensure it's above backdrop */
   }
   
   .movie-actions {
@@ -138,6 +156,13 @@ body {
   .edit-btn:hover,
   .delete-btn:hover {
     transform: scale(1.2);
+  }
+  
+  .edit-btn img,
+  .delete-btn img {
+    width: 20px;
+    height: 20px;
+    filter: brightness(0) invert(1); /* Ensures black SVGs appear white on dark background */
   }
   
   .return-btn {
@@ -176,4 +201,13 @@ body {
 
   .logout:hover {
     background-color: #555;
+  }
+
+  .auth-input {
+    width: 100%;
+    padding: 0.4rem 0.6rem;   /* ⬅️ smaller padding */
+    font-size: 0.85rem;       /* ⬅️ slightly smaller text */
+    border-radius: 4px;       /* ⬅️ smaller rounding if desired */
+    border: 1px solid #ccc;
+    height: 3rem; 
   }

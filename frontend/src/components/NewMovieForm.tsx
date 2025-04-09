@@ -37,101 +37,80 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
   };
 
   return (
-    <div>
-      <div
-        className="modal-content"
-        style={{
-          backgroundColor: "#28262F",
-          border: "2px solid white",
-          borderRadius: "10px",
-          width: "800px",
-          margin: "0 auto",
-          color: "white"
-        }}
->
-        <form onSubmit={handleSubmit}>
-          <h2 style={{ textAlign: 'center' }}>Add Movie</h2>
-          <div className="form-grid">
-            <label>
-              Movie Title:
-              <input type="text" name="title" value={formData.title} onChange={handleChange} />
-            </label>
-            <label>
-              Director:
-              <input type="text" name="director" value={formData.director} onChange={handleChange} />
-            </label>
-            <br/><br/>
-            <label>
-              Year:
-              <select name="releaseYear" value={formData.releaseYear} onChange={handleChange}>
+    <div className="auth-wrapper">
+      <div className="auth-card">
+        <div className="auth-content">
+          <h2 className="auth-title">Add Movie</h2>
+          <form onSubmit={handleSubmit} style={{ width: '100%' }}>
+            <div className="auth-input-group">
+              <label htmlFor="title">Movie Title</label>
+              <input type="text" name="title" value={formData.title} onChange={handleChange} className="auth-input" />
+            </div>
+            <div className="auth-input-group">
+              <label htmlFor="director">Director</label>
+              <input type="text" name="director" value={formData.director} onChange={handleChange} className="auth-input" />
+            </div>
+            <div className="auth-input-group">
+              <label htmlFor="releaseYear">Year</label>
+              <select name="releaseYear" value={formData.releaseYear} onChange={handleChange} className="auth-input">
                 <option value="">Value</option>
                 {[...Array(50)].map((_, i) => {
                   const year = 2025 - i;
                   return <option key={year} value={year}>{year}</option>;
                 })}
               </select>
-            </label>
-            <label>
-              Movie Duration:
-              <input type="text" name="duration" value={formData.duration} onChange={handleChange} />
-            </label>
-            <br/><br/>
-            <label>
-              Release Date:
-              <input type="date" name="releaseDate" onChange={handleChange} />
-            </label>
-            <label>
-              Type:
-              <select name="type" value={formData.type} onChange={handleChange}>
+            </div>
+            <div className="auth-input-group">
+              <label htmlFor="duration">Movie Duration</label>
+              <input type="text" name="duration" value={formData.duration} onChange={handleChange} className="auth-input" />
+            </div>
+            <div className="auth-input-group">
+              <label htmlFor="releaseDate">Release Date</label>
+              <input type="date" name="releaseDate" onChange={handleChange} className="auth-input" />
+            </div>
+            <div className="auth-input-group">
+              <label htmlFor="type">Type</label>
+              <select name="type" value={formData.type} onChange={handleChange} className="auth-input">
                 <option value="">Value</option>
                 <option value="Movie">Movie</option>
                 <option value="TV Show">TV Show</option>
               </select>
-            </label>
-            <br/><br/>
-            <label>
-              IMDB Rating:
-              <select name="rating" value={formData.rating} onChange={handleChange}>
+            </div>
+            <div className="auth-input-group">
+              <label htmlFor="rating">IMDB Rating</label>
+              <select name="rating" value={formData.rating} onChange={handleChange} className="auth-input">
                 <option value="">Value</option>
                 <option value="G">G</option>
                 <option value="PG">PG</option>
                 <option value="PG-13">PG-13</option>
                 <option value="R">R</option>
               </select>
-            </label>
-            <label>
-              Genre:
-              <select name="genre" onChange={handleChange}>
+            </div>
+            <div className="auth-input-group">
+              <label htmlFor="genre">Genre</label>
+              <select name="genre" onChange={handleChange} className="auth-input">
                 <option value="">Value</option>
                 <option value="Drama">Drama</option>
                 <option value="Action">Action</option>
                 <option value="Comedy">Comedy</option>
               </select>
-            </label>
-            <br/><br/>
-            <label>
-              Country Made:
-              <select name="country" value={formData.country} onChange={handleChange}>
+            </div>
+            <div className="auth-input-group">
+              <label htmlFor="country">Country Made</label>
+              <select name="country" value={formData.country} onChange={handleChange} className="auth-input">
                 <option value="">Value</option>
                 <option value="USA">USA</option>
                 <option value="UK">UK</option>
                 <option value="Canada">Canada</option>
               </select>
-            </label>
-            <label>
-              Cast List:
-              <textarea name="cast" value={formData.cast} onChange={handleChange} />
-            </label>
-            <br/><br/>
-            <label>
-              Duration:
-              <textarea name="text" value={formData.duration} onChange={handleChange} />
-            </label>
-          </div>
-          <div style={{ textAlign: 'center', marginTop: '1rem' }}>
-            <button type="submit">Submit</button>
-          </div>
-        </form>
+            </div>
+            <div className="auth-input-group">
+              <label htmlFor="cast">Cast List</label>
+              <textarea name="cast" value={formData.cast} onChange={handleChange} className="auth-input" />
+            </div>
+            <button type="submit" className="auth-button">Submit</button>
+          </form>
+        </div>
       </div>
     </div>
   );
