@@ -79,19 +79,23 @@ const movieData = [
 
 const faqData = [
   {
-    question: 'How does the recommendation system work?',
+    question: 'What is CineNiche?',
     answer:
-      'Our recommendation system uses your viewing history and ratings to suggest movies you might enjoy based on similar users and preferences.',
+      'CineNiche is an up-and-coming movie streaming company focused on delivering curated, hard-to-find content to a passionate audience. Their catalog spans cult classics, international cinema, indie films, and niche documentaries, many of which are unavailable on larger mainstream platforms.',
   },
   {
-    question: 'Can I change my account preferences?',
+    question: 'Where Can I Watch? ',
     answer:
-      'Yes! Once logged in, you can update your preferences, ratings, and viewing habits anytime in your account settings.',
+      'Despite serving a small content niche, CineNiche has seen rapid growth in its subscriber base and has developed apps for a wide range of platforms, including Windows, Mac, iOS, Android, Roku, AppleTV, and more.',
   },
   {
-    question: 'Is my data secure with CineNiche?',
+    question: 'How much does CineNiche cost?',
+    answer: 'Subscription plans range from $6.99 to $16.99 a month.',
+  },
+  {
+    question: 'Is CineNiche good for kids?',
     answer:
-      'Absolutely. We value your privacy and use secure practices to ensure your data is protected at all times.',
+      'CineNiche has a wide variety of movies, including many kid friendly films. Parents can filter movies by rating to find the perfect movie that is appropriate for all family members.',
   },
 ];
 
@@ -144,6 +148,11 @@ const HomePage: React.FC = () => {
           ))}
         </div>
         <div className="collage-overlay">
+          <img
+            src="/images/logo-without-text.PNG"
+            alt="Background"
+            className="hero-image"
+          />
           <h1 className="title">CineNiche</h1>
         </div>
         <div className="collage-scroll scroll-row-2">
