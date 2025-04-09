@@ -11,23 +11,26 @@ using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
+// Database Context
 builder.Services.AddDbContext<MoviesContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("MovieConnection")));
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("IdentityConnection")));
 
+// Add authorization
 builder.Services.AddAuthorization();
 
+//Add user and role identity, includes password credentials
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     {
         options.Password.RequireDigit = false;
@@ -49,25 +52,28 @@ builder.Services.Configure<IdentityOptions>(options =>
 
 builder.Services.AddScoped<IUserClaimsPrincipalFactory<IdentityUser>, CustomUserClaimsPrincipalFactory>();
 
+// Configure cookies
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
     options.Cookie.SameSite = SameSiteMode.None;
-    options.Cookie.Name = ".ApsNetCore.Identity.Application";
+    options.Cookie.Name = ".AspNetCore.Identity.Application";
     options.LoginPath = "/login";
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
 });
 
+// Cors Settings
 builder.Services.AddCors(options =>
     options.AddPolicy("AllowReactAppBlah",
     policy =>
     {
-        policy.WithOrigins("http://localhost:3000", "https://localhost:3000")
+        policy.WithOrigins("https://localhost:3000", "http://localhost:3000")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
     }));
 
+// Email identity skeleton
 builder.Services.AddSingleton<IEmailSender<IdentityUser>, NoOpEmailSender<IdentityUser>>();
 
 var app = builder.Build();
@@ -81,8 +87,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowReactAppBlah");
 
+// HTTPS redirction
 app.UseHttpsRedirection();
 
+// Both authentication and authorization
 app.UseAuthentication();
 app.UseAuthorization();
 
@@ -90,31 +98,30 @@ app.MapControllers();
 
 app.MapIdentityApi<IdentityUser>();
 
+// Logout post
 app.MapPost("/logout", async (HttpContext context, SignInManager<IdentityUser> signInManager) =>
 {
     await signInManager.SignOutAsync();
-    
+
     // Ensure authentication cookie is removed
-    context.Response.Cookies.Delete(".AspNetCore.Identity.Application"); new CookieOptions
-    {
-        Secure = true,
-        HttpOnly = true,
-        SameSite = SameSiteMode.None
-    };
+    context.Response.Cookies.Delete(".AspNetCore.Identity.Application");
 
     return Results.Ok(new { message = "Logout successful" });
 }).RequireAuthorization();
 
-
-app.MapGet("/pingauth", (ClaimsPrincipal user) =>
+// Ping Aut api enpoint
+app.MapGet("/pingauth", async (ClaimsPrincipal user, UserManager<IdentityUser> userManager) =>
 {
     if (!user.Identity?.IsAuthenticated ?? false)
     {
         return Results.Unauthorized();
     }
 
-    var email = user.FindFirstValue(ClaimTypes.Email) ?? "unknown@example.com"; // Ensure it's never null
-    return Results.Json(new { email = email }); // Return as JSON
+    var email = user.FindFirstValue(ClaimTypes.Email) ?? "unknown@example.com";
+    var identityUser = await userManager.FindByEmailAsync(email);
+    var roles = identityUser != null ? await userManager.GetRolesAsync(identityUser) : new List<string>();
+
+    return Results.Json(new { email = email, roles = roles });
 }).RequireAuthorization();
 
 app.Run();

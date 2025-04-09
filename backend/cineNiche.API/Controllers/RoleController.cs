@@ -18,6 +18,7 @@ public class RoleController : Controller
         _userManager = userManager;
     }
     
+    // Add Role API endpoint
     [HttpPost("AddRole")]
     public async Task<IActionResult> AddRole(string roleName)
     {
@@ -40,7 +41,8 @@ public class RoleController : Controller
 
         return StatusCode(500, "An error occurred while creating the role.");
     }
-
+    
+    // Assign Role to user API Endpoint
     [HttpPost("AssignRoleToUser")]
     public async Task<IActionResult> AssignRoleToUser(string userEmail, string roleName)
     {
@@ -68,5 +70,19 @@ public class RoleController : Controller
         }
 
         return StatusCode(500, "An error occurred while assigning the role.");
+    }
+
+    // Get Roles API endpoint
+    [HttpGet("GetRoles")]
+    public async Task<IActionResult> GetRoles()
+    {
+        var user = await _userManager.GetUserAsync(User);
+        if (user == null)
+        {
+            return Unauthorized("User not found.");
+        }
+
+        var roles = await _userManager.GetRolesAsync(user);
+        return Ok(roles);
     }
 }

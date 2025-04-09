@@ -9,14 +9,19 @@ function Logout(props: { children: React.ReactNode }) {
     try {
       const response = await fetch('https://localhost:5000/logout', {
         method: 'POST',
-        credentials: 'include', // Ensure cookies are sent
+        credentials: 'include',
         headers: {
           'Content-Type': 'application/json',
         },
       });
 
       if (response.ok) {
-        navigate('/login');
+        localStorage.removeItem('userRole');
+        localStorage.removeItem('authToken');
+        setTimeout(() => {
+          navigate('/home');
+          window.location.reload(); // Ensure React state resets
+        }, 300); // Delay to allow cookies/session to sync
       } else {
         console.error('Logout failed:', response.status);
       }

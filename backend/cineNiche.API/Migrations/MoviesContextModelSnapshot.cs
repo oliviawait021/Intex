@@ -19,23 +19,29 @@ namespace cineNiche.API.Migrations
 
             modelBuilder.Entity("cineNiche.API.Data.MoviesRating", b =>
                 {
-                    b.Property<int?>("Rating")
+                    b.Property<int?>("UserId")
                         .HasColumnType("INTEGER")
-                        .HasColumnName("rating");
+                        .HasColumnName("user_id");
 
                     b.Property<string>("ShowId")
                         .HasColumnType("TEXT")
                         .HasColumnName("show_id");
 
-                    b.Property<int?>("UserId")
+                    b.Property<int?>("Rating")
                         .HasColumnType("INTEGER")
-                        .HasColumnName("user_id");
+                        .HasColumnName("rating");
 
-                    b.ToTable("movies_ratings", (string)null);
+                    b.HasKey("UserId", "ShowId");
+
+                    b.ToTable("MoviesRatings");
                 });
 
             modelBuilder.Entity("cineNiche.API.Data.MoviesTitle", b =>
                 {
+                    b.Property<string>("ShowId")
+                        .HasColumnType("TEXT")
+                        .HasColumnName("show_id");
+
                     b.Property<int?>("Action")
                         .HasColumnType("INTEGER");
 
@@ -162,10 +168,6 @@ namespace cineNiche.API.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("release_year");
 
-                    b.Property<string>("ShowId")
-                        .HasColumnType("TEXT")
-                        .HasColumnName("show_id");
-
                     b.Property<int?>("Spirituality")
                         .HasColumnType("INTEGER");
 
@@ -195,6 +197,8 @@ namespace cineNiche.API.Migrations
                     b.Property<string>("Type")
                         .HasColumnType("TEXT")
                         .HasColumnName("type");
+
+                    b.HasKey("ShowId");
 
                     b.ToTable("movies_titles", (string)null);
                 });
