@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Movie } from '../types/Movie';
-import { deleteMovie, fetchMovies, fetchUserInfo, UserInfo } from '../api/MoivesAPI';
+import {
+  deleteMovie,
+  fetchMovies,
+  fetchUserInfo,
+  UserInfo,
+} from '../api/MoivesAPI';
 import Pagination from '../components/Pagination';
 import NewMovieForm from '../components/NewMovieForm';
 import EditMovieForm from '../components/EditMovieForm';
@@ -45,7 +50,7 @@ const AdminMoviesPage = () => {
   }, [pageSize, pageNum]);
 
   useEffect(() => {
-    console.log("showform state changed:", showform);
+    console.log('showform state changed:', showform);
   }, [showform]); // Runs when showform changes
 
   useEffect(() => {
@@ -53,13 +58,13 @@ const AdminMoviesPage = () => {
       .then((info) => {
         setUserInfo(info);
         if (!info.isAuthenticated) {
-          alert("You must be logged in to view this page.");
+          alert('You must be logged in to view this page.');
         } else if (!info.isAdmin) {
-          alert("Only admins can access this page.");
+          alert('Only admins can access this page.');
         }
       })
       .catch((err) => {
-        console.error("User info fetch failed", err);
+        console.error('User info fetch failed', err);
       });
   }, []);
 
@@ -72,11 +77,11 @@ const AdminMoviesPage = () => {
       setMovies(movies.filter((m) => m.showId !== showId));
     } catch (error: any) {
       if (error.response?.status === 401) {
-        alert("You must be logged in to delete a movie.");
+        alert('You must be logged in to delete a movie.');
       } else if (error.response?.status === 403) {
-        alert("Access denied. Only admins can delete movies.");
+        alert('Access denied. Only admins can delete movies.');
       } else {
-        alert("Failed to delete movie. Please try again.");
+        alert('Failed to delete movie. Please try again.');
       }
     }
   };
@@ -95,32 +100,32 @@ const AdminMoviesPage = () => {
         <div className="admin-controls">
           <div className="admin-header">
             <br />
-              <h1>Manage Movie Collection</h1>
-              <div className="admin-controls-row">
-                {userInfo.isAdmin && (
-                  <>
-                    <button
-                      className="add-movie-button"
-                      onClick={() => {
-                        console.log("CLICKED ADD MOVIE");
-                        setShowForm(true);
-                      }}
-                    >
-                      Add Movie
-                    </button>
-                    <div className="search-bar-container">
-                      <div className="search-bar">
-                        <input
-                          type="text"
-                          placeholder="Search for a movie..."
-                          value={searchTerm}
-                          onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                      </div>
+            <h1>Manage Movie Collection</h1>
+            <div className="admin-controls-row">
+              {userInfo.isAdmin && (
+                <>
+                  <button
+                    className="add-movie-button"
+                    onClick={() => {
+                      console.log('CLICKED ADD MOVIE');
+                      setShowForm(true);
+                    }}
+                  >
+                    Add Movie
+                  </button>
+                  <div className="search-bar-container">
+                    <div className="search-bar">
+                      <input
+                        type="text"
+                        placeholder="Search for a movie..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                      />
                     </div>
-                  </>
-                )}
-              </div>
+                  </div>
+                </>
+              )}
+            </div>
           </div>
         </div>
 
@@ -147,23 +152,35 @@ const AdminMoviesPage = () => {
         )}
 
         <div className="movie-list">
-        {movies
-          .filter((m) =>
-            m.title.toLowerCase().includes(searchTerm.toLowerCase())
-          )
-          .map((m) => (
-            <div key={m.showId} className="movie-card">
-              <div className="movie-info">
-                <h2>{m.title}</h2>
-                <p>ID: {m.showId} - {m.type} - {m.releaseYear}</p>
-                <p>Type: {m.type}</p>
+          {movies
+            .filter((m) =>
+              m.title.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            .map((m) => (
+              <div key={m.showId} className="movie-card">
+                <div className="movie-info">
+                  <h2>{m.title}</h2>
+                  <p>
+                    ID: {m.showId} - {m.type} - {m.releaseYear}
+                  </p>
+                  <p>Type: {m.type}</p>
+                </div>
+                <div className="movie-actions">
+                  <button
+                    onClick={() => setEditingMovie(m)}
+                    className="edit-btn"
+                  >
+                    <img src="/icons/editing.png" alt="Edit" />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(m.showId)}
+                    className="delete-btn"
+                  >
+                    <img src="/icons/bin.png" alt="Delete" />
+                  </button>
+                </div>
               </div>
-              <div className="movie-actions">
-                <button onClick={() => setEditingMovie(m)} className="edit-btn"><img src="/icons/editing.png" alt="Edit" /></button>
-                <button onClick={() => handleDelete(m.showId)} className="delete-btn"><img src="/icons/bin.png" alt="Delete" /></button>
-              </div>
-            </div>
-          ))}
+            ))}
         </div>
 
         <Pagination

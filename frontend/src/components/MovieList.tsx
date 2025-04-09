@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Movie } from '../types/Movie';
 import { useNavigate } from 'react-router-dom';
-import { fetchMovies } from '../api/MoivesAPI';
+import { fetchMovies } from '../api/MoviesAPI';
 import Pagination from './Pagination';
 
 function MovieList({ selectedCategories }: { selectedCategories: string[] }) {

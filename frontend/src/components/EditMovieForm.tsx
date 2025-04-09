@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Movie } from '../types/Movie';
-import { updateMovie } from '../api/MoivesAPI';
+import { updateMovie } from '../api/MoviesAPI';
 interface EditMovieFormProps {
   movie: Movie;
   onSuccess: () => void;
@@ -16,12 +16,12 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
     e.preventDefault();
     try {
       await updateMovie(formData.showId, formData);
-      console.log(formData.showId)
+      console.log(formData.showId);
       alert('Movie updated successfully!');
       onSuccess();
     } catch (error) {
-      console.error("Failed to update movie:", error);
-      alert("There was an error updating the movie.");
+      console.error('Failed to update movie:', error);
+      alert('There was an error updating the movie.');
     }
   };
   return (
