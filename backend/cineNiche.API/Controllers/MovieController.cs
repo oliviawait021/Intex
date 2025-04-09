@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using cineNiche.API.Data;
 using Microsoft.AspNetCore.Authorization;
 
+
 namespace cineNiche.API.Controllers
 {
     [Route("[controller]")]

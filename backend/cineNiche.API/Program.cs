@@ -5,15 +5,29 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using cineNiche.API.Services;
 using cineNiche.API.Data;
+using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication.Google;
 
 
 var builder = WebApplication.CreateBuilder(args);
+
+// 👇 Add this section to configure HTTPS with your custom cert
+builder.WebHost.ConfigureKestrel(serverOptions =>
+{
+    serverOptions.ListenLocalhost(5000, listenOptions =>
+    {
+        listenOptions.UseHttps(
+            "/Users/oliviafowler/Desktop/Intex/frontend/localhost.pfx", 
+            "1234");
+    });
+});
 
 // Add services to the container.
 
@@ -30,6 +44,42 @@ builder.Services.AddDbContext<ApplicationDbContext>(options =>
 
 // Add authorization
 builder.Services.AddAuthorization();
+
+// Add authentication for google
+builder.Services.AddAuthentication(options =>
+    {
+        options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
+        options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
+    })
+    .AddCookie()
+    .AddGoogle(options =>
+    {
+        options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
+        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+        options.Events.OnCreatingTicket = async context =>
+        {
+            var email = context.Principal.FindFirstValue(ClaimTypes.Email);
+
+            var userManager = context.HttpContext.RequestServices.GetRequiredService<UserManager<IdentityUser>>();
+            var signInManager = context.HttpContext.RequestServices.GetRequiredService<SignInManager<IdentityUser>>();
+
+            var user = await userManager.FindByEmailAsync(email);
+
+            if (user == null)
+            {
+                user = new IdentityUser
+                {
+                    UserName = email,
+                    Email = email,
+                    EmailConfirmed = true
+                };
+
+                await userManager.CreateAsync(user);
+            }
+
+            await signInManager.SignInAsync(user, isPersistent: false);
+        };
+    });
 
 //Add user and role identity, includes password credentials
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
@@ -93,6 +143,28 @@ app.UseHttpsRedirection();
 
 // Both authentication and authorization
 app.UseAuthentication();
+
+// Cookie
+app.Use(async (context, next) =>
+{
+    using var scope = app.Services.CreateScope();
+    var db = scope.ServiceProvider.GetRequiredService<MoviesContext>();
+
+    var movieType = await db.MoviesTitles.FirstOrDefaultAsync(t => t.Type == "Movie");
+    if (movieType != null)
+    {
+        context.Response.Cookies.Append("favMovieType", movieType.Type, new CookieOptions
+        {
+            HttpOnly = false,
+            SameSite = SameSiteMode.Strict,
+            Secure = true
+        });
+    }
+
+    await next();
+});
+
+// Authorization middleware
 app.UseAuthorization();
 
 app.MapControllers();
@@ -124,5 +196,20 @@ app.MapGet("/pingauth", async (ClaimsPrincipal user, UserManager<IdentityUser> u
 
     return Results.Json(new { email = email, roles = roles });
 }).RequireAuthorization();
+
+// google login and logout endpoints
+app.MapGet("/login-google", async context =>
+{
+    await context.ChallengeAsync(GoogleDefaults.AuthenticationScheme, new AuthenticationProperties
+    {
+        RedirectUri = "http://localhost:3000/movies"
+    });
+});
+
+app.MapGet("/logout", async context =>
+{
+    await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+    context.Response.Redirect("/");
+});
 
 app.Run();

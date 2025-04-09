@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './Identity.css';
 import '@fortawesome/fontawesome-free/css/all.css';
+import { GoogleLogin } from '@react-oauth/google';
 
 function LoginPage() {
   // state variables for email and passwords
@@ -39,6 +40,7 @@ function LoginPage() {
       setError('Please fill in all fields.');
       return;
     }
+    
 
     const loginUrl = rememberme
       ? 'https://localhost:5000/login?useCookies=true'
@@ -134,6 +136,47 @@ function LoginPage() {
             </p>
           </div>
         </form>
+
+        {/* Third-party login buttons */}
+        <div className="auth-input-group">
+                    <GoogleLogin
+            onSuccess={async (credentialResponse) => {
+              console.log("Google login success:", credentialResponse);
+
+              const token = credentialResponse.credential;
+
+              try {
+                const response = await fetch("https://localhost:5000/api/auth/google", {
+                  method: "POST",
+                  headers: {
+                    "Content-Type": "application/json"
+                  },
+                  credentials: "include", // This allows the cookie to be set
+                  body: JSON.stringify({
+                    token: token
+                  })
+                });
+
+                if (!response.ok) {
+                  throw new Error("Failed to log in via Google");
+                }
+
+                const data = await response.json();
+                console.log("Backend login success:", data);
+                navigate('/movies');
+                setTimeout(() => {
+                  window.location.reload();
+                }, 200);
+              } catch (error) {
+                console.error("Error during Google login:", error);
+              }
+            }}
+            onError={() => {
+              console.log("Google login failed");
+              setError("Google login failed");
+            }}
+          />
+        </div>
 
         {/* Error message display */}
         {error && <p className="error">{error}</p>}
