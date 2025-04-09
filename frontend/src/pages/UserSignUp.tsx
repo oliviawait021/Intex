@@ -82,7 +82,7 @@ const UserSignUp = () => {
   return (
     <div className="auth-wrapper">
       <div className="auth-content">
-        <img src="/public/images/logo.png" alt="Logo" className="auth-logo" />
+        <img src="/images/logo.png" alt="Logo" className="auth-logo" />
         <div className="auth-card">
           <h2 className="auth-title">User Sign Up</h2>
           <form onSubmit={handleSubmit}>
@@ -92,9 +92,6 @@ const UserSignUp = () => {
               { name: 'phone', type: 'text', label: 'Phone' },
               { name: 'email', type: 'email', label: 'Email' },
               { name: 'age', type: 'number', label: 'Age' },
-              { name: 'city', type: 'text', label: 'City' },
-              { name: 'state', type: 'text', label: 'State' },
-              { name: 'zip', type: 'number', label: 'Zip Code' },
             ].map(({ name, type, label }) => (
               <div
                 className="auth-input-group"
@@ -118,7 +115,7 @@ const UserSignUp = () => {
               </div>
             ))}
 
-            {/* Gender Dropdown */}
+            {/* Gender Dropdown (after Age) */}
             <div
               className="auth-input-group"
               style={{ marginBottom: '0.75rem' }}
@@ -145,6 +142,118 @@ const UserSignUp = () => {
               </select>
             </div>
 
+            {/* City Input */}
+            <div
+              className="auth-input-group"
+              style={{ marginBottom: '0.75rem' }}
+            >
+              <label htmlFor="city">City</label>
+              <input
+                className="auth-input"
+                type="text"
+                name="city"
+                value={formData.city}
+                onChange={handleChange}
+                style={{ padding: '0.5rem 0.75rem', fontSize: '0.9rem' }}
+              />
+            </div>
+
+            {/* State Dropdown */}
+            <div
+              className="auth-input-group"
+              style={{ marginBottom: '0.75rem' }}
+            >
+              <label htmlFor="state">State</label>
+              <select
+                name="state"
+                value={formData.state}
+                onChange={handleChange}
+                className="auth-input"
+                style={{
+                  padding: '0.5rem 0.75rem',
+                  fontSize: '0.9rem',
+                  border: '1px solid #ccc',
+                  borderRadius: '6px',
+                  width: '100%',
+                  height: '2rem',
+                }}
+              >
+                <option value="">Select State</option>
+                {[
+                  'AL',
+                  'AK',
+                  'AZ',
+                  'AR',
+                  'CA',
+                  'CO',
+                  'CT',
+                  'DE',
+                  'FL',
+                  'GA',
+                  'HI',
+                  'ID',
+                  'IL',
+                  'IN',
+                  'IA',
+                  'KS',
+                  'KY',
+                  'LA',
+                  'ME',
+                  'MD',
+                  'MA',
+                  'MI',
+                  'MN',
+                  'MS',
+                  'MO',
+                  'MT',
+                  'NE',
+                  'NV',
+                  'NH',
+                  'NJ',
+                  'NM',
+                  'NY',
+                  'NC',
+                  'ND',
+                  'OH',
+                  'OK',
+                  'OR',
+                  'PA',
+                  'RI',
+                  'SC',
+                  'SD',
+                  'TN',
+                  'TX',
+                  'UT',
+                  'VT',
+                  'VA',
+                  'WA',
+                  'WV',
+                  'WI',
+                  'WY',
+                ].map((abbr) => (
+                  <option key={abbr} value={abbr}>
+                    {abbr}
+                  </option>
+                ))}
+              </select>
+            </div>
+
+            {/* Zip Code Input */}
+            <div
+              className="auth-input-group"
+              style={{ marginBottom: '0.75rem' }}
+            >
+              <label htmlFor="zip">Zip Code</label>
+              <input
+                className="auth-input"
+                type="number"
+                name="zip"
+                value={formData.zip === 0 ? '' : formData.zip}
+                onChange={handleChange}
+                style={{ padding: '0.5rem 0.75rem', fontSize: '0.9rem' }}
+              />
+            </div>
+
             {/* Streaming Service Checkboxes */}
             <div
               className="auth-input-group"
@@ -154,9 +263,9 @@ const UserSignUp = () => {
                 className="auth-label"
                 style={{ fontWeight: 'bold', fontSize: '1rem' }}
               >
-                Streaming Subscriptions{' '}
+                Streaming Subscriptions you have{' '}
                 <span style={{ fontSize: '0.9rem' }}>
-                  (Select all that apply)
+                  (Select all that apply):
                 </span>
               </label>
               <div
@@ -182,7 +291,7 @@ const UserSignUp = () => {
                     style={{
                       display: 'flex',
                       flexWrap: 'wrap',
-                      gap: '0.5rem 1.25rem', // rows and columns gap
+                      gap: '0.5rem 1.25rem',
                       marginTop: '0.5rem',
                     }}
                   >

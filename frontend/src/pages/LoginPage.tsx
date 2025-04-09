@@ -78,7 +78,7 @@ function LoginPage() {
   return (
     <div className="auth-wrapper">
       <div className="auth-content">
-        <img src="/public/images/logo.png" alt="Logo" className="auth-logo" />
+        <img src="/images/logo.png" alt="Logo" className="auth-logo" />
         <div className="auth-card">
           <h2 className="auth-title">Sign in to continue</h2>
           <form onSubmit={handleSubmit}>
