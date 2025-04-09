@@ -86,7 +86,6 @@
   max-width: 1000px;
   margin: 40px auto;
   padding: 0 30px;
-  background-color: #0b061b;
   border-radius: 10px; /* Rounded corners for the FAQ container */
   overflow: hidden; /* Ensure content does not exceed rounded corners */
 }
@@ -206,6 +205,7 @@
 }
 
 .collage-container {
+  border-radius: 30px;
   position: relative;
   overflow: hidden;
   width: 100%;

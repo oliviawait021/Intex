@@ -1,7 +1,7 @@
 import React, { useState, useRef } from 'react';
 import './HomePage.css';
 import { Link } from 'react-router-dom';
-
+import Footer from '../components/Footer';
 
 const movieData = [
   {
@@ -241,17 +241,7 @@ const HomePage: React.FC = () => {
             </div>
           ))}
 
-          <div className="faq-links">
-            <Link to="/login" className="faq-link">
-              Account
-            </Link>
-            <Link to="/privacy" className="faq-link">
-              Privacy Policy
-            </Link>
-            <a href="#faq" className="faq-link">
-              FAQ
-            </a>
-          </div>
+          <Footer />
         </div>
       </div>
     </>

@@ -1,7 +1,7 @@
 import React, { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import './MoviesPage.css';
-import { Search } from 'lucide-react';
+import WelcomeBand from '../components/WelcomeBand';
 
 const genres = [
   'Movie',
@@ -61,29 +61,7 @@ const MoviesPage: React.FC = () => {
 
   return (
     <>
-      <h2 className="welcome-text">Welcome Zoldroyd!</h2>
-      <br />
-      <div className="genre-search-bar">
-        <div className="genre-scroll-container">
-          {genres.map((genre, i) => (
-            <button className="genre-button" key={i}>
-              {genre}
-            </button>
-          ))}
-        </div>
-        <div className="search-bar-container">
-          <div className="search-bar">
-            <Search size={18} className="search-icon" />
-            <input
-              type="text"
-              placeholder="Search for a movie..."
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-            />
-          </div>
-        </div>
-      </div>
-
+      <WelcomeBand />
       {genres.map((genre, index) => {
         const movies = filterBySearch(moviesByGenre[genre] || []);
         return (
