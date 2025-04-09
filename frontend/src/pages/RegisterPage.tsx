@@ -68,80 +68,85 @@ function Register() {
 
   return (
     <div className="auth-wrapper">
-      <div className="auth-card">
-        <h2 className="auth-title">Register</h2>
-        <form onSubmit={handleSubmit}>
-          {/* Email field */}
-          <div className="auth-input-group">
-            <label htmlFor="email">Username</label>
-            <input
-              className="auth-input"
-              type="email"
-              id="email"
-              name="email"
-              value={email}
-              onChange={handleChange}
-            />
-          </div>
+      <div className="auth-content">
+        <img src="/public/images/logo.png" alt="Logo" className="auth-logo" />
+        <div className="auth-card">
+          <h2 className="auth-title">Register</h2>
+          <form onSubmit={handleSubmit}>
+            {/* Email field */}
+            <div className="auth-input-group">
+              <label htmlFor="email">Username</label>
+              <input
+                className="auth-input"
+                type="email"
+                id="email"
+                name="email"
+                value={email}
+                onChange={handleChange}
+              />
+            </div>
 
-          {/* Password field */}
-          <div className="auth-input-group">
-            <label htmlFor="password">Password</label>
-            <input
-              className="auth-input"
-              type="password"
-              id="password"
-              name="password"
-              value={password}
-              onChange={handleChange}
-            />
-          </div>
+            {/* Password field */}
+            <div className="auth-input-group">
+              <label htmlFor="password">Password</label>
+              <input
+                className="auth-input"
+                type="password"
+                id="password"
+                name="password"
+                value={password}
+                onChange={handleChange}
+              />
+            </div>
 
-          {/* Confirm password field */}
-          <div className="auth-input-group">
-            <label htmlFor="confirmPassword">Confirm Password</label>
-            <input
-              className="auth-input"
-              type="password"
-              id="confirmPassword"
-              name="confirmPassword"
-              value={confirmPassword}
-              onChange={handleChange}
-            />
-          </div>
+            {/* Confirm password field */}
+            <div className="auth-input-group">
+              <label htmlFor="confirmPassword">Confirm Password</label>
+              <input
+                className="auth-input"
+                type="password"
+                id="confirmPassword"
+                name="confirmPassword"
+                value={confirmPassword}
+                onChange={handleChange}
+              />
+            </div>
 
-          {/* Submit button */}
-          <button type="submit" className="auth-button">
-            Register
-          </button>
+            {/* Submit button */}
+            <button type="submit" className="auth-button">
+              Register
+            </button>
 
-          {/* Or use Google */}
-          <div className="auth-input-group">
-            <p style={{ textAlign: 'center', margin: '1rem 0' }}>or register using</p>
-            <GoogleLogin
-              onSuccess={(credentialResponse) => {
-                console.log('Google login success:', credentialResponse);
-                // Optionally send token to backend if you do verification on frontend
-              }}
-              onError={() => {
-                setError('Google login failed');
-              }}
-            />
-          </div>
+            {/* Or use Google */}
+            <div className="auth-input-group">
+              <p style={{ textAlign: 'center', margin: '1rem 0' }}>
+                or register using
+              </p>
+              <GoogleLogin
+                onSuccess={(credentialResponse) => {
+                  console.log('Google login success:', credentialResponse);
+                  // Optionally send token to backend if you do verification on frontend
+                }}
+                onError={() => {
+                  setError('Google login failed');
+                }}
+              />
+            </div>
 
-          {/* Login link */}
-          <div className="auth-footer">
-            <p>
-              Already have an account?{' '}
-              <a href="#" onClick={handleLoginClick} className="auth-link">
-                Return to Login
-              </a>
-            </p>
-          </div>
-        </form>
+            {/* Login link */}
+            <div className="auth-footer">
+              <p>
+                Already have an account?{' '}
+                <a href="#" onClick={handleLoginClick} className="auth-link">
+                  Return to Login
+                </a>
+              </p>
+            </div>
+          </form>
 
-        {/* Error message display */}
-        {error && <p className="error">{error}</p>}
+          {/* Error message display */}
+          {error && <p className="error">{error}</p>}
+        </div>
       </div>
     </div>
   );
