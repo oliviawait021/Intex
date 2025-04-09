@@ -40,7 +40,6 @@ function LoginPage() {
       setError('Please fill in all fields.');
       return;
     }
-    
 
     const loginUrl = rememberme
       ? 'https://localhost:5000/login?useCookies=true'
@@ -78,108 +77,114 @@ function LoginPage() {
 
   return (
     <div className="auth-wrapper">
-      <div className="auth-card">
-        <h2 className="auth-title">Sign in to continue</h2>
-        <form onSubmit={handleSubmit}>
-          {/* Email field */}
+      <div className="auth-content">
+        <img src="/public/images/logo.png" alt="Logo" className="auth-logo" />
+        <div className="auth-card">
+          <h2 className="auth-title">Sign in to continue</h2>
+          <form onSubmit={handleSubmit}>
+            {/* Email field */}
+            <div className="auth-input-group">
+              <label htmlFor="email">Username</label>
+              <input
+                className="auth-input"
+                type="email"
+                id="email"
+                name="email"
+                value={email}
+                onChange={handleChange}
+              />
+            </div>
+
+            {/* Password field */}
+            <div className="auth-input-group">
+              <label htmlFor="password">Password</label>
+              <input
+                className="auth-input"
+                type="password"
+                id="password"
+                name="password"
+                value={password}
+                onChange={handleChange}
+              />
+            </div>
+
+            {/* Remember me checkbox */}
+            <div className="auth-input-group" style={{ fontSize: '1rem' }}>
+              <input
+                type="checkbox"
+                id="rememberme"
+                name="rememberme"
+                checked={rememberme}
+                onChange={handleChange}
+              />
+              <label htmlFor="rememberme" style={{ marginLeft: '0.5rem' }}>
+                Remember me?
+              </label>
+            </div>
+
+            {/* Submit button */}
+            <button type="submit" className="auth-button">
+              Sign In
+            </button>
+
+            {/* Register link */}
+            <div className="auth-footer">
+              <p>
+                Don’t have an account?{' '}
+                <a href="#" onClick={handleRegisterClick} className="auth-link">
+                  Sign up here
+                </a>
+              </p>
+            </div>
+          </form>
+
+          {/* Third-party login buttons */}
           <div className="auth-input-group">
-            <label htmlFor="email">Username</label>
-            <input
-              className="auth-input"
-              type="email"
-              id="email"
-              name="email"
-              value={email}
-              onChange={handleChange}
-            />
-          </div>
+            <GoogleLogin
+              onSuccess={async (credentialResponse) => {
+                console.log('Google login success:', credentialResponse);
 
-          {/* Password field */}
-          <div className="auth-input-group">
-            <label htmlFor="password">Password</label>
-            <input
-              className="auth-input"
-              type="password"
-              id="password"
-              name="password"
-              value={password}
-              onChange={handleChange}
-            />
-          </div>
+                const token = credentialResponse.credential;
 
-          {/* Remember me checkbox */}
-          <div className="auth-input-group" style={{ fontSize: '1rem' }}>
-            <input
-              type="checkbox"
-              id="rememberme"
-              name="rememberme"
-              checked={rememberme}
-              onChange={handleChange}
-            />
-            <label htmlFor="rememberme" style={{ marginLeft: '0.5rem' }}>
-              Remember me?
-            </label>
-          </div>
+                try {
+                  const response = await fetch(
+                    'https://localhost:5000/api/auth/google',
+                    {
+                      method: 'POST',
+                      headers: {
+                        'Content-Type': 'application/json',
+                      },
+                      credentials: 'include', // This allows the cookie to be set
+                      body: JSON.stringify({
+                        token: token,
+                      }),
+                    }
+                  );
 
-          {/* Submit button */}
-          <button type="submit" className="auth-button">
-            Sign In
-          </button>
+                  if (!response.ok) {
+                    throw new Error('Failed to log in via Google');
+                  }
 
-          {/* Register link */}
-          <div className="auth-footer">
-            <p>
-              Don’t have an account?{' '}
-              <a href="#" onClick={handleRegisterClick} className="auth-link">
-                Sign up here
-              </a>
-            </p>
-          </div>
-        </form>
-
-        {/* Third-party login buttons */}
-        <div className="auth-input-group">
-                    <GoogleLogin
-            onSuccess={async (credentialResponse) => {
-              console.log("Google login success:", credentialResponse);
-
-              const token = credentialResponse.credential;
-
-              try {
-                const response = await fetch("https://localhost:5000/api/auth/google", {
-                  method: "POST",
-                  headers: {
-                    "Content-Type": "application/json"
-                  },
-                  credentials: "include", // This allows the cookie to be set
-                  body: JSON.stringify({
-                    token: token
-                  })
-                });
-
-                if (!response.ok) {
-                  throw new Error("Failed to log in via Google");
+                  const data = await response.json();
+                  console.log('Backend login success:', data);
+                  navigate('/movies');
+                  setTimeout(() => {
+                    window.location.reload();
+                  }, 200);
+                } catch (error) {
+                  console.error('Error during Google login:', error);
                 }
+              }}
+              onError={() => {
+                console.log('Google login failed');
+                setError('Google login failed');
+              }}
+            />
+          </div>
 
-                const data = await response.json();
-                console.log("Backend login success:", data);
-                navigate('/movies');
-                setTimeout(() => {
-                  window.location.reload();
-                }, 200);
-              } catch (error) {
-                console.error("Error during Google login:", error);
-              }
-            }}
-            onError={() => {
-              console.log("Google login failed");
-              setError("Google login failed");
-            }}
-          />
+          {/* Error message display */}
+          {error && <p className="error">{error}</p>}
         </div>
-
-        {/* Error message display */}
-        {error && <p className="error">{error}</p>}
       </div>
     </div>
   );

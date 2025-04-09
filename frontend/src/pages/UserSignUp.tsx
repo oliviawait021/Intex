@@ -81,121 +81,130 @@ const UserSignUp = () => {
 
   return (
     <div className="auth-wrapper">
-      <div className="auth-card">
-        <h2 className="auth-title">User Sign Up</h2>
-        <form onSubmit={handleSubmit}>
-          {/* User Info Fields */}
-          {[
-            { name: 'name', type: 'text', label: 'Name' },
-            { name: 'phone', type: 'text', label: 'Phone' },
-            { name: 'email', type: 'email', label: 'Email' },
-            { name: 'age', type: 'number', label: 'Age' },
-            { name: 'city', type: 'text', label: 'City' },
-            { name: 'state', type: 'text', label: 'State' },
-            { name: 'zip', type: 'number', label: 'Zip Code' },
-          ].map(({ name, type, label }) => (
+      <div className="auth-content">
+        <img src="/public/images/logo.png" alt="Logo" className="auth-logo" />
+        <div className="auth-card">
+          <h2 className="auth-title">User Sign Up</h2>
+          <form onSubmit={handleSubmit}>
+            {/* User Info Fields */}
+            {[
+              { name: 'name', type: 'text', label: 'Name' },
+              { name: 'phone', type: 'text', label: 'Phone' },
+              { name: 'email', type: 'email', label: 'Email' },
+              { name: 'age', type: 'number', label: 'Age' },
+              { name: 'city', type: 'text', label: 'City' },
+              { name: 'state', type: 'text', label: 'State' },
+              { name: 'zip', type: 'number', label: 'Zip Code' },
+            ].map(({ name, type, label }) => (
+              <div
+                className="auth-input-group"
+                key={name}
+                style={{ marginBottom: '0.75rem' }}
+              >
+                <label htmlFor={name}>{label}</label>
+                <input
+                  className="auth-input"
+                  type={type}
+                  name={name}
+                  value={
+                    type === 'number' &&
+                    formData[name as keyof UserFormData] === 0
+                      ? ''
+                      : formData[name as keyof UserFormData]
+                  }
+                  onChange={handleChange}
+                  style={{ padding: '0.5rem 0.75rem', fontSize: '0.9rem' }}
+                />
+              </div>
+            ))}
+
+            {/* Gender Dropdown */}
             <div
               className="auth-input-group"
-              key={name}
               style={{ marginBottom: '0.75rem' }}
             >
-              <label htmlFor={name}>{label}</label>
-              <input
-                className="auth-input"
-                type={type}
-                name={name}
-                value={
-                  type === 'number' &&
-                  formData[name as keyof UserFormData] === 0
-                    ? ''
-                    : formData[name as keyof UserFormData]
-                }
+              <label htmlFor="gender">Gender</label>
+              <select
+                name="gender"
+                value={formData.gender}
                 onChange={handleChange}
-                style={{ padding: '0.5rem 0.75rem', fontSize: '0.9rem' }}
-              />
+                className="auth-input"
+                style={{
+                  padding: '0.5rem 0.75rem',
+                  fontSize: '0.9rem',
+                  border: '1px solid #ccc',
+                  borderRadius: '6px',
+                  width: '100%',
+                  height: '2rem',
+                }}
+              >
+                <option value="">Select Gender</option>
+                <option value="Male">Male</option>
+                <option value="Female">Female</option>
+                <option value="Other">Other</option>
+              </select>
             </div>
-          ))}
 
-          {/* Gender Dropdown */}
-          <div className="auth-input-group" style={{ marginBottom: '0.75rem' }}>
-            <label htmlFor="gender">Gender</label>
-            <select
-              name="gender"
-              value={formData.gender}
-              onChange={handleChange}
-              className="auth-input"
-              style={{
-                padding: '0.5rem 0.75rem',
-                fontSize: '0.9rem',
-                border: '1px solid #ccc',
-                borderRadius: '6px',
-                width: '100%',
-                height: '2rem',
-              }}
-            >
-              <option value="">Select Gender</option>
-              <option value="Male">Male</option>
-              <option value="Female">Female</option>
-              <option value="Other">Other</option>
-            </select>
-          </div>
-
-          {/* Streaming Service Checkboxes */}
-          <div className="auth-input-group" style={{ marginBottom: '1.5rem' }}>
-            <label
-              className="auth-label"
-              style={{ fontWeight: 'bold', fontSize: '1rem' }}
-            >
-              Streaming Subscriptions{' '}
-              <span style={{ fontSize: '0.9rem' }}>
-                (Select all that apply)
-              </span>
-            </label>
+            {/* Streaming Service Checkboxes */}
             <div
-              style={{
-                display: 'flex',
-                flexWrap: 'wrap',
-                gap: '0.75rem 1.5rem',
-                marginTop: '0.5rem',
-              }}
+              className="auth-input-group"
+              style={{ marginBottom: '1.5rem' }}
             >
-              {[
-                { key: 'netflix', label: 'Netflix' },
-                { key: 'amazonPrime', label: 'Amazon Prime' },
-                { key: 'disney', label: 'Disney+' },
-                { key: 'paramount', label: 'Paramount+' },
-                { key: 'max', label: 'Max' },
-                { key: 'hulu', label: 'Hulu' },
-                { key: 'appleTv', label: 'Apple TV+' },
-                { key: 'peacock', label: 'Peacock' },
-              ].map(({ key, label }) => (
-                <label
-                  key={key}
-                  style={{
-                    display: 'flex',
-                    flexWrap: 'wrap',
-                    gap: '0.5rem 1.25rem', // rows and columns gap
-                    marginTop: '0.5rem',
-                  }}
-                >
-                  <input
-                    type="checkbox"
-                    name={key}
-                    checked={!!formData[key as keyof UserFormData]}
-                    onChange={handleChange}
-                  />
-                  {label}
-                </label>
-              ))}
+              <label
+                className="auth-label"
+                style={{ fontWeight: 'bold', fontSize: '1rem' }}
+              >
+                Streaming Subscriptions{' '}
+                <span style={{ fontSize: '0.9rem' }}>
+                  (Select all that apply)
+                </span>
+              </label>
+              <div
+                style={{
+                  display: 'flex',
+                  flexWrap: 'wrap',
+                  gap: '0.75rem 1.5rem',
+                  marginTop: '0.5rem',
+                }}
+              >
+                {[
+                  { key: 'netflix', label: 'Netflix' },
+                  { key: 'amazonPrime', label: 'Amazon Prime' },
+                  { key: 'disney', label: 'Disney+' },
+                  { key: 'paramount', label: 'Paramount+' },
+                  { key: 'max', label: 'Max' },
+                  { key: 'hulu', label: 'Hulu' },
+                  { key: 'appleTv', label: 'Apple TV+' },
+                  { key: 'peacock', label: 'Peacock' },
+                ].map(({ key, label }) => (
+                  <label
+                    key={key}
+                    style={{
+                      display: 'flex',
+                      flexWrap: 'wrap',
+                      gap: '0.5rem 1.25rem', // rows and columns gap
+                      marginTop: '0.5rem',
+                    }}
+                  >
+                    <input
+                      type="checkbox"
+                      name={key}
+                      checked={!!formData[key as keyof UserFormData]}
+                      onChange={handleChange}
+                    />
+                    {label}
+                  </label>
+                ))}
+              </div>
             </div>
-          </div>
 
-          <button type="submit" className="auth-button">
-            Submit
-          </button>
+            <button type="submit" className="auth-button">
+              Submit
+            </button>
 
-          {error && <p className="error">{error}</p>}
-        </form>
+            {error && <p className="error">{error}</p>}
+          </form>
+        </div>
       </div>
     </div>
   );
