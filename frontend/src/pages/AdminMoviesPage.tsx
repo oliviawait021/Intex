@@ -1,12 +1,18 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Movie } from '../types/Movie';
-import { deleteMovie, fetchMovies } from '../api/MoivesAPI';
+import {
+  deleteMovie,
+  fetchMovies,
+  fetchUserInfo,
+  UserInfo,
+} from '../api/MoivesAPI';
 import Pagination from '../components/Pagination';
 import NewMovieForm from '../components/NewMovieForm';
 import EditMovieForm from '../components/EditMovieForm';
 import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView';
 import Logout from '../components/Logout';
+import './AdminMoviesPage.css';
 
 const AdminMoviesPage = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -18,6 +24,8 @@ const AdminMoviesPage = () => {
   const [loading, setLoading] = useState(true);
   const [showform, setShowForm] = useState(false);
   const [editingMovie, setEditingMovie] = useState<Movie | null>(null);
+  const [searchTerm, setSearchTerm] = useState('');
+  const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
   useEffect(() => {
     const loadMovies = async () => {
@@ -41,6 +49,25 @@ const AdminMoviesPage = () => {
     loadMovies();
   }, [pageSize, pageNum]);
 
+  useEffect(() => {
+    console.log('showform state changed:', showform);
+  }, [showform]); // Runs when showform changes
+
+  useEffect(() => {
+    fetchUserInfo()
+      .then((info) => {
+        setUserInfo(info);
+        if (!info.isAuthenticated) {
+          alert('You must be logged in to view this page.');
+        } else if (!info.isAdmin) {
+          alert('Only admins can access this page.');
+        }
+      })
+      .catch((err) => {
+        console.error('User info fetch failed', err);
+      });
+  }, []);
+
   const handleDelete = async (showId: string) => {
     const confirmDelete = window.confirm('Are you sure you want to delete?');
     if (!confirmDelete) return;
@@ -48,11 +75,18 @@ const AdminMoviesPage = () => {
     try {
       await deleteMovie(showId);
       setMovies(movies.filter((m) => m.showId !== showId));
-    } catch (error) {
-      alert('Failed to delete movie. Please try again.');
+    } catch (error: any) {
+      if (error.response?.status === 401) {
+        alert('You must be logged in to delete a movie.');
+      } else if (error.response?.status === 403) {
+        alert('Access denied. Only admins can delete movies.');
+      } else {
+        alert('Failed to delete movie. Please try again.');
+      }
     }
   };
 
+  if (!userInfo) return <p>Loading user info...</p>;
   if (loading) return <p>loading movies</p>;
   if (error) return <p className="text-red-500">Error: {error}</p>;
 
@@ -60,92 +94,94 @@ const AdminMoviesPage = () => {
     <>
       <AuthorizeView>
         <Logout>
-          Logout <AuthorizedUser value="email" />
+          Logout <AuthorizedUser value="role" />
         </Logout>
 
-        <h1>Admin Movies</h1>
-
-        {!showform && (
-          <button
-            className="btn btn-success mb-3"
-            onClick={() => setShowForm(true)}
-          >
-            New Movie
-          </button>
-        )}
-
-        {showform && (
-          <NewMovieForm
-            onSuccess={() => {
-              setShowForm(false);
-              fetchMovies(pageSize, pageNum, []).then((data) => {
-                setMovies(data.movies);
-                setTotalPages(
-                  Number.isFinite(data.totalNumber) && pageSize > 0
-                    ? Math.ceil(data.totalNumber / pageSize)
-                    : 0
-                );
-              });
-            }}
-            onCancel={() => setShowForm(false)}
-          />
-        )}
+        <div className="admin-controls">
+          <div className="admin-header">
+            <br />
+            <h1>Manage Movie Collection</h1>
+            <div className="admin-controls-row">
+              {userInfo.isAdmin && (
+                <>
+                  <button
+                    className="add-movie-button"
+                    onClick={() => {
+                      console.log('CLICKED ADD MOVIE');
+                      setShowForm(true);
+                    }}
+                  >
+                    Add Movie
+                  </button>
+                  <div className="search-bar-container">
+                    <div className="search-bar">
+                      <input
+                        type="text"
+                        placeholder="Search for a movie..."
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                      />
+                    </div>
+                  </div>
+                </>
+              )}
+            </div>
+          </div>
+        </div>
 
         {editingMovie && (
-          <EditMovieForm
-            movie={editingMovie}
-            onSuccess={() => {
-              setEditingMovie(null);
-              fetchMovies(pageSize, pageNum, []).then((data) => {
-                setMovies(data.movies);
-                setTotalPages(
-                  Number.isFinite(data.totalNumber) && pageSize > 0
-                    ? Math.ceil(data.totalNumber / pageSize)
-                    : 0
-                );
-              });
-            }}
-            onCancel={() => setEditingMovie(null)}
-          />
+          <div className="modal-backdrop">
+            <div className="modal-content">
+              <EditMovieForm
+                movie={editingMovie}
+                onSuccess={() => {
+                  setEditingMovie(null);
+                  fetchMovies(pageSize, pageNum, []).then((data) => {
+                    setMovies(data.movies);
+                    setTotalPages(
+                      Number.isFinite(data.totalNumber) && pageSize > 0
+                        ? Math.ceil(data.totalNumber / pageSize)
+                        : 0
+                    );
+                  });
+                }}
+                onCancel={() => setEditingMovie(null)}
+              />
+            </div>
+          </div>
         )}
 
-        <table className="table table-bordered table-striped">
-          <thead>
-            <tr>
-              <th>Show ID</th>
-              <th>Title</th>
-              <th>Type</th>
-              <th>Director</th>
-              <th>Cast</th>
-              <th>Country</th>
-              <th>Release Year</th>
-              <th>Rating</th>
-              <th>Duration</th>
-              <th>Description</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {movies.map((m) => (
-              <tr key={m.showId}>
-                <td>{m.showId}</td>
-                <td>{m.title}</td>
-                <td>{m.type}</td>
-                <td>{m.director}</td>
-                <td>{m.cast}</td>
-                <td>{m.country}</td>
-                <td>{m.releaseYear}</td>
-                <td>{m.rating}</td>
-                <td>{m.duration}</td>
-                <td>{m.description}</td>
-                <td>
-                  <button onClick={() => setEditingMovie(m)}>Edit</button>
-                  <button onClick={() => handleDelete(m.showId)}>Delete</button>
-                </td>
-              </tr>
+        <div className="movie-list">
+          {movies
+            .filter((m) =>
+              m.title.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            .map((m) => (
+              <div key={m.showId} className="movie-card">
+                <div className="movie-info">
+                  <h2>{m.title}</h2>
+                  <p>
+                    ID: {m.showId} - {m.type} - {m.releaseYear}
+                  </p>
+                  <p>Type: {m.type}</p>
+                </div>
+                <div className="movie-actions">
+                  <button
+                    onClick={() => setEditingMovie(m)}
+                    className="edit-btn"
+                  >
+                    <img src="/icons/editing.png" alt="Edit" />
+                  </button>
+                  <button
+                    onClick={() => handleDelete(m.showId)}
+                    className="delete-btn"
+                  >
+                    <img src="/icons/bin.png" alt="Delete" />
+                  </button>
+                </div>
+              </div>
             ))}
-          </tbody>
-        </table>
+        </div>
 
         <Pagination
           currentPage={pageNum}
@@ -158,9 +194,30 @@ const AdminMoviesPage = () => {
           }}
         />
 
-        <button className="btn btn-danger" onClick={() => navigate('/movies')}>
+        <button className="return-btn" onClick={() => navigate('/movies')}>
           Return to Movie Page
         </button>
+
+        {showform && (
+          <div className="modal-backdrop">
+            <div className="modal-content">
+              <NewMovieForm
+                onSuccess={() => {
+                  setShowForm(false);
+                  fetchMovies(pageSize, pageNum, []).then((data) => {
+                    setMovies(data.movies);
+                    setTotalPages(
+                      Number.isFinite(data.totalNumber) && pageSize > 0
+                        ? Math.ceil(data.totalNumber / pageSize)
+                        : 0
+                    );
+                  });
+                }}
+                onCancel={() => setShowForm(false)}
+              />
+            </div>
+          </div>
+        )}
       </AuthorizeView>
     </>
   );

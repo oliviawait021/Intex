@@ -10,7 +10,7 @@ namespace cineNiche.API.Controllers
 {
     [Route("[controller]")]
     [ApiController]
-    // [Authorize]
+    [Authorize]
     public class MovieController : ControllerBase
     {
         private readonly MoviesContext _movieContext;
@@ -22,7 +22,7 @@ namespace cineNiche.API.Controllers
 
         // Get paginated and filtered movies
         [HttpGet("AllMovies")]
-        public IActionResult Get(int pageHowMany = 10, int pageNum = 1, [FromQuery] List<string>? movieTypes = null)
+        public IActionResult Get(int pageSize = 10, int pageNum = 1, [FromQuery] List<string>? movieTypes = null)
         {
             HttpContext.Response.Cookies.Append("favMovieType", "Movie", new CookieOptions()
             {
@@ -40,8 +40,8 @@ namespace cineNiche.API.Controllers
             }
 
             var movies = query
-                .Skip((pageNum - 1) * pageHowMany)
-                .Take(pageHowMany)
+                .Skip((pageNum - 1) * pageSize)
+                .Take(pageSize)
                 .ToList();
 
             var totalNumber = query.Count();
@@ -67,7 +67,7 @@ namespace cineNiche.API.Controllers
 
         // Add a new movie
         [HttpPost("AddMovie")]
-        // [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public IActionResult AddMovie([FromBody] MoviesTitle newMovie)
         {
 
@@ -79,7 +79,7 @@ namespace cineNiche.API.Controllers
 
         // Update an existing movie
         [HttpPut("UpdateMovie/{showId}")]
-        // [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public IActionResult UpdateMovie(string showId, [FromBody] MoviesTitle updatedMovie)
         {
             var existingMovie = _movieContext.MoviesTitles.Find(showId);
@@ -106,7 +106,7 @@ namespace cineNiche.API.Controllers
 
         // Delete a movie
         [HttpDelete("DeleteMovie/{showId}")]
-        // [Authorize(Roles = "Admin")]
+        //[Authorize(Roles = "Admin")]
         public IActionResult DeleteMovie(string showId)
         {
             var movie = _movieContext.MoviesTitles.Find(showId);
@@ -164,5 +164,6 @@ namespace cineNiche.API.Controllers
                 return StatusCode(500, $"Internal server error: {ex.Message}");
             }
         }
+
     }
 }

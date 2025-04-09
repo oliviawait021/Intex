@@ -1,0 +1,230 @@
+body {
+    background-color: #2c2c2c;
+    color: #fff;
+    font-family: 'Segoe UI', sans-serif;
+    margin: 0;
+    padding: 0;
+  }
+  
+  .logout-bar {
+    padding: 1rem;
+    background-color: #1a1a1a;
+    text-align: right;
+    font-size: 0.9rem;
+    color: #aaa;
+  }
+  
+  .admin-header {
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 1rem 2rem;
+  }
+  
+  .admin-header h1 {
+    margin: 0;
+    font-size: 1.5rem;
+    color: white;
+    text-align: center;
+    margin-bottom: 1rem;
+}
+  
+  .admin-controls-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 1rem;
+    width: 100%;
+  }
+
+  .add-movie-button {
+    padding: 0.5rem 1rem;
+    background-color: #28262F;
+    color: white;
+    width: 150px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+
+  
+  .add-movie-button:hover {
+    background-color: #555;
+  }
+  
+  .movie-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+    padding: 0 1rem;
+  }
+  
+  .movie-card {
+    display: flex;
+    align-items: left;
+    background-color: #28262F;
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    height: 100px;
+    width: 800px;
+    color: white;
+    box-shadow: 0 4px 8px 444(0, 0, 0, 0.3);
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    position: relative;
+  }
+  
+  .movie-card:hover {
+    transform: scale(1.03);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.4);
+  }x
+  
+  .movie-poster {
+    width: 80px;
+    height: auto;
+    margin-right: 20rem;
+    border-radius: 4px;
+  }
+  
+  .movie-info {
+    flex-grow: 1;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    text-align: left;
+    color: white;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
+  }
+  
+  .movie-info h2 {
+    margin: 0;
+    font-size: 1.2rem;
+    color: white;
+    text-align: left;
+  }
+  
+  .movie-info p {
+    margin: 0.3rem 0;
+    font-size: 0.9rem;
+    color: white;
+    text-align: left;
+  }
+
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.5); /* Dim background */
+  z-index: 9999; /* Ensure it's on top */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+    background-color: #28262f;
+    padding: 2rem;
+    border-radius: 10px;
+    width: 800px;
+    color: white;
+    z-index: 10000; /* Ensure it's above backdrop */
+  }
+  
+  .movie-actions {
+    display: flex;
+    gap: 0.5rem;
+    position: absolute;
+    right: 1rem;
+    top: 50%;
+    transform: translateY(-50%);
+  }
+  
+  .edit-btn,
+  .delete-btn {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 1.3rem;
+    cursor: pointer;
+    padding: 0.4rem;
+    transition: transform 0.2s;
+  }
+  
+  .edit-btn:hover,
+  .delete-btn:hover {
+    transform: scale(1.2);
+  }
+  
+  .edit-btn img,
+  .delete-btn img {
+    width: 20px;
+    height: 20px;
+    filter: brightness(0) invert(1); /* Ensures black SVGs appear white on dark background */
+  }
+  
+  .return-btn {
+    margin: 2rem auto;
+    display: block;
+    background-color: #555;
+    color: white;
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.2s;
+  }
+  
+  .return-btn:hover {
+    background-color: #666;
+  }
+
+  .logout-container {
+    display: flex;
+    justify-content: flex-end;
+    padding: 1rem 2rem 0 2rem;
+    background-color: #2c2c2c;
+  }
+
+  .logout {
+    padding: 0.5rem 1rem;
+    background-color: #444;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    font-size: 0.9rem;
+    transition: background-color 0.2s;
+  }
+
+  .logout:hover {
+    background-color: #555;
+  }
+
+  .auth-input {
+    width: 100%;
+    padding: 0.4rem 0.6rem;   /* ⬅️ smaller padding */
+    font-size: 0.85rem;       /* ⬅️ slightly smaller text */
+    border-radius: 4px;       /* ⬅️ smaller rounding if desired */
+    border: 1px solid #ccc;
+    height: 3rem; 
+  }
+  /* Movie item container */
+.movie-item {
+  flex-shrink: 0; /* Prevent items from shrinking */
+  width: 50px; /* Set the width for each movie item */
+  text-align: center;
+  scroll-snap-align: start; /* Make each item snap to the start */
+  border-radius: 10px; /* Rounded corners for each movie item */
+  overflow: hidden; /* Ensure content inside the item doesn't overflow */
+}
+
+/* Movie poster */
+.movie-poster {
+  width: 50px;
+  height: 150px;
+  object-fit: cover; /* Maintain aspect ratio and cover container */
+  border-radius: 8px; /* Rounded corners for images */
+}

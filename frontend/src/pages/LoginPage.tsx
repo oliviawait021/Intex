@@ -64,6 +64,9 @@ function LoginPage() {
         throw new Error(data?.message || 'Invalid email or password.');
       }
 
+      // Store username in localStorage (or sessionStorage, depending on your preference)
+      localStorage.setItem('username', email);
+
       navigate('/movies');
       setTimeout(() => {
         window.location.reload();

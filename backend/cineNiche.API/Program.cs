@@ -15,7 +15,6 @@ using Microsoft.Extensions.Hosting;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication.Google;
 
-
 var builder = WebApplication.CreateBuilder(args);
 
 // 👇 Add this section to configure HTTPS with your custom cert
@@ -51,7 +50,24 @@ builder.Services.AddAuthentication(options =>
         options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
         options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
     })
-    .AddCookie()
+    .AddCookie(options =>
+    {
+        options.Events = new CookieAuthenticationEvents
+        {
+            OnRedirectToLogin = context =>
+            {
+                context.Response.StatusCode = 401;
+                context.Response.ContentType = "application/json";
+                return context.Response.WriteAsync("{\"error\": \"You must be logged in to access this resource.\"}");
+            },
+            OnRedirectToAccessDenied = context =>
+            {
+                context.Response.StatusCode = 403;
+                context.Response.ContentType = "application/json";
+                return context.Response.WriteAsync("{\"error\": \"Access denied. Admins only.\"}");
+            }
+        };
+    })
     .AddGoogle(options =>
     {
         options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
@@ -110,11 +126,6 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.SameSite = SameSiteMode.None;
     options.Cookie.Name = ".AspNetCore.Identity.Application";
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-    options.Events.OnRedirectToLogin = context =>
-    {
-        context.Response.StatusCode = 401;
-        return Task.CompletedTask;
-    };
 });
 
 // Cors Settings

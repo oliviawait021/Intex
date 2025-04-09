@@ -1,26 +1,46 @@
-.genre-button {
-  background-color: #4a3dbd;
-  color: white;
-  border: none;
-  border-radius: 20px;
-  padding: 8px 16px;
-  cursor: pointer;
-  transition: background-color 0.3s;
-  white-space: nowrap;
+.welcome-band {
+  display: flex;
+  flex-direction: row; /* this ensures horizontal layout */
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background: linear-gradient(to right, #0b061b, #3b277f);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
 }
 
-.genre-button:hover,
-.genre-button:active {
-  background-color: #6f5df5;
-}
-
+/* Sections */
+.left-header,
+.welcome-text-container,
 .search-bar-container {
   display: flex;
   align-items: center;
-  margin-top: 10px;
-  width: 300px;
 }
 
+/* Welcome text */
+.welcome-text {
+  font-size: 2rem;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+}
+
+/* Logo and hamburger */
+.hamburger-icon {
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.logo {
+  height: 40px;
+}
+
+/* Search bar */
 .search-bar {
   display: flex;
   align-items: center;
@@ -28,7 +48,7 @@
   border: 2px solid white;
   border-radius: 30px;
   background-color: white;
-  flex: 1;
+  width: 300px;
 }
 
 .search-bar input {
@@ -43,12 +63,4 @@
 
 .search-icon {
   color: #4a3dbd;
-}
-
-.welcome-text {
-  font-size: 2rem;
-  font-weight: 600;
-  color: white;
-  text-align: center;
-  margin-bottom: 20px; /* Space between text and buttons */
 }
