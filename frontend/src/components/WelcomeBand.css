@@ -1,0 +1,54 @@
+.genre-button {
+  background-color: #4a3dbd;
+  color: white;
+  border: none;
+  border-radius: 20px;
+  padding: 8px 16px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+  white-space: nowrap;
+}
+
+.genre-button:hover,
+.genre-button:active {
+  background-color: #6f5df5;
+}
+
+.search-bar-container {
+  display: flex;
+  align-items: center;
+  margin-top: 10px;
+  width: 300px;
+}
+
+.search-bar {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border: 2px solid white;
+  border-radius: 30px;
+  background-color: white;
+  flex: 1;
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  color: black;
+  background-color: white;
+  width: 100%;
+  margin-left: 8px;
+}
+
+.search-icon {
+  color: #4a3dbd;
+}
+
+.welcome-text {
+  font-size: 2rem;
+  font-weight: 600;
+  color: white;
+  text-align: center;
+  margin-bottom: 20px; /* Space between text and buttons */
+}

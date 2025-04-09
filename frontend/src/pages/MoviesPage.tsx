@@ -1,49 +1,49 @@
-import React, { useState, useRef } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
+import axios from 'axios';
 import './MoviesPage.css';
-import { Link } from 'react-router-dom';
 import { Search } from 'lucide-react';
 
 const genres = [
+  'Movie',
+  'TV Show',
+  'Children',
   'Action',
-  'Comedy',
-  'Drama',
+  'Adventure',
+  'Comedies',
+  'Documentaries',
+  'Docuseries',
+  'Dramas',
   'Fantasy',
-  'Horror',
-  'Romance',
-  'Sci-Fi',
-  'Thriller',
-  'Mystery',
-  'Animation',
-  'Documentary',
+  'Musicals',
+  'Spirituality',
+  'Thrillers',
 ];
 
-const movieData = [
-  { name: 'The Matrix', poster: '/images/the-matrix.jpg' },
-  { name: 'Inception', poster: '/images/inception.jpg' },
-  { name: 'The Dark Knight', poster: '/images/the-dark-night.jpg' },
-  { name: 'Avatar', poster: '/images/avatar.jpg' },
-  { name: 'Interstellar', poster: '/images/interstellar.jpg' },
-  { name: 'The Avengers', poster: '/images/the-avengers.jpg' },
-  { name: 'The Godfather', poster: '/images/the-godfather.jpg' },
-  { name: 'Forrest Gump', poster: '/images/forrest-gump.jpg' },
-  { name: 'Titanic', poster: '/images/titanic.jpg' },
-  { name: 'Brother Bear', poster: '/images/brother-bear.jpg' },
-  { name: 'Mission: Impossible', poster: '/images/mission-impossible.jpg' },
-  { name: 'Top Gun: Maverick', poster: '/images/topgun.jpg' },
-  { name: 'Back to the Future', poster: '/images/back-to-the-future.jpg' },
-  { name: 'Jurassic Park', poster: '/images/jurassic-park.jpg' },
-  {
-    name: 'The Silence of the Lambs',
-    poster: '/images/the-silence-of-the-lambs.jpg',
-  },
-  { name: 'The Terminator', poster: '/images/the-terminator.jpg' },
-  { name: 'The Green Mile', poster: '/images/the-green-mile.jpg' },
-  { name: 'Coco', poster: '/images/coco.jpg' },
-];
+interface Movie {
+  showId: string;
+  title: string;
+  imageFileName: string;
+}
 
 const MoviesPage: React.FC = () => {
   const [searchTerm, setSearchTerm] = useState('');
+  const [moviesByGenre, setMoviesByGenre] = useState<Record<string, Movie[]>>(
+    {}
+  );
   const movieContainerRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  useEffect(() => {
+    genres.forEach(async (genre) => {
+      try {
+        const response = await axios.get(
+          `https://localhost:port/Movie/GetMoviesByGenre?genre=${genre}`
+        );
+        setMoviesByGenre((prev) => ({ ...prev, [genre]: response.data }));
+      } catch (error) {
+        console.error(`Error fetching movies for ${genre}:`, error);
+      }
+    });
+  }, []);
 
   const scrollMovies = (index: number, direction: 'left' | 'right') => {
     const container = movieContainerRefs.current[index];
@@ -54,17 +54,16 @@ const MoviesPage: React.FC = () => {
     }
   };
 
-  const filteredMovies = movieData.filter((movie) =>
-    movie.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+  const filterBySearch = (movies: Movie[]) =>
+    movies.filter((movie) =>
+      movie.title?.toLowerCase().includes(searchTerm.toLowerCase())
+    );
 
   return (
     <>
-      {/* Welcome text */}
       <h2 className="welcome-text">Welcome Zoldroyd!</h2>
       <br />
       <div className="genre-search-bar">
-        {/* Genre buttons */}
         <div className="genre-scroll-container">
           {genres.map((genre, i) => (
             <button className="genre-button" key={i}>
@@ -85,57 +84,45 @@ const MoviesPage: React.FC = () => {
         </div>
       </div>
 
-      {[
-        "What's Hot",
-        'Recommended for You',
-        'Coming Soon',
-        'Action',
-        'Comedy',
-        'Drama',
-        'Fantasy',
-        'Horror',
-        'Romance',
-        'Sci-Fi',
-        'Thriller',
-        'Mystery',
-        'Animation',
-        'Documentary',
-      ].map((title, index) => (
-        <div key={index} className="movie-section">
-          <h2 className="section-title">{title}</h2>
-          <div className="movie-scroll-container">
-            <button
-              className="scroll-arrow left"
-              onClick={() => scrollMovies(index, 'left')}
-            >
-              &#60;
-            </button>
-            <div
-              className="movie-container"
-              ref={(el) => {
-                movieContainerRefs.current[index] = el;
-              }}
-            >
-              {filteredMovies.map((movie, movieIndex) => (
-                <div className="movie-item" key={movieIndex}>
-                  <img
-                    src={movie.poster}
-                    alt={movie.name}
-                    className="movie-poster"
-                  />
-                  <div className="movie-title">{movie.name}</div>
-                </div>
-              ))}
+      {genres.map((genre, index) => {
+        const movies = filterBySearch(moviesByGenre[genre] || []);
+        return (
+          <div key={genre} className="movie-section">
+            <h2 className="section-title">{genre}</h2>
+            <div className="movie-scroll-container">
+              <button
+                className="scroll-arrow left"
+                onClick={() => scrollMovies(index, 'left')}
+              >
+                &#60;
+              </button>
+              <div
+                className="movie-container"
+                ref={(el) => {
+                  movieContainerRefs.current[index] = el;
+                }}
+              >
+                {movies.map((movie, movieIndex) => (
+                  <div className="movie-item" key={movieIndex}>
+                    <img
+                      src={`https://movie-images.s3.us-west-1.amazonaws.com/${movie.imageFileName}`}
+                      alt={movie.title}
+                      className="movie-poster"
+                    />
+                    <div className="movie-title">{movie.title}</div>
+                  </div>
+                ))}
+              </div>
+              <button
+                className="scroll-arrow right"
+                onClick={() => scrollMovies(index, 'right')}
+              >
+                &#62;
+              </button>
             </div>
-            <button
-              className="scroll-arrow right"
-              onClick={() => scrollMovies(index, 'right')}
-            >
-              &#62;
-            </button>
           </div>
-        </div>
-      ))}
+        );
+      })}
     </>
   );
 };
