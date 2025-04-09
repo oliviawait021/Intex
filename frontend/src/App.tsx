@@ -97,11 +97,43 @@ function App() {
           location="bottom"
           buttonText="Accept"
           cookieName="cookieConsent"
-          style={{ background: '#2B373B' }}
-          buttonStyle={{ color: '#4e503b', fontSize: '13px' }}
+          style={{
+            background: '#1e1e1e',
+            color: '#ffffff',
+            fontSize: '16px',
+            padding: '20px',
+            justifyContent: 'space-between',
+            alignItems: 'center',
+            display: 'flex',
+            flexWrap: 'wrap',
+          }}
+          buttonStyle={{
+            backgroundColor: '#6f5df5',
+            color: '#000',
+            fontWeight: 'bold',
+            padding: '10px 20px',
+            borderRadius: '5px',
+            fontSize: '14px',
+            border: 'none',
+            cursor: 'pointer',
+            marginTop: '10px',
+          }}
+          enableDeclineButton
+          declineButtonText="Decline"
+          declineButtonStyle={{
+            backgroundColor: '#bbb',
+            color: '#000',
+            fontWeight: 'bold',
+            padding: '10px 20px',
+            borderRadius: '5px',
+            fontSize: '14px',
+            border: 'none',
+            cursor: 'pointer',
+            marginLeft: '10px',
+          }}
           expires={365}
         >
-          This website uses cookies to enhance the user experience.
+          We use cookies to ensure you get the best experience on our website.
         </CookieConsent>
       </Router>
     </>

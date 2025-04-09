@@ -24,6 +24,14 @@ namespace cineNiche.API.Controllers
         [HttpGet("AllMovies")]
         public IActionResult Get(int pageHowMany = 10, int pageNum = 1, [FromQuery] List<string>? movieTypes = null)
         {
+            HttpContext.Response.Cookies.Append("favMovieType", "Movie", new CookieOptions()
+            {
+                HttpOnly = true,
+                Secure = true,
+                SameSite = SameSiteMode.Strict,
+                Expires = DateTime.Now.AddMinutes(5)
+            });
+            
             var query = _movieContext.MoviesTitles.AsQueryable();
 
             if (movieTypes is { Count: > 0 })

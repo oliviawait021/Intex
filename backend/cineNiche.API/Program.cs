@@ -143,26 +143,6 @@ app.UseHttpsRedirection();
 // Both authentication and authorization
 app.UseAuthentication();
 
-// Cookie
-app.Use(async (context, next) =>
-{
-    using var scope = app.Services.CreateScope();
-    var db = scope.ServiceProvider.GetRequiredService<MoviesContext>();
-
-    var movieType = await db.MoviesTitles.FirstOrDefaultAsync(t => t.Type == "Movie");
-    if (movieType != null)
-    {
-        context.Response.Cookies.Append("favMovieType", movieType.Type, new CookieOptions
-        {
-            HttpOnly = false,
-            SameSite = SameSiteMode.Strict,
-            Secure = true
-        });
-    }
-
-    await next();
-});
-
 // Authorization middleware
 app.UseAuthorization();
 

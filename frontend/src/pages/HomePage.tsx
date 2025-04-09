@@ -2,6 +2,7 @@ import React, { useState, useRef } from 'react';
 import './HomePage.css';
 import { Link } from 'react-router-dom';
 
+
 const movieData = [
   {
     name: 'The Matrix',
