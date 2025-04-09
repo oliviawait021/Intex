@@ -1,10 +1,12 @@
 import { useState } from 'react';
 import { Movie } from '../types/Movie';
-import { addMovie } from '../api/MoivesAPI';
+import { addMovie, getNextShowId } from '../api/MoivesAPI';
+
 interface NewMovieFormProps {
   onSuccess: () => void;
   onCancel: () => void;
 }
+
 const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
   const [formData, setFormData] = useState<Movie>({
     showId: '',
@@ -18,14 +20,21 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
     duration: '',
     description: '',
   });
+
   const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    await addMovie(formData);
+
+    const newShowId = await getNextShowId();
+    const newMovie = { ...formData, showId: newShowId };
+
+    await addMovie(newMovie);
     onSuccess();
   };
+
   return (
     <form onSubmit={handleSubmit}>
       <h2>Add New Movie</h2>
@@ -111,7 +120,7 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
             onChange={handleChange}
           />
         </label>
-        <button type="submit">Add Project</button>
+        <button type="submit">Add Movie</button>
         <button type="button" onClick={onCancel}>
           Cancel
         </button>
@@ -119,4 +128,5 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
     </form>
   );
 };
+
 export default NewMovieForm;

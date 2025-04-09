@@ -1,5 +1,10 @@
 import './App.css';
-import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from 'react-router-dom';
 import { useEffect, useState } from 'react';
 import LoginPage from './pages/LoginPage';
 import RegisterPage from './pages/RegisterPage';
@@ -11,7 +16,9 @@ import MovieDetailPage from './pages/MovieDetailPage';
 import PrivacyPage from './pages/PrivacyPage';
 
 function App() {
-  const [isAuthenticated, setIsAuthenticated] = useState(!!localStorage.getItem('authToken'));
+  const [isAuthenticated, setIsAuthenticated] = useState(
+    !!localStorage.getItem('authToken')
+  );
   const [userRole, setUserRole] = useState(localStorage.getItem('userRole'));
 
   useEffect(() => {
@@ -24,7 +31,8 @@ function App() {
         if (res.ok) {
           const data = await res.json();
           setIsAuthenticated(true);
-          const role = data.roles && data.roles.length > 0 ? data.roles[0] : 'Customer';
+          const role =
+            data.roles && data.roles.length > 0 ? data.roles[0] : 'Customer';
           setUserRole(role);
           localStorage.setItem('authToken', 'true');
           localStorage.setItem('userRole', role);
@@ -66,15 +74,18 @@ function App() {
     <>
       <Router>
         <Routes>
-          <Route path="/" element={<MoviesPage />} />
+          <Route path="/" element={<HomePage />} />
           <Route path="/movies" element={<MoviesPage />} />
-          <Route path="/adminmovies" element={
-            isAuthenticated && userRole === 'Admin' ? (
-              <AdminMoviesPage />
-            ) : (
-              <Navigate to="/" replace />
-            )
-          } />
+          <Route
+            path="/adminmovies"
+            element={
+              isAuthenticated && userRole === 'Admin' ? (
+                <AdminMoviesPage />
+              ) : (
+                <Navigate to="/" replace />
+              )
+            }
+          />
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/home" element={<HomePage />} />

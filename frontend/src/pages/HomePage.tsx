@@ -134,7 +134,7 @@ const HomePage: React.FC = () => {
     <>
       <div className="collage-container">
         <div className="collage-scroll scroll-row-1">
-          {posterPaths.concat(posterPaths).map((src, index) => (
+          {posterPaths.map((src, index) => (
             <img
               key={index}
               src={src}
