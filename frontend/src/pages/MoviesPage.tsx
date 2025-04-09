@@ -35,7 +35,7 @@ const MoviesPage: React.FC = () => {
   useEffect(() => {
     genres.forEach(async (genre) => {
       try {
-        const response = await axios.get(
+        const response = await axios.get<Movie[]>(
           `https://localhost:port/Movie/GetMoviesByGenre?genre=${genre}`
         );
         setMoviesByGenre((prev) => ({ ...prev, [genre]: response.data }));
