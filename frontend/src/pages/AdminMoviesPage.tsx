@@ -7,6 +7,7 @@ import NewMovieForm from '../components/NewMovieForm';
 import EditMovieForm from '../components/EditMovieForm';
 import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView';
 import Logout from '../components/Logout';
+import './AdminMoviesPage.css';
 
 const AdminMoviesPage = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -59,37 +60,18 @@ const AdminMoviesPage = () => {
   return (
     <>
       <AuthorizeView>
-        <Logout>
+        <Logout className="logout">
           Logout <AuthorizedUser value="email" />
         </Logout>
 
-        <h1>Admin Movies</h1>
-
-        {!showform && (
-          <button
-            className="btn btn-success mb-3"
-            onClick={() => setShowForm(true)}
-          >
-            New Movie
-          </button>
-        )}
-
-        {showform && (
-          <NewMovieForm
-            onSuccess={() => {
-              setShowForm(false);
-              fetchMovies(pageSize, pageNum, []).then((data) => {
-                setMovies(data.movies);
-                setTotalPages(
-                  Number.isFinite(data.totalNumber) && pageSize > 0
-                    ? Math.ceil(data.totalNumber / pageSize)
-                    : 0
-                );
-              });
-            }}
-            onCancel={() => setShowForm(false)}
-          />
-        )}
+        <div className="admin-header">
+          <div className="header-content">
+            <h1>Manage Movie Collection</h1>
+            <button className="add-movie-button" onClick={() => setShowForm(true)}>
+              Add Movie
+            </button>
+          </div>
+        </div>
 
         {editingMovie && (
           <EditMovieForm
@@ -109,43 +91,21 @@ const AdminMoviesPage = () => {
           />
         )}
 
-        <table className="table table-bordered table-striped">
-          <thead>
-            <tr>
-              <th>Show ID</th>
-              <th>Title</th>
-              <th>Type</th>
-              <th>Director</th>
-              <th>Cast</th>
-              <th>Country</th>
-              <th>Release Year</th>
-              <th>Rating</th>
-              <th>Duration</th>
-              <th>Description</th>
-              <th>Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {movies.map((m) => (
-              <tr key={m.showId}>
-                <td>{m.showId}</td>
-                <td>{m.title}</td>
-                <td>{m.type}</td>
-                <td>{m.director}</td>
-                <td>{m.cast}</td>
-                <td>{m.country}</td>
-                <td>{m.releaseYear}</td>
-                <td>{m.rating}</td>
-                <td>{m.duration}</td>
-                <td>{m.description}</td>
-                <td>
-                  <button onClick={() => setEditingMovie(m)}>Edit</button>
-                  <button onClick={() => handleDelete(m.showId)}>Delete</button>
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
+        <div className="movie-list">
+          {movies.map((m) => (
+            <div key={m.showId} className="movie-card">
+              <div className="movie-info">
+                <h2>{m.title}</h2>
+                <p>ID: {m.showId} - {m.type} - {m.releaseYear}</p>
+                <p>Status: Active</p>
+              </div>
+              <div className="movie-actions">
+                <button onClick={() => handleDelete(m.showId)} className="delete-btn">🗑️</button>
+                <button onClick={() => setEditingMovie(m)} className="edit-btn">✏️</button>
+              </div>
+            </div>
+          ))}
+        </div>
 
         <Pagination
           currentPage={pageNum}
@@ -158,9 +118,26 @@ const AdminMoviesPage = () => {
           }}
         />
 
-        <button className="btn btn-danger" onClick={() => navigate('/movies')}>
+        <button className="return-btn" onClick={() => navigate('/movies')}>
           Return to Movie Page
         </button>
+
+        {showform && (
+          <NewMovieForm
+            onSuccess={() => {
+              setShowForm(false);
+              fetchMovies(pageSize, pageNum, []).then((data) => {
+                setMovies(data.movies);
+                setTotalPages(
+                  Number.isFinite(data.totalNumber) && pageSize > 0
+                    ? Math.ceil(data.totalNumber / pageSize)
+                    : 0
+                );
+              });
+            }}
+            onCancel={() => setShowForm(false)}
+          />
+        )}
       </AuthorizeView>
     </>
   );
