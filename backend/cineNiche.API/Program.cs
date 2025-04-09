@@ -50,24 +50,6 @@ builder.Services.AddAuthentication(options =>
         options.DefaultScheme = CookieAuthenticationDefaults.AuthenticationScheme;
         options.DefaultChallengeScheme = GoogleDefaults.AuthenticationScheme;
     })
-    .AddCookie(options =>
-    {
-        options.Events = new CookieAuthenticationEvents
-        {
-            OnRedirectToLogin = context =>
-            {
-                context.Response.StatusCode = 401;
-                context.Response.ContentType = "application/json";
-                return context.Response.WriteAsync("{\"error\": \"You must be logged in to access this resource.\"}");
-            },
-            OnRedirectToAccessDenied = context =>
-            {
-                context.Response.StatusCode = 403;
-                context.Response.ContentType = "application/json";
-                return context.Response.WriteAsync("{\"error\": \"Access denied. Admins only.\"}");
-            }
-        };
-    })
     .AddGoogle(options =>
     {
         options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
@@ -119,15 +101,6 @@ builder.Services.Configure<IdentityOptions>(options =>
 
 builder.Services.AddScoped<IUserClaimsPrincipalFactory<IdentityUser>, CustomUserClaimsPrincipalFactory>();
 
-// Configure cookies
-builder.Services.ConfigureApplicationCookie(options =>
-{
-    options.Cookie.HttpOnly = true;
-    options.Cookie.SameSite = SameSiteMode.None;
-    options.Cookie.Name = ".AspNetCore.Identity.Application";
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-});
-
 // Cors Settings
 builder.Services.AddCors(options =>
     options.AddPolicy("AllowReactAppBlah",
@@ -141,6 +114,30 @@ builder.Services.AddCors(options =>
 
 // Email identity skeleton
 builder.Services.AddSingleton<IEmailSender<IdentityUser>, NoOpEmailSender<IdentityUser>>();
+
+builder.Services.ConfigureApplicationCookie(options =>
+{
+    options.Cookie.HttpOnly = true;
+    options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.Name = ".AspNetCore.Identity.Application";
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+
+    options.Events = new CookieAuthenticationEvents
+    {
+        OnRedirectToLogin = context =>
+        {
+            context.Response.StatusCode = 401;
+            context.Response.ContentType = "application/json";
+            return context.Response.WriteAsync("{\"error\": \"You must be logged in to access this resource.\"}");
+        },
+        OnRedirectToAccessDenied = context =>
+        {
+            context.Response.StatusCode = 403;
+            context.Response.ContentType = "application/json";
+            return context.Response.WriteAsync("{\"error\": \"Access denied. Admins only.\"}");
+        }
+    };
+});
 
 var app = builder.Build();
 
@@ -188,8 +185,18 @@ app.MapGet("/pingauth", async (ClaimsPrincipal user, UserManager<IdentityUser> u
     var email = user.FindFirstValue(ClaimTypes.Email) ?? "unknown@example.com";
     var identityUser = await userManager.FindByEmailAsync(email);
     var roles = identityUser != null ? await userManager.GetRolesAsync(identityUser) : new List<string>();
+    var isAdmin = user.IsInRole("Admin");
 
-    return Results.Json(new { email = email, roles = roles });
+    Console.WriteLine("🔐 IsInRole(Admin): " + isAdmin);
+    Console.WriteLine("👤 User.Identity.Name: " + user.Identity?.Name);
+
+    return Results.Json(new
+    {
+        email = email,
+        roles = roles,
+        isAdmin = isAdmin,
+        isAuthenticated = user.Identity?.IsAuthenticated ?? false
+    });
 }).RequireAuthorization();
 
 // google login and logout endpoints
