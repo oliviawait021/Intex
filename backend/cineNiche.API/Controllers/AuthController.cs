@@ -2,6 +2,7 @@ using Google.Apis.Auth;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Security.Claims;
+using System.Threading.Tasks; // Added import for Task
 
 namespace cineNiche.API.Controllers
 {
@@ -46,10 +47,40 @@ namespace cineNiche.API.Controllers
                 return BadRequest(new { error = "Invalid token", details = ex.Message });
             }
         }
+
+        [HttpGet("userinfo")]
+        public async Task<IActionResult> GetUserInfo()
+        {
+            var user = HttpContext.User;
+
+            var isAuthenticated = user.Identity?.IsAuthenticated ?? false;
+            var userName = user.Identity?.Name ?? "";
+
+            if (!isAuthenticated)
+            {
+                return Ok(new
+                {
+                    isAuthenticated = false,
+                    isAdmin = false,
+                    userName = ""
+                });
+            }
+
+            var identityUser = await _userManager.FindByNameAsync(userName);
+            var roles = await _userManager.GetRolesAsync(identityUser);
+
+            return Ok(new
+            {
+                isAuthenticated = true,
+                isAdmin = roles.Contains("Admin"),
+                userName
+            });
+        }
     }
 
     public class GoogleTokenRequest
     {
         public string Token { get; set; }
     }
+    
 }
