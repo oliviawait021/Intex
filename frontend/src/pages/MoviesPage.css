@@ -224,3 +224,18 @@
   font-size: 1.2rem;
   margin-top: 30px;
 }
+
+.movie-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+  gap: 1.5rem;
+  padding: 2rem;
+  justify-items: center;
+}
+
+.loading-text {
+  text-align: center;
+  color: white;
+  font-size: 1rem;
+  margin: 2rem;
+}

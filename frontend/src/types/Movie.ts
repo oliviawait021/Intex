@@ -9,7 +9,6 @@ export interface Movie {
   rating: string;
   duration: string;
   description: string;
-  genre?: string;
   action?: number;
   adventure?: number;
   animeSeriesInternationalTvShows?: number;
@@ -42,4 +41,5 @@ export interface Movie {
   tvDramas?: number;
   talkShowsTvComedies?: number;
   thrillers?: number;
+  genre?: string;
 }
