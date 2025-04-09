@@ -171,7 +171,7 @@ const HomePage: React.FC = () => {
       <div className="home-container">
         {/* Buttons for account creation and login */}
         <div className="account-buttons">
-          <Link to="/register" className="account-button">
+          <Link to="/signup" className="account-button">
             Create Your Account
           </Link>
           <Link to="/login" className="account-button">

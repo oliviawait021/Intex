@@ -19,6 +19,8 @@ body {
   padding: 3rem;
   border-radius: 16px;
   width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
@@ -44,10 +46,11 @@ body {
 
 .auth-input-group input {
   width: 100%;
-  padding: 0.75rem 1rem;
-  font-size: 1rem;
-  border-radius: 6px;
+  padding: 0.4rem 0.6rem;   /* ⬅️ smaller padding */
+  font-size: 0.85rem;       /* ⬅️ slightly smaller text */
+  border-radius: 4px;       /* ⬅️ smaller rounding if desired */
   border: 1px solid #ccc;
+  height: 2rem; 
 }
 
 /* Button */

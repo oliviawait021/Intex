@@ -272,6 +272,8 @@ namespace cineNiche.API.Migrations
                         .HasColumnType("INTEGER")
                         .HasColumnName("zip");
 
+                    b.HasKey("UserId");
+
                     b.ToTable("movies_users", (string)null);
                 });
 #pragma warning restore 612, 618

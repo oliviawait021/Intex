@@ -14,6 +14,7 @@ import AdminMoviesPage from './pages/AdminMoviesPage';
 import HomePage from './pages/HomePage';
 import MovieDetailPage from './pages/MovieDetailPage';
 import PrivacyPage from './pages/PrivacyPage';
+import UserSignUp from './pages/UserSignUp';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -91,6 +92,7 @@ function App() {
           <Route path="/home" element={<HomePage />} />
           <Route path="/details" element={<MovieDetailPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
+          <Route path="/signup" element={<UserSignUp />} />
         </Routes>
 
         <CookieConsent

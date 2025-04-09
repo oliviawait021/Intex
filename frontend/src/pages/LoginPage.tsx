@@ -26,7 +26,7 @@ function LoginPage() {
   };
 
   const handleRegisterClick = () => {
-    navigate('/register');
+    navigate('/SignUp');
   };
 
   // handle submit event for the form

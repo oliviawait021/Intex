@@ -205,6 +205,11 @@ namespace cineNiche.API.Migrations
 
             modelBuilder.Entity("cineNiche.API.Data.MoviesUser", b =>
                 {
+                    b.Property<int>("UserId")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("INTEGER")
+                        .HasColumnName("user_id");
+
                     b.Property<int?>("Age")
                         .HasColumnType("INTEGER")
                         .HasColumnName("age");
@@ -261,13 +266,11 @@ namespace cineNiche.API.Migrations
                         .HasColumnType("TEXT")
                         .HasColumnName("state");
 
-                    b.Property<int?>("UserId")
-                        .HasColumnType("INTEGER")
-                        .HasColumnName("user_id");
-
                     b.Property<int?>("Zip")
                         .HasColumnType("INTEGER")
                         .HasColumnName("zip");
+
+                    b.HasKey("UserId");
 
                     b.ToTable("movies_users", (string)null);
                 });

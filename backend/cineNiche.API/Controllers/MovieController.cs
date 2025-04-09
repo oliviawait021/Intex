@@ -131,5 +131,29 @@ namespace cineNiche.API.Controllers
 
             return Ok($"s{max + 1}");
         }
+        
+        [AllowAnonymous]
+        [HttpPost("RegisterUser")]
+        public IActionResult RegisterUser([FromBody] MoviesUser user)
+        {
+            try
+            {
+                if (user == null)
+                    return BadRequest("User data is null");
+
+                var maxId = _movieContext.MoviesUsers.Max(u => u.UserId);
+                user.UserId = maxId + 1;
+
+                _movieContext.MoviesUsers.Add(user);
+                _movieContext.SaveChanges();
+
+                return Ok(user);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"ERROR: {ex.Message}");
+                return StatusCode(500, $"Internal server error: {ex.Message}");
+            }
+        }
     }
 }

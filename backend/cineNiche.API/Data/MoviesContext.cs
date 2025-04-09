@@ -77,9 +77,8 @@ public partial class MoviesContext : DbContext
 
         modelBuilder.Entity<MoviesUser>(entity =>
         {
-            entity
-                .HasNoKey()
-                .ToTable("movies_users");
+            entity.HasKey(e => e.UserId);
+            entity.ToTable("movies_users");
 
             entity.Property(e => e.Age).HasColumnName("age");
             entity.Property(e => e.AmazonPrime).HasColumnName("Amazon Prime");
