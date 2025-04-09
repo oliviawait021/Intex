@@ -1,11 +1,10 @@
 /* Global background */
 body {
-  background: linear-gradient(to right, #0b061b, #0b061b);
+  background: linear-gradient(to right, #0b061b, #3b277f);
 }
 
 /* Wrapper around the form */
 .auth-wrapper {
-  background-color: #0a0617;
   height: 100vh;
   display: flex;
   justify-content: center;
@@ -46,11 +45,11 @@ body {
 
 .auth-input-group input {
   width: 100%;
-  padding: 0.4rem 0.6rem;   /* ⬅️ smaller padding */
-  font-size: 0.85rem;       /* ⬅️ slightly smaller text */
-  border-radius: 4px;       /* ⬅️ smaller rounding if desired */
+  padding: 0.4rem 0.6rem; /* ⬅️ smaller padding */
+  font-size: 0.85rem; /* ⬅️ slightly smaller text */
+  border-radius: 4px; /* ⬅️ smaller rounding if desired */
   border: 1px solid #ccc;
-  height: 3rem; 
+  height: 3rem;
 }
 
 /* Button */
