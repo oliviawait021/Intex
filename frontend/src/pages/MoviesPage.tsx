@@ -2,8 +2,6 @@ import React, { useState, useRef } from 'react';
 import './MoviesPage.css';
 import WelcomeBand from '../components/WelcomeBand';
 
-
-
 const genreOptions = [
   'Documentary & Reality',
   'Drama',

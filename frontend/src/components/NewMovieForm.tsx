@@ -22,7 +22,11 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
     description: '',
   });
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement>) => {
+  const handleChange = (
+    e: React.ChangeEvent<
+      HTMLInputElement | HTMLSelectElement | HTMLTextAreaElement
+    >
+  ) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
@@ -44,33 +48,70 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
           <form onSubmit={handleSubmit} style={{ width: '100%' }}>
             <div className="auth-input-group">
               <label htmlFor="title">Movie Title</label>
-              <input type="text" name="title" value={formData.title} onChange={handleChange} className="auth-input" />
+              <input
+                type="text"
+                name="title"
+                value={formData.title}
+                onChange={handleChange}
+                className="auth-input"
+              />
             </div>
             <div className="auth-input-group">
               <label htmlFor="director">Director</label>
-              <input type="text" name="director" value={formData.director} onChange={handleChange} className="auth-input" />
+              <input
+                type="text"
+                name="director"
+                value={formData.director}
+                onChange={handleChange}
+                className="auth-input"
+              />
             </div>
             <div className="auth-input-group">
               <label htmlFor="releaseYear">Year</label>
-              <select name="releaseYear" value={formData.releaseYear} onChange={handleChange} className="auth-input">
+              <select
+                name="releaseYear"
+                value={formData.releaseYear}
+                onChange={handleChange}
+                className="auth-input"
+              >
                 <option value="">Value</option>
                 {[...Array(50)].map((_, i) => {
                   const year = 2025 - i;
-                  return <option key={year} value={year}>{year}</option>;
+                  return (
+                    <option key={year} value={year}>
+                      {year}
+                    </option>
+                  );
                 })}
               </select>
             </div>
             <div className="auth-input-group">
               <label htmlFor="duration">Movie Duration</label>
-              <input type="text" name="duration" value={formData.duration} onChange={handleChange} className="auth-input" />
+              <input
+                type="text"
+                name="duration"
+                value={formData.duration}
+                onChange={handleChange}
+                className="auth-input"
+              />
             </div>
             <div className="auth-input-group">
               <label htmlFor="releaseDate">Release Date</label>
-              <input type="date" name="releaseDate" onChange={handleChange} className="auth-input" />
+              <input
+                type="date"
+                name="releaseDate"
+                onChange={handleChange}
+                className="auth-input"
+              />
             </div>
             <div className="auth-input-group">
               <label htmlFor="type">Type</label>
-              <select name="type" value={formData.type} onChange={handleChange} className="auth-input">
+              <select
+                name="type"
+                value={formData.type}
+                onChange={handleChange}
+                className="auth-input"
+              >
                 <option value="">Value</option>
                 <option value="Movie">Movie</option>
                 <option value="TV Show">TV Show</option>
@@ -78,7 +119,12 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
             </div>
             <div className="auth-input-group">
               <label htmlFor="rating">IMDB Rating</label>
-              <select name="rating" value={formData.rating} onChange={handleChange} className="auth-input">
+              <select
+                name="rating"
+                value={formData.rating}
+                onChange={handleChange}
+                className="auth-input"
+              >
                 <option value="">Value</option>
                 <option value="G">G</option>
                 <option value="PG">PG</option>
@@ -88,7 +134,11 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
             </div>
             <div className="auth-input-group">
               <label htmlFor="genre">Genre</label>
-              <select name="genre" onChange={handleChange} className="auth-input">
+              <select
+                name="genre"
+                onChange={handleChange}
+                className="auth-input"
+              >
                 <option value="">Value</option>
                 <option value="Drama">Drama</option>
                 <option value="Action">Action</option>
@@ -97,7 +147,12 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
             </div>
             <div className="auth-input-group">
               <label htmlFor="country">Country Made</label>
-              <select name="country" value={formData.country} onChange={handleChange} className="auth-input">
+              <select
+                name="country"
+                value={formData.country}
+                onChange={handleChange}
+                className="auth-input"
+              >
                 <option value="">Value</option>
                 <option value="USA">USA</option>
                 <option value="UK">UK</option>
@@ -106,9 +161,16 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
             </div>
             <div className="auth-input-group">
               <label htmlFor="cast">Cast List</label>
-              <textarea name="cast" value={formData.cast} onChange={handleChange} className="auth-input" />
+              <textarea
+                name="cast"
+                value={formData.cast}
+                onChange={handleChange}
+                className="auth-input"
+              />
             </div>
-            <button type="submit" className="auth-button">Submit</button>
+            <button type="submit" className="auth-button">
+              Submit
+            </button>
           </form>
         </div>
       </div>
