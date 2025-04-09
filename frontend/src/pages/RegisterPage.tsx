@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './identity.css';
+import { GoogleLogin } from '@react-oauth/google';
 
 function Register() {
   // state variables for email and passwords
@@ -113,6 +114,20 @@ function Register() {
           <button type="submit" className="auth-button">
             Register
           </button>
+
+          {/* Or use Google */}
+          <div className="auth-input-group">
+            <p style={{ textAlign: 'center', margin: '1rem 0' }}>or register using</p>
+            <GoogleLogin
+              onSuccess={(credentialResponse) => {
+                console.log('Google login success:', credentialResponse);
+                // Optionally send token to backend if you do verification on frontend
+              }}
+              onError={() => {
+                setError('Google login failed');
+              }}
+            />
+          </div>
 
           {/* Login link */}
           <div className="auth-footer">
