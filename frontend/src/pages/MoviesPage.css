@@ -83,9 +83,9 @@
   border-radius: 8px;
 }
 
-.movie-title {
+.movies-page-title-please {
   margin-top: 10px;
-  font-size: 1rem;
+  font-size: 1.25rem;
   font-weight: 500;
   color: white;
   white-space: normal;
