@@ -1,93 +1,19 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 import './HomePage.css';
 import { Link } from 'react-router-dom';
 import Footer from '../components/Footer';
-
-const movieData = [
-  {
-    name: 'The Matrix',
-    poster: '/images/the-matrix.jpg',
-  },
-  {
-    name: 'Inception',
-    poster: '/images/inception.jpg',
-  },
-  {
-    name: 'The Dark Knight',
-    poster: '/images/the-dark-night.jpg',
-  },
-  {
-    name: 'Avatar',
-    poster: '/images/avatar.jpg',
-  },
-  {
-    name: 'Interstellar',
-    poster: '/images/interstellar.jpg',
-  },
-  {
-    name: 'The Avengers',
-    poster: '/images/the-avengers.jpg',
-  },
-  {
-    name: 'The Godfather',
-    poster: '/images/the-godfather.jpg',
-  },
-  {
-    name: 'Forrest Gump',
-    poster: '/images/forrest-gump.jpg',
-  },
-  {
-    name: 'Titanic',
-    poster: '/images/titanic.jpg',
-  },
-  {
-    name: 'Brother Bear',
-    poster: '/images/brother-bear.jpg',
-  },
-  {
-    name: 'Mission: Impossible',
-    poster: '/images/mission-impossible.jpg',
-  },
-  {
-    name: 'Top Gun: Maverick',
-    poster: '/images/topgun.jpg',
-  },
-  {
-    name: 'Back to the Future',
-    poster: '/images/back-to-the-future.jpg',
-  },
-  {
-    name: 'Jurassic Park',
-    poster: '/images/jurassic-park.jpg',
-  },
-  {
-    name: 'The Silence of the Lambs',
-    poster: '/images/the-silence-of-the-lambs.jpg',
-  },
-  {
-    name: 'The Terminator',
-    poster: '/images/the-terminator.jpg',
-  },
-  {
-    name: 'The Green Mile',
-    poster: '/images/the-green-mile.jpg',
-  },
-  {
-    name: 'Coco',
-    poster: '/images/coco.jpg',
-  },
-];
+import { Movie } from '../types/Movie';
 
 const faqData = [
   {
     question: 'What is CineNiche?',
     answer:
-      'CineNiche is an up-and-coming movie streaming company focused on delivering curated, hard-to-find content to a passionate audience. Their catalog spans cult classics, international cinema, indie films, and niche documentaries, many of which are unavailable on larger mainstream platforms.',
+      'CineNiche is an up-and-coming movie streaming company focused on delivering curated, hard-to-find content to a passionate audience...',
   },
   {
     question: 'Where Can I Watch? ',
     answer:
-      'Despite serving a small content niche, CineNiche has seen rapid growth in its subscriber base and has developed apps for a wide range of platforms, including Windows, Mac, iOS, Android, Roku, AppleTV, and more.',
+      'Despite serving a small content niche, CineNiche has seen rapid growth in its subscriber base...',
   },
   {
     question: 'How much does CineNiche cost?',
@@ -96,11 +22,10 @@ const faqData = [
   {
     question: 'Is CineNiche good for kids?',
     answer:
-      'CineNiche has a wide variety of movies, including many kid friendly films. Parents can filter movies by rating to find the perfect movie that is appropriate for all family members.',
+      'CineNiche has a wide variety of movies, including many kid friendly films...',
   },
 ];
 
-//This is for Top screen
 const posterPaths1 = [
   '/images/imagesForTop/Case Closed.jpg',
   '/images/imagesForTop/Look Whos Back.jpg',
@@ -126,8 +51,9 @@ const posterPaths2 = [
 
 const HomePage: React.FC = () => {
   const [openIndex, setOpenIndex] = useState<number | null>(null);
+  const [trendingMovies, setTrendingMovies] = useState<Movie[]>([]);
+  const [newReleases, setNewReleases] = useState<Movie[]>([]);
 
-  // Explicitly typing the refs as an array of HTMLDivElement or null
   const movieContainerRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const toggleFAQ = (index: number) => {
@@ -138,14 +64,42 @@ const HomePage: React.FC = () => {
     if (movieContainerRefs.current[index]) {
       const scrollAmount =
         direction === 'left'
-          ? -movieContainerRefs.current[index].clientWidth
-          : movieContainerRefs.current[index].clientWidth;
-      movieContainerRefs.current[index].scrollBy({
+          ? -movieContainerRefs.current[index]!.clientWidth
+          : movieContainerRefs.current[index]!.clientWidth;
+      movieContainerRefs.current[index]!.scrollBy({
         left: scrollAmount,
         behavior: 'smooth',
       });
     }
   };
+
+  useEffect(() => {
+    fetch('https://localhost:5000/Movie/TrendingNow', {
+      credentials: 'include',
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
+        return res.json();
+      })
+      .then((data: Movie[]) => setTrendingMovies(data))
+      .catch((err) => console.error('Failed to fetch trending:', err));
+
+    fetch('https://localhost:5000/Movie/NewReleases', {
+      credentials: 'include',
+    })
+      .then((res) => {
+        if (!res.ok) throw new Error(`Fetch failed: ${res.status}`);
+        return res.json();
+      })
+      .then((data: Movie[]) => setNewReleases(data))
+      .catch((err) => console.error('Failed to fetch new releases:', err));
+  }, []);
+
+  const formatTitleForS3 = (title: string) =>
+    encodeURIComponent(title.trim()).replace(/%20/g, '+');
+
+  const getPosterUrl = (title: string) =>
+    `https://movie-posters8.s3.us-east-1.amazonaws.com/Movie+Posters/${formatTitleForS3(title)}.jpg`;
 
   return (
     <>
@@ -192,48 +146,95 @@ const HomePage: React.FC = () => {
           </Link>
         </div>
 
-        {/* Movie section repeated three times */}
-        {["What's Hot", 'Recommended for You', 'Coming Soon'].map(
-          (title, index) => (
-            <div key={index} className="movie-section">
-              <h2 className="section-title">{title}</h2>
+        {/* TRENDING NOW Carousel */}
+        <div className="movie-section">
+          <h2 className="section-title">Top Movies and Shows</h2>
 
-              <div className="movie-scroll-container">
-                <button
-                  className="scroll-arrow left"
-                  onClick={() => scrollMovies(index, 'left')}
-                >
-                  &#60;
-                </button>
-                <div
-                  className="movie-container"
-                  ref={(el) => {
-                    movieContainerRefs.current[index] = el;
-                  }} // Assigning ref without type issue
-                >
-                  {movieData.map((movie, movieIndex) => (
-                    <div className="movie-item" key={movieIndex}>
-                      <img
-                        src={movie.poster}
-                        alt={movie.name}
-                        className="movie-poster"
-                      />
-                      <div className="movies-home-page-title-please">
-                        {movie.name}
-                      </div>
-                    </div>
-                  ))}
+          <div className="movie-scroll-container">
+            <button
+              className="scroll-arrow left"
+              onClick={() => scrollMovies(0, 'left')}
+            >
+              &#60;
+            </button>
+
+            <div
+              className="movie-container"
+              ref={(el) => {
+                movieContainerRefs.current[0] = el;
+              }}
+            >
+              {trendingMovies.map((movie, index) => (
+                <div className="movie-item" key={index}>
+                  <img
+                    src={getPosterUrl(movie.title)}
+                    alt={movie.title}
+                    className="movie-poster"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src =
+                        '/images/default-poster.png';
+                    }}
+                  />
+                  <div className="movies-home-page-title-please">
+                    {movie.title}
+                  </div>
                 </div>
-                <button
-                  className="scroll-arrow right"
-                  onClick={() => scrollMovies(index, 'right')}
-                >
-                  &#62;
-                </button>
-              </div>
+              ))}
             </div>
-          )
-        )}
+
+            <button
+              className="scroll-arrow right"
+              onClick={() => scrollMovies(0, 'right')}
+            >
+              &#62;
+            </button>
+          </div>
+        </div>
+
+        {/* New Releases Carousel */}
+        <div className="movie-section">
+          <h2 className="section-title">New Releases</h2>
+
+          <div className="movie-scroll-container">
+            <button
+              className="scroll-arrow left"
+              onClick={() => scrollMovies(1, 'left')}
+            >
+              &#60;
+            </button>
+
+            <div
+              className="movie-container"
+              ref={(el) => {
+                movieContainerRefs.current[1] = el;
+              }}
+            >
+              {newReleases.map((movie, index) => (
+                <div className="movie-item" key={index}>
+                  <img
+                    src={getPosterUrl(movie.title)}
+                    alt={movie.title}
+                    className="movie-poster"
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src =
+                        '/images/default-poster.png';
+                    }}
+                  />
+                  <div className="movies-home-page-title-please">
+                    {movie.title}
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <button
+              className="scroll-arrow right"
+              onClick={() => scrollMovies(1, 'right')}
+            >
+              &#62;
+            </button>
+          </div>
+        </div>
 
         {/* FAQ section */}
         <div className="faq-container" id="faq">
@@ -254,7 +255,6 @@ const HomePage: React.FC = () => {
               )}
             </div>
           ))}
-
           <Footer />
         </div>
       </div>

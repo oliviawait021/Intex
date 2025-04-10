@@ -30,6 +30,8 @@ public partial class MoviesContext : DbContext
         modelBuilder.Entity<MoviesRating>(entity =>
         {
             entity.HasKey(e => new { e.UserId, e.ShowId });
+
+            entity.ToTable("movies_ratings");
             
             entity.Property(e => e.Rating).HasColumnName("rating");
             entity.Property(e => e.ShowId).HasColumnName("show_id");

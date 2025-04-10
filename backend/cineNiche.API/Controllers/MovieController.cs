@@ -31,7 +31,7 @@ namespace cineNiche.API.Controllers
                 SameSite = SameSiteMode.Lax,
                 Expires = DateTime.Now.AddMinutes(5)
             });
-            
+
             var query = _movieContext.MoviesTitles.AsQueryable();
 
             if (movieTypes is { Count: > 0 })
@@ -140,7 +140,7 @@ namespace cineNiche.API.Controllers
 
             return Ok($"s{max + 1}");
         }
-        
+
         [AllowAnonymous]
         [HttpPost("RegisterUser")]
         public IActionResult RegisterUser([FromBody] MoviesUser user)
@@ -178,6 +178,50 @@ namespace cineNiche.API.Controllers
 
             return Ok(movie);
         }
+        
+        [HttpGet("TrendingNow")]
+    public IActionResult GetTrendingNow()
+    {
+        // Step 1: Get all show_ids with a rating of 5
+        var trendingShowIds = _movieContext.MoviesRatings
+            .Where(r => r.Rating == 5)
+            .Select(r => r.ShowId)
+            .Distinct()
+            .ToList();
+
+        if (!trendingShowIds.Any())
+        {
+            return Ok(new List<MoviesTitle>());
+        }
+
+        // Step 2: Query MoviesTitles for matching show_ids (limit 20)
+        var trendingMovies = _movieContext.MoviesTitles
+            .Where(m => trendingShowIds.Contains(m.ShowId))
+            .Take(20)
+            .ToList();
+
+        return Ok(trendingMovies);
+    }
+
+    [HttpGet("NewReleases")]
+    [AllowAnonymous]
+    public IActionResult GetNewReleases()
+    {
+        try
+        {
+            var newMovies = _movieContext.MoviesTitles
+                .OrderByDescending(m => m.ReleaseYear)
+                .Take(20)
+                .ToList();
+
+            return Ok(newMovies);
+        }
+        catch (Exception ex)
+        {
+            Console.WriteLine("🔥 Error in NewReleases endpoint: " + ex.Message);
+            return StatusCode(500, "Internal Server Error: " + ex.Message);
+        }
+    }
 
 
     }
