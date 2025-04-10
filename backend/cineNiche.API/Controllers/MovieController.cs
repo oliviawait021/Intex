@@ -28,7 +28,7 @@ namespace cineNiche.API.Controllers
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.Strict,
+                SameSite = SameSiteMode.Lax,
                 Expires = DateTime.Now.AddMinutes(5)
             });
             
@@ -67,7 +67,7 @@ namespace cineNiche.API.Controllers
 
         // Add a new movie
         [HttpPost("AddMovie")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult AddMovie([FromBody] MoviesTitle newMovie)
         {
 
@@ -79,7 +79,7 @@ namespace cineNiche.API.Controllers
 
         // Update an existing movie
         [HttpPut("UpdateMovie/{showId}")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult UpdateMovie(string showId, [FromBody] MoviesTitle updatedMovie)
         {
             var existingMovie = _movieContext.MoviesTitles.Find(showId);
@@ -106,7 +106,7 @@ namespace cineNiche.API.Controllers
 
         // Delete a movie
         [HttpDelete("DeleteMovie/{showId}")]
-        //[Authorize(Roles = "Admin")]
+        [Authorize(Roles = "Admin")]
         public IActionResult DeleteMovie(string showId)
         {
             var movie = _movieContext.MoviesTitles.Find(showId);

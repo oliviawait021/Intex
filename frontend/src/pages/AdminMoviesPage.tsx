@@ -100,27 +100,30 @@ const AdminMoviesPage = () => {
         <div className="admin-controls">
           <div className="admin-header">
             <br />
-            <h1>Manage Movie Collection</h1>
-            <div className="admin-controls-row">
-              {userInfo.isAdmin && (
-                <>
-                  <button
-                    className="add-movie-button"
-                    onClick={() => {
-                      console.log('CLICKED ADD MOVIE');
-                      setShowForm(true);
-                    }}
-                  >
-                    Add Movie
-                  </button>
-                  <div className="search-bar-container">
-                    <div className="search-bar">
-                      <input
-                        type="text"
-                        placeholder="Search for a movie..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                      />
+              <h1>Manage Movie Collection</h1>
+              <div className="admin-controls-row">
+                {userInfo.isAdmin && (
+                  <>
+                    <button
+                      className="add-movie-button"
+                      onClick={() => {
+                        console.log("CLICKED ADD MOVIE");
+                        console.log("admin: "+  userInfo.isAdmin);
+                        console.log("auth: " + userInfo.isAuthenticated);
+                        setShowForm(true);
+                      }}
+                    >
+                      Add Movie
+                    </button>
+                    <div className="search-bar-container">
+                      <div className="search-bar">
+                        <input
+                          type="text"
+                          placeholder="Search for a movie..."
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                      </div>
                     </div>
                   </div>
                 </>
@@ -152,18 +155,19 @@ const AdminMoviesPage = () => {
         )}
 
         <div className="movie-list">
-          {movies
-            .filter((m) =>
-              m.title.toLowerCase().includes(searchTerm.toLowerCase())
-            )
-            .map((m) => (
-              <div key={m.showId} className="movie-card">
-                <div className="movie-info">
-                  <h2>{m.title}</h2>
-                  <p>
-                    ID: {m.showId} - {m.type} - {m.releaseYear}
-                  </p>
-                  <p>Type: {m.type}</p>
+        {movies
+          .filter((m) =>
+            m.title.toLowerCase().includes(searchTerm.toLowerCase())
+          )
+          .map((m) => (
+            <div key={m.showId} className="movie-card">
+              <div className="movie-poster-container">
+                <img src="/images/avatar.jpg" alt="Movie Poster" className="movie-poster" />
+              </div>
+              <div className="movie-info">
+                <h2>{m.title}</h2>
+                <p>ID: {m.showId} - {m.type} - {m.releaseYear}</p>
+                <p>Type: {m.type}</p>
                 </div>
                 <div className="movie-actions">
                   <button
