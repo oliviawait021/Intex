@@ -1,5 +1,4 @@
 .movie-detail .movie-detail-container {
-  background-color: #0e0b24;
   min-height: 100vh;
   color: white;
   padding: 3rem 1.5rem;
@@ -7,15 +6,15 @@
 
 .movie-detail .movie-detail-grid {
   max-width: 90rem;
-  margin: 0 auto;
+  margin: 0 auto; /* This centers the grid container */
   display: grid;
-  grid-template-columns: 1fr;
+  grid-template-columns: 1fr; /* Single column for mobile */
   gap: 3rem;
 }
 
 @media (min-width: 768px) {
-  .movie-detail-grid {
-    grid-template-columns: 1fr 2fr;
+  .movie-detail .movie-detail-grid {
+    grid-template-columns: 1fr 2fr; /* Two columns for larger screens */
   }
 }
 

@@ -141,8 +141,11 @@ const MoviesPage: React.FC = () => {
       ? movies
       : movies.filter((movie) => selectedGenres.includes(movie.genre));
 
-  const getPosterUrl = (filename: string) =>
-    `https://movie-posters8.s3.us-east-1.amazonaws.com/Movie+Posters/${filename}`;
+  const formatTitleForS3 = (title: string) =>
+    encodeURIComponent(title.trim()).replace(/%20/g, '+');
+
+  const getPosterUrl = (title: string) =>
+    `https://movie-posters8.s3.us-east-1.amazonaws.com/Movie+Posters/${formatTitleForS3(title)}.jpg`;
 
   return (
     <>
@@ -182,20 +185,17 @@ const MoviesPage: React.FC = () => {
                 key={movie.showId}
               >
                 <img
-                  src={getPosterUrl(
-                    `${movie.title.replace(/[^\p{L}\p{N}\s]/gu, '').trim()}.jpg`
-                  )}
+                  src={getPosterUrl(movie.title)}
                   alt={movie.title}
                   className="movie-poster"
-                  style={{ objectFit: 'contain' }}
                   onError={(e) => {
-                    console.warn('Poster not found for:', movie.title);
+                    console.log('Image not found for:', movie.title);
                     (e.currentTarget as HTMLImageElement).src =
                       '/images/default-poster.png';
                   }}
                 />
 
-                <div className="movies-page-title-please">{movie.title}</div>
+                <div className="movie-title">{movie.title}</div>
               </div>
             ))}
           </div>
@@ -223,20 +223,17 @@ const MoviesPage: React.FC = () => {
                 key={movie.showId}
               >
                 <img
-                  src={getPosterUrl(
-                    `${movie.title.replace(/[^\p{L}\p{N}\s]/gu, '').trim()}.jpg`
-                  )}
+                  src={getPosterUrl(movie.title)}
                   alt={movie.title}
                   className="movie-poster"
-                  style={{ objectFit: 'contain' }}
                   onError={(e) => {
-                    console.warn('Poster not found for:', movie.title);
+                    console.log('Image not found for:', movie.title);
                     (e.currentTarget as HTMLImageElement).src =
                       '/images/default-poster.png';
                   }}
                 />
 
-                <div className="movies-page-title-please">{movie.title}</div>
+                <div className="movie-title">{movie.title}</div>
               </div>
             ))}
           </div>
@@ -258,19 +255,17 @@ const MoviesPage: React.FC = () => {
             key={movie.showId}
           >
             <img
-              src={getPosterUrl(
-                `${movie.title.replace(/[^\p{L}\p{N}\s]/gu, '').trim()}.jpg`
-              )}
+              src={getPosterUrl(movie.title)}
               alt={movie.title}
               className="movie-poster"
               style={{ objectFit: 'contain' }}
               onError={(e) => {
-                console.warn('Poster not found for:', movie.title);
+                console.warn('Missing poster for:', movie.title);
                 (e.currentTarget as HTMLImageElement).src =
                   '/images/default-poster.png';
               }}
             />
-            <div className="movies-page-title-please">{movie.title}</div>
+            <div className="movie-title">{movie.title}</div>
           </div>
         ))}
       </div>
