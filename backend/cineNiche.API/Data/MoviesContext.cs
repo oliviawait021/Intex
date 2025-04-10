@@ -95,10 +95,10 @@ public partial class MoviesContext : DbContext
             entity.Property(e => e.Zip).HasColumnName("zip");
         });
 
-        modelBuilder.Entity<allContent_recs>(entity =>
-        {
-            entity.HasKey(e => new { e.source_show_id, e.recommended_show_id });
-        });
+        // modelBuilder.Entity<allContent_recs>(entity =>
+        // {
+        //     entity.HasKey(e => new { e.source_show_id, e.recommended_show_id });
+        // });
 
         OnModelCreatingPartial(modelBuilder);
     }
