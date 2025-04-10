@@ -74,9 +74,12 @@ const MoviesPage: React.FC = () => {
   const fetchMovies = async (page: number) => {
     setIsLoading(true);
     try {
-      const response = await fetch(`https://localhost:5000/Movie/AllMovies?pageHowMany=54&pageNum=${page}`, {
-        credentials: 'include',
-      });
+      const response = await fetch(
+        `https://localhost:5000/Movie/AllMovies?pageHowMany=54&pageNum=${page}`,
+        {
+          credentials: 'include',
+        }
+      );
 
       if (!response.ok) {
         throw new Error('Failed to fetch movies');
@@ -265,7 +268,7 @@ const MoviesPage: React.FC = () => {
                   '/images/default-poster.png';
               }}
             />
-            <div className="movie-title">{movie.title}</div>
+            <div className="movies-page-title-please">{movie.title}</div>
           </div>
         ))}
       </div>
@@ -277,5 +280,3 @@ const MoviesPage: React.FC = () => {
 };
 
 export default MoviesPage;
-
-
