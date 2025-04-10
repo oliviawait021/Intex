@@ -252,28 +252,32 @@ const MoviesPage: React.FC = () => {
 
       <h2 className="section-title">Movies</h2>
       <div className="movie-grid">
-        {filteredMovies.map((movie) => (
-          <div
-            onClick={() => handlePosterClick(movie.showId)}
-            className="movie-item"
-            key={movie.showId}
-          >
-            <img
-              src={getPosterUrl(
-                `${movie.title.replace(/[^\p{L}\p{N}\s]/gu, '').trim()}.jpg`
-              )}
-              alt={movie.title}
-              className="movie-poster"
-              style={{ objectFit: 'contain' }}
-              onError={(e) => {
-                console.warn('Poster not found for:', movie.title);
-                (e.currentTarget as HTMLImageElement).src =
-                  '/images/default-poster.png';
-              }}
-            />
-            <div className="movies-page-title-please">{movie.title}</div>
-          </div>
-        ))}
+        {filteredMovies.map((movie) => {
+          const posterUrl = getPosterUrl(movie.title);
+          console.log('Movie Title:', movie.title);
+          console.log('Poster URL:', posterUrl);
+          return (
+            <div className="movie-item" key={movie.showId}>
+              <img
+                src={posterUrl}
+                alt={movie.title}
+                className="movie-poster"
+                style={{ objectFit: 'contain' }}
+                onError={(e) => {
+                  console.warn(
+                    'Missing poster for:',
+                    movie.title,
+                    ' URL:',
+                    posterUrl
+                  );
+                  (e.currentTarget as HTMLImageElement).src =
+                    '/images/default-poster.png';
+                }}
+              />
+              <div className="movie-title">{movie.title}</div>
+            </div>
+          );
+        })}
       </div>
 
       <div ref={sentinelRef} style={{ height: '1px' }} />
