@@ -94,6 +94,10 @@
   padding: 0 0.5rem;
 }
 
+.movies-page-carousel-titles-size {
+  font-size: 1.25rem !important;
+}
+
 /* Grid of movies */
 .movie-grid {
   display: grid;

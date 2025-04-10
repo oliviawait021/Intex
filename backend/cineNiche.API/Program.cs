@@ -137,6 +137,9 @@ builder.Services.ConfigureApplicationCookie(options =>
     };
 });
 
+// Add HttpClient using IHttpClientFactory
+builder.Services.AddHttpClient();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.

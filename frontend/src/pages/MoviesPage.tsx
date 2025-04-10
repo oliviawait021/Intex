@@ -13,6 +13,11 @@ const genreOptions = [
   'Other / Miscellaneous',
 ];
 
+interface Recommendation {
+  rating: number;
+  show_id: string;
+}
+
 interface Movie {
   showId: string;
   title: string;
@@ -26,6 +31,10 @@ const MoviesPage: React.FC = () => {
   const [pageNum, setPageNum] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
+  const [forYou, setForYou] = useState<Movie[]>([]); // New state for top picks
+  const [forYouLoading, setForYouLoading] = useState(false);
+
   const [userInfo, setUserInfo] = useState<{ isAuthenticated: boolean }>({
     isAuthenticated: true,
   });
@@ -103,7 +112,84 @@ const MoviesPage: React.FC = () => {
   };
 
   useEffect(() => {
+    const getMovieDetails = async () => {
+      const movies: Movie[] = [];
+      for (const recommendation of recommendations) {
+        const movie = await fetchMovieImgandTitle(recommendation.show_id);
+        if (movie) {
+          movies.push(movie);
+        }
+      }
+      setForYou(movies);
+    };
+
+    if (recommendations.length > 0) {
+      getMovieDetails();
+    }
+  }, [recommendations]);
+
+  const fetchMovieImgandTitle = async (
+    showId: string
+  ): Promise<Movie | null> => {
+    try {
+      const response = await fetch(
+        `https://localhost:5000/Movie/GetMovieById/${showId}` // Replace with your actual API endpoint
+      );
+
+      if (!response.ok) {
+        throw new Error(`Failed to fetch movie details for ${showId}`);
+      }
+
+      const movieDetails = await response.json();
+      return movieDetails as Movie;
+    } catch (error) {
+      console.error(`Error fetching movie details for ${showId}:`, error);
+      return null;
+    }
+  };
+
+  const fetchRecommendations = async () => {
+    setForYouLoading(true);
+    try {
+      const response = await fetch(
+        'https://cold-start-recommender-esbaczgkgkhcdyhh.eastus-01.azurewebsites.net/recommend',
+        {
+          method: 'POST', // Explicitly using POST
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            age: 10, // Replace with actual user age
+            Male: 1, // Replace with actual user gender
+            Other: 0, // Replace with actual user gender
+            Netflix: 1, // Replace with actual user platform preference
+            'Amazon Prime': 0, // Replace with actual user platform preference
+            'Disney+': 0, // Replace with actual user platform preference
+            'Paramount+': 0, // Replace with actual user platform preference
+            Max: 0, // Replace with actual user platform preference
+            Hulu: 0, // Replace with actual user platform preference
+            'Apple TV+': 0, // Replace with actual user platform preference
+            Peacock: 0, // Replace with actual user platform preference
+          }),
+        }
+      );
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch recommendations');
+      }
+
+      const data = await response.json();
+      setRecommendations(data as Recommendation[]); // Store in recommendations
+    } catch (error) {
+      console.error('Error fetching recommendations:', error);
+    } finally {
+      setForYouLoading(false);
+    }
+  };
+
+  useEffect(() => {
     fetchMovies(pageNum);
+    fetchRecommendations();
   }, [pageNum]);
 
   useEffect(() => {
@@ -173,80 +259,86 @@ const MoviesPage: React.FC = () => {
 
       <div className="recommendation-section">
         <h2 className="section-title">Top Picks for You</h2>
-        <div className="movie-scroll-container">
-          <button
-            className="scroll-arrow left"
-            onClick={() => scrollCarousel(topPicksRef, 'left')}
-          >
-            &#60;
-          </button>
-          <div className="movie-container" ref={topPicksRef}>
-            {topPicks.map((movie) => (
-              <div
-                onClick={() => handlePosterClick(movie.showId)}
-                className="movie-item"
-                key={movie.showId}
-              >
-                <img
-                  src={getPosterUrl(movie.title)}
-                  alt={movie.title}
-                  className="movie-poster"
-                  onError={(e) => {
-                    console.log('Image not found for:', movie.title);
-                    (e.currentTarget as HTMLImageElement).src =
-                      '/images/default-poster.png';
-                  }}
-                />
+        {forYouLoading && <p>Loading top picks...</p>}
+        {!forYouLoading && (
+          <div className="movie-scroll-container">
+            <button
+              className="scroll-arrow left"
+              onClick={() => scrollCarousel(topPicksRef, 'left')}
+            >
+              &#60;
+            </button>
+            <div className="movie-container" ref={topPicksRef}>
+              {forYou.map((movie) => (
+                <div
+                  onClick={() => handlePosterClick(movie.showId)}
+                  className="movie-item"
+                  key={movie.showId}
+                >
+                  <img
+                    src={getPosterUrl(movie.title)}
+                    alt={movie.title}
+                    style={{ objectFit: 'contain' }}
+                    className="movie-poster"
+                    onError={(e) => {
+                      console.log('Image not found for:', movie.title);
+                      (e.currentTarget as HTMLImageElement).src =
+                        '/images/default-poster.png';
+                    }}
+                  />
 
-                <div className="movie-title">{movie.title}</div>
-              </div>
-            ))}
+                  <div className="movie-title movies-page-title-please movies-page-carousel-titles-size">
+                    {movie.title}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button
+              className="scroll-arrow right"
+              onClick={() => scrollCarousel(topPicksRef, 'right')}
+            >
+              &#62;
+            </button>
           </div>
-          <button
-            className="scroll-arrow right"
-            onClick={() => scrollCarousel(topPicksRef, 'right')}
-          >
-            &#62;
-          </button>
-        </div>
+        )}
+      </div>
 
-        <h2 className="section-title">Recommended For You</h2>
-        <div className="movie-scroll-container">
-          <button
-            className="scroll-arrow left"
-            onClick={() => scrollCarousel(becauseYouLikedRef, 'left')}
-          >
-            &#60;
-          </button>
-          <div className="movie-container" ref={becauseYouLikedRef}>
-            {becauseYouLiked.map((movie) => (
-              <div
-                onClick={() => handlePosterClick(movie.showId)}
-                className="movie-item"
-                key={movie.showId}
-              >
-                <img
-                  src={getPosterUrl(movie.title)}
-                  alt={movie.title}
-                  className="movie-poster"
-                  onError={(e) => {
-                    console.log('Image not found for:', movie.title);
-                    (e.currentTarget as HTMLImageElement).src =
-                      '/images/default-poster.png';
-                  }}
-                />
+      <h2 className="section-title">Recommended For You</h2>
+      <div className="movie-scroll-container">
+        <button
+          className="scroll-arrow left"
+          onClick={() => scrollCarousel(becauseYouLikedRef, 'left')}
+        >
+          &#60;
+        </button>
+        <div className="movie-container" ref={becauseYouLikedRef}>
+          {becauseYouLiked.map((movie) => (
+            <div
+              onClick={() => handlePosterClick(movie.showId)}
+              className="movie-item"
+              key={movie.showId}
+            >
+              <img
+                src={getPosterUrl(movie.title)}
+                alt={movie.title}
+                className="movie-poster"
+                onError={(e) => {
+                  console.log('Image not found for:', movie.title);
+                  (e.currentTarget as HTMLImageElement).src =
+                    '/images/default-poster.png';
+                }}
+              />
 
-                <div className="movie-title">{movie.title}</div>
-              </div>
-            ))}
-          </div>
-          <button
-            className="scroll-arrow right"
-            onClick={() => scrollCarousel(becauseYouLikedRef, 'right')}
-          >
-            &#62;
-          </button>
+              <div className="movie-title">{movie.title}</div>
+            </div>
+          ))}
         </div>
+        <button
+          className="scroll-arrow right"
+          onClick={() => scrollCarousel(becauseYouLikedRef, 'right')}
+        >
+          &#62;
+        </button>
       </div>
 
       <h2 className="section-title">Movies</h2>
