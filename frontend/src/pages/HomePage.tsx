@@ -218,7 +218,9 @@ const HomePage: React.FC = () => {
                         alt={movie.name}
                         className="movie-poster"
                       />
-                      <div className="movie-title">{movie.name}</div>
+                      <div className="movies-home-page-title-please">
+                        {movie.name}
+                      </div>
                     </div>
                   ))}
                 </div>
