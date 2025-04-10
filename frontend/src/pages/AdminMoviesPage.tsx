@@ -27,6 +27,10 @@ const AdminMoviesPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
+  const handlePosterClick = (showId: string) => {
+    navigate(`/admin/${showId}`);
+  };
+
   useEffect(() => {
     const loadMovies = async () => {
       try {
@@ -166,7 +170,11 @@ const AdminMoviesPage = () => {
                 m.title.toLowerCase().includes(searchTerm.toLowerCase())
               )
               .map((m) => (
-                <div key={m.showId} className="movie-card">
+                <div
+                  onClick={() => handlePosterClick(m.showId)}
+                  key={m.showId}
+                  className="movie-card"
+                >
                   <div className="movie-poster-container">
                     <img
                       src={getPosterUrl(m.title)}

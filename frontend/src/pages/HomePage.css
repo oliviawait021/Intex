@@ -266,7 +266,7 @@
 .collage-scroll {
   display: flex;
   flex-wrap: nowrap;
-  animation: scrollPosters 40s linear infinite;
+  animation: scrollPosters 45s linear infinite;
 }
 
 .poster {
@@ -278,7 +278,7 @@
 }
 
 .scroll-row-1 {
-  animation: scroll-left 30s linear infinite;
+  animation: scroll-left 45s linear infinite;
 }
 
 .scroll-row-2 {

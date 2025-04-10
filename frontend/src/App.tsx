@@ -15,6 +15,7 @@ import HomePage from './pages/HomePage';
 import MovieDetailPage from './pages/MovieDetailPage';
 import PrivacyPage from './pages/PrivacyPage';
 import UserSignUp from './pages/UserSignUp';
+import AdminDetailPage from './pages/AdminDetailPage';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -90,7 +91,8 @@ function App() {
           <Route path="/login" element={<LoginPage />} />
           <Route path="/register" element={<RegisterPage />} />
           <Route path="/home" element={<HomePage />} />
-          <Route path="/details" element={<MovieDetailPage />} />
+          <Route path="/movie/:showId" element={<MovieDetailPage />} />
+          <Route path="/admin/:showId" element={<AdminDetailPage />} />
           <Route path="/privacy" element={<PrivacyPage />} />
           <Route path="/signup" element={<UserSignUp />} />
         </Routes>

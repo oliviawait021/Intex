@@ -3,6 +3,7 @@ import './MoviesPage.css';
 import WelcomeBand from '../components/WelcomeBand';
 import axios from 'axios';
 import { fetchUserInfo } from '../api/MoviesAPI';
+import { useNavigate } from 'react-router-dom';
 
 const genreOptions = [
   'Documentary & Reality',
@@ -29,6 +30,11 @@ const MoviesPage: React.FC = () => {
   const [userInfo, setUserInfo] = useState<{ isAuthenticated: boolean }>({
     isAuthenticated: true,
   });
+
+  const navigate = useNavigate();
+  const handlePosterClick = (showId: string) => {
+    navigate(`/movie/${showId}`);
+  };
 
   const observer = useRef<IntersectionObserver | null>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -174,7 +180,11 @@ const MoviesPage: React.FC = () => {
           </button>
           <div className="movie-container" ref={topPicksRef}>
             {topPicks.map((movie) => (
-              <div className="movie-item" key={movie.showId}>
+              <div
+                onClick={() => handlePosterClick(movie.showId)}
+                className="movie-item"
+                key={movie.showId}
+              >
                 <img
                   src={getPosterUrl(movie.title)}
                   alt={movie.title}
@@ -208,7 +218,11 @@ const MoviesPage: React.FC = () => {
           </button>
           <div className="movie-container" ref={becauseYouLikedRef}>
             {becauseYouLiked.map((movie) => (
-              <div className="movie-item" key={movie.showId}>
+              <div
+                onClick={() => handlePosterClick(movie.showId)}
+                className="movie-item"
+                key={movie.showId}
+              >
                 <img
                   src={getPosterUrl(movie.title)}
                   alt={movie.title}
@@ -236,7 +250,11 @@ const MoviesPage: React.FC = () => {
       <h2 className="section-title">Movies</h2>
       <div className="movie-grid">
         {filteredMovies.map((movie) => (
-          <div className="movie-item" key={movie.showId}>
+          <div
+            onClick={() => handlePosterClick(movie.showId)}
+            className="movie-item"
+            key={movie.showId}
+          >
             <img
               src={getPosterUrl(movie.title)}
               alt={movie.title}

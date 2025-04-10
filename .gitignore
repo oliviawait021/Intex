@@ -49,3 +49,6 @@ file-structure.txt
 **/obj/
 
 node_modules/
+
+#secrete file
+.env
