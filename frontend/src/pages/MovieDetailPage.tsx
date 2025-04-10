@@ -101,12 +101,16 @@ const MovieDetailPage = () => {
 
   useEffect(() => {
     const loadMovie = async () => {
+      console.log("showId:", showId);
+      if (!showId) {
+        setError("No movie ID provided");
+        return;
+      }
       try {
-        if (showId) {
-          const data = await fetchMovieById(showId);
-          setMovie(data);
-        }
+        const data = await fetchMovieById(showId);
+        setMovie(data);
       } catch (err: any) {
+        console.error("Failed to fetch movie:", err);
         setError(err.message || 'Failed to load movie');
       }
     };
