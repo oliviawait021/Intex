@@ -169,10 +169,10 @@ const AdminMoviesPage = () => {
                 </div>
                 <div className="movie-info">
                   <h2>{m.title}</h2>
+                  <p>Director: {m.director}</p>
                   <p>
                     ID: {m.showId} - {m.type} - {m.releaseYear}
                   </p>
-                  <p>Type: {m.type}</p>
                 </div>
                 <div className="movie-actions">
                   <button
