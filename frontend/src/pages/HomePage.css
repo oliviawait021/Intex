@@ -65,11 +65,15 @@
 }
 
 /* Movie title */
-.movie-title {
+.movies-home-page-title-please {
   margin-top: 10px;
-  font-size: 1.2rem;
+  font-size: 1.25rem;
   font-weight: 500;
   color: white;
+  white-space: normal;
+  word-break: break-word;
+  text-align: center;
+  padding: 0 0.5rem;
 }
 
 /* Section titles */
