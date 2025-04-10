@@ -25,6 +25,7 @@ function App() {
   );
   const [userRole, setUserRole] = useState(localStorage.getItem('userRole'));
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
+  const [loadingAuth, setLoadingAuth] = useState(true);
 
   useEffect(() => {
     const fetchUser = async () => {
@@ -41,11 +42,13 @@ function App() {
           setUserRole(role);
           localStorage.setItem('authToken', 'true');
           localStorage.setItem('userRole', role);
+          setLoadingAuth(false);
         } else {
           setIsAuthenticated(false);
           setUserRole(null);
           localStorage.removeItem('authToken');
           localStorage.removeItem('userRole');
+          setLoadingAuth(false);
         }
       } catch (error) {
         console.error('Error checking authentication:', error);
@@ -53,6 +56,7 @@ function App() {
         setUserRole(null);
         localStorage.removeItem('authToken');
         localStorage.removeItem('userRole');
+        setLoadingAuth(false);
       }
     };
 
@@ -83,6 +87,7 @@ function App() {
         isDrawerOpen={isDrawerOpen}
         setIsDrawerOpen={setIsDrawerOpen}
         setIsAuthenticated={setIsAuthenticated}
+        loadingAuth={loadingAuth}
       />
       <CookieConsent
         location="bottom"
@@ -135,15 +140,19 @@ function AppContent({
   userRole,
   isDrawerOpen,
   setIsDrawerOpen,
-  setIsAuthenticated
+  setIsAuthenticated,
+  loadingAuth
 }: {
   isAuthenticated: boolean;
   userRole: string | null;
   isDrawerOpen: boolean;
   setIsDrawerOpen: React.Dispatch<React.SetStateAction<boolean>>;
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
+  loadingAuth: boolean;
 }) {
   const location = useLocation();
+  if (loadingAuth) return <div>Loading...</div>;
+
   const showDrawer =
     isAuthenticated &&
     ["/", "/movies", "/adminmovies", "/privacy"].includes(
@@ -205,6 +214,7 @@ function AppContent({
                 )
               }
             />
+            <Route path="/movie/:showId" element={<MovieDetailPage />} />
             <Route path="/details" element={<MovieDetailPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/signup" element={<UserSignUp />} />
