@@ -26,9 +26,6 @@ const MoviesPage: React.FC = () => {
   const [pageNum, setPageNum] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [userInfo, setUserInfo] = useState<{ isAuthenticated: boolean }>({
-    isAuthenticated: true,
-  });
 
   const navigate = useNavigate();
   const handlePosterClick = (showId: string) => {
@@ -112,8 +109,7 @@ const MoviesPage: React.FC = () => {
 
   useEffect(() => {
     fetchUserInfo()
-      .then((info) => {
-        setUserInfo(info);
+      .then((info: { isAuthenticated: boolean }) => {
         if (!info.isAuthenticated) {
           alert('You must be logged in to view this page.');
         }

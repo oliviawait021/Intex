@@ -137,7 +137,7 @@ export interface UserInfo {
 }
 
 export const fetchUserInfo = async (): Promise<UserInfo> => {
-  const res = await fetch(`${API_URL}/api/auth/userinfo`, {
+  const res = await fetch(`${baseURL}/api/auth/userinfo`, {
     credentials: 'include',
   });
 

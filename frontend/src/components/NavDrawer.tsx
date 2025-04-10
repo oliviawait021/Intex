@@ -8,8 +8,7 @@ interface NavDrawerProps {
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const NavDrawer: React.FC<NavDrawerProps> = ({ isOpen, onClose, setIsAuthenticated }) => {
-  if (!isOpen) return null;
+const NavDrawer: React.FC<NavDrawerProps> = ({ isOpen, setIsAuthenticated }) => {  if (!isOpen) return null;
 
   const navigate = useNavigate();
   const [userRole, setUserRole] = useState<string | null>(null);

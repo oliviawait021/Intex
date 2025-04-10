@@ -53,7 +53,7 @@ function WelcomeBand() {
         </div>
       </header>
 
-      <NavDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} setIsAuthenticated={function (value: SetStateAction<boolean>): void {
+      <NavDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} setIsAuthenticated={function (_: SetStateAction<boolean>): void {
         throw new Error('Function not implemented.');
       } } />
     </>
