@@ -27,23 +27,19 @@ var builder = WebApplication.CreateBuilder(args);
 // });
 
 DotNetEnv.Env.Load("backend.env"); // or just .Env.Load() if it's in the root
-Console.WriteLine("🌱 Environment variables loaded from backend.env");
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-Console.WriteLine("🔧 Controllers added");
 
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-Console.WriteLine("📘 Swagger setup added");
 
 // Database Context
 builder.Services.AddDbContext<MoviesContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("MovieConnection")));
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("IdentityConnection")));
-Console.WriteLine("🗄️ Database contexts configured");
 
 // Add authorization
 builder.Services.AddAuthorization();
@@ -82,7 +78,6 @@ builder.Services.AddAuthentication(options =>
             await signInManager.SignInAsync(user, isPersistent: false);
         };
     });
-Console.WriteLine("🔐 Authentication configured");
 
 //Add user and role identity, includes password credentials
 builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
@@ -97,7 +92,6 @@ builder.Services.AddIdentity<IdentityUser, IdentityRole>(options =>
     .AddRoles<IdentityRole>()
     .AddEntityFrameworkStores<ApplicationDbContext>()
     .AddDefaultTokenProviders();
-Console.WriteLine("🆔 Identity services configured");
 
 builder.Services.Configure<IdentityOptions>(options =>
 {
@@ -117,7 +111,6 @@ builder.Services.AddCors(options =>
             .AllowAnyMethod()
             .AllowCredentials();
     }));
-Console.WriteLine("🌐 CORS policy configured");
 
 // Email identity skeleton
 builder.Services.AddSingleton<IEmailSender<IdentityUser>, NoOpEmailSender<IdentityUser>>();
@@ -146,36 +139,27 @@ builder.Services.ConfigureApplicationCookie(options =>
         }
     };
 });
-Console.WriteLine("🍪 Application cookie configured");
 
 var app = builder.Build();
-Console.WriteLine("🚀 App built and ready to configure middleware");
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
 {
-    Console.WriteLine("🛠️ Development environment detected — enabling Swagger UI");
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
 app.UseCors("AllowReactAppBlah");
-Console.WriteLine("🧰 CORS middleware activated");
 
 app.UseHttpsRedirection();
-Console.WriteLine("🔐 HTTPS redirection enabled");
 
 app.UseAuthentication();
-Console.WriteLine("👤 Authentication middleware enabled");
 
 app.UseAuthorization();
-Console.WriteLine("🔒 Authorization middleware enabled");
 
 app.MapControllers();
-Console.WriteLine("📡 Controller routes mapped");
 
 app.MapIdentityApi<IdentityUser>();
-Console.WriteLine("👥 Identity API endpoints mapped");
 
 // Logout post
 app.MapPost("/logout", async (HttpContext context, SignInManager<IdentityUser> signInManager) =>
@@ -207,9 +191,6 @@ app.MapGet("/pingauth", async (ClaimsPrincipal user, UserManager<IdentityUser> u
     var identityUser = await userManager.FindByEmailAsync(email);
     var roles = identityUser != null ? await userManager.GetRolesAsync(identityUser) : new List<string>();
     var isAdmin = user.IsInRole("Admin");
-
-    Console.WriteLine("🔐 IsInRole(Admin): " + isAdmin);
-    Console.WriteLine("👤 User.Identity.Name: " + user.Identity?.Name);
 
     return Results.Json(new
     {
@@ -243,4 +224,3 @@ app.MapGet("/logout", async context =>
 }).RequireCors("AllowReactAppBlah");
 
 app.Run();
-Console.WriteLine("🚦 App is now running");
