@@ -6,7 +6,7 @@ import {
   fetchMovies,
   fetchUserInfo,
   UserInfo,
-} from '../api/MoivesAPI';
+} from '../api/MoviesAPI';
 import Pagination from '../components/Pagination';
 import NewMovieForm from '../components/NewMovieForm';
 import EditMovieForm from '../components/EditMovieForm';
