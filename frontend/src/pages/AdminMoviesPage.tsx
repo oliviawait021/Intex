@@ -104,10 +104,6 @@ const AdminMoviesPage = () => {
     <>
       <div className="admin-page">
         <AuthorizeView>
-          <Logout>
-            Logout <AuthorizedUser value="role" />
-          </Logout>
-
           <div className="admin-controls">
             <div className="admin-header">
               <br />
@@ -141,113 +137,119 @@ const AdminMoviesPage = () => {
               </div>
             </div>
           </div>
-
-          {editingMovie && (
-            <div className="modal-backdrop">
-              <div className="modal-content">
-                <EditMovieForm
-                  movie={editingMovie}
-                  onSuccess={() => {
-                    setEditingMovie(null);
-                    fetchMovies(pageSize, pageNum, []).then((data) => {
-                      setMovies(data.movies);
-                      setTotalPages(
-                        Number.isFinite(data.totalNumber) && pageSize > 0
-                          ? Math.ceil(data.totalNumber / pageSize)
-                          : 0
-                      );
-                    });
-                  }}
-                  onCancel={() => setEditingMovie(null)}
-                />
-              </div>
-            </div>
-          )}
-
-          <div className="movie-list">
-            {movies
-              .filter((m) =>
-                m.title.toLowerCase().includes(searchTerm.toLowerCase())
-              )
-              .map((m) => (
-                <div
-                  onClick={() => handlePosterClick(m.showId)}
-                  key={m.showId}
-                  className="movie-card"
-                >
-                  <div className="movie-poster-container">
-                    <img
-                      src={getPosterUrl(m.title)}
-                      alt={m.title}
-                      className="movie-poster"
-                      onError={(e) => {
-                        console.warn('Missing poster for:', m.title);
-                        (e.currentTarget as HTMLImageElement).src =
-                          '/images/default-poster.png';
-                      }}
-                    />
-                  </div>
-                  <div className="movie-info">
-                    <h2>{m.title}</h2>
-                    <p>
-                      ID: {m.showId} - {m.type} - {m.releaseYear}
-                    </p>
-                    <p>Type: {m.type}</p>
-                  </div>
-                  <div className="movie-actions">
-                    <button
-                      onClick={() => setEditingMovie(m)}
-                      className="edit-btn"
-                    >
-                      <img src="/icons/editing.png" alt="Edit" />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(m.showId)}
-                      className="delete-btn"
-                    >
-                      <img src="/icons/bin.png" alt="Delete" />
-                    </button>
-                  </div>
-                </div>
-              ))}
-          </div>
-
-          <Pagination
-            currentPage={pageNum}
-            totalPages={totalPages}
-            pageSize={pageSize}
-            onPageChange={setPageNum}
-            onPageSizeChange={(newSize) => {
-              setPageSize(newSize);
-              setPageNum(1);
-            }}
-          />
-
-          <button className="return-btn" onClick={() => navigate('/movies')}>
-            Return to Movie Page
-          </button>
-
-          {showform && (
-            <div className="modal-backdrop">
-              <div className="modal-content">
-                <NewMovieForm
-                  onSuccess={() => {
-                    setShowForm(false);
-                    fetchMovies(pageSize, pageNum, []).then((data) => {
-                      setMovies(data.movies);
-                      setTotalPages(
-                        Number.isFinite(data.totalNumber) && pageSize > 0
-                          ? Math.ceil(data.totalNumber / pageSize)
-                          : 0
-                      );
-                    });
-                  }}
-                  onCancel={() => setShowForm(false)}
-                />
-              </div>
-            </div>
-          )}
         </AuthorizeView>
+
+        {editingMovie && (
+          <div className="modal-backdrop">
+            <div className="modal-content">
+              <EditMovieForm
+                movie={editingMovie}
+                onSuccess={() => {
+                  setEditingMovie(null);
+                  fetchMovies(pageSize, pageNum, []).then((data) => {
+                    setMovies(data.movies);
+                    setTotalPages(
+                      Number.isFinite(data.totalNumber) && pageSize > 0
+                        ? Math.ceil(data.totalNumber / pageSize)
+                        : 0
+                    );
+                  });
+                }}
+                onCancel={() => setEditingMovie(null)}
+              />
+            </div>
+          </div>
+        )}
+
+        <div className="movie-list">
+          {movies
+            .filter((m) =>
+              m.title.toLowerCase().includes(searchTerm.toLowerCase())
+            )
+            .map((m) => (
+              <div
+                onClick={() => handlePosterClick(m.showId)}
+                key={m.showId}
+                className="movie-card"
+              >
+                <div className="movie-poster-container">
+                  <img
+                    src={getPosterUrl(m.title)}
+                    alt={m.title}
+                    className="movie-poster"
+                    onError={(e) => {
+                      console.warn('Missing poster for:', m.title);
+                      (e.currentTarget as HTMLImageElement).src =
+                        '/images/default-poster.png';
+                    }}
+                  />
+                </div>
+                <div className="movie-info">
+                  <h2>{m.title}</h2>
+                  <p>
+                    ID: {m.showId} - {m.type} - {m.releaseYear}
+                  </p>
+                  <p>Type: {m.type}</p>
+                </div>
+                <div className="movie-actions">
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEditingMovie(m);
+                    }}
+                    className="edit-btn"
+                  >
+                    <img src="/icons/editing.png" alt="Edit" />
+                  </button>
+                  <button
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(m.showId);
+                    }}
+                    className="delete-btn"
+                  >
+                    <img src="/icons/bin.png" alt="Delete" />
+                  </button>
+                </div>
+              </div>
+            ))}
+        </div>
+
+        <Pagination
+          currentPage={pageNum}
+          totalPages={totalPages}
+          pageSize={pageSize}
+          onPageChange={setPageNum}
+          onPageSizeChange={(newSize) => {
+            setPageSize(newSize);
+            setPageNum(1);
+          }}
+        />
+
+        <button className="return-btn" onClick={() => navigate('/movies')}>
+          Return to Movie Page
+        </button>
+
+        {showform && (
+          <div className="modal-backdrop">
+            <div className="modal-content">
+              <NewMovieForm
+                onSuccess={() => {
+                  setShowForm(false);
+                  fetchMovies(pageSize, pageNum, []).then((data) => {
+                    setMovies(data.movies);
+                    setTotalPages(
+                      Number.isFinite(data.totalNumber) && pageSize > 0
+                        ? Math.ceil(data.totalNumber / pageSize)
+                        : 0
+                    );
+                  });
+                }}
+                onCancel={() => setShowForm(false)}
+              />
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

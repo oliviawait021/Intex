@@ -36,7 +36,7 @@ const AdminDetailPage = () => {
     try {
       await deleteMovie(id);
       alert('Movie deleted successfully');
-      navigate('/admin/movies'); // Redirect back to admin list
+      navigate('/adminmovies'); // Redirect back to admin list
     } catch (error: any) {
       if (error.response?.status === 401) {
         alert('You must be logged in to delete a movie.');

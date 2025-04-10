@@ -1,7 +1,6 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './MoviesPage.css';
 import WelcomeBand from '../components/WelcomeBand';
-import axios from 'axios';
 import { fetchUserInfo } from '../api/MoviesAPI';
 import { useNavigate } from 'react-router-dom';
 
@@ -75,16 +74,16 @@ const MoviesPage: React.FC = () => {
   const fetchMovies = async (page: number) => {
     setIsLoading(true);
     try {
-      const response = await axios.get<{
-        movies: Movie[];
-        totalNumber: number;
-      }>('https://localhost:5000/Movie/AllMovies', {
-        params: {
-          pageHowMany: 54,
-          pageNum: page,
-        },
+      const response = await fetch(`https://localhost:5000/Movie/AllMovies?pageHowMany=54&pageNum=${page}`, {
+        credentials: 'include',
       });
-      const { movies: newMovies, totalNumber } = response.data;
+
+      if (!response.ok) {
+        throw new Error('Failed to fetch movies');
+      }
+
+      const data = await response.json();
+      const { movies: newMovies, totalNumber } = data;
       setMovies((prev) => {
         const existingIds = new Set(prev.map((m) => m.showId));
         const uniqueNewMovies = newMovies.filter(
@@ -283,3 +282,5 @@ const MoviesPage: React.FC = () => {
 };
 
 export default MoviesPage;
+
+

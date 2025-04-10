@@ -19,7 +19,8 @@ function Logout(props: { children: React.ReactNode }) {
         localStorage.removeItem('userRole');
         localStorage.removeItem('authToken');
         setTimeout(() => {
-          navigate('/home');
+          alert('You have been logged out.');
+          navigate('/');
           window.location.reload(); // Ensure React state resets
         }, 300); // Delay to allow cookies/session to sync
       } else {

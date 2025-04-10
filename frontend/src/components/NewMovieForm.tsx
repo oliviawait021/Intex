@@ -171,6 +171,7 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
             <button type="submit" className="auth-button">
               Submit
             </button>
+            <button type="button" className="auth-button" onClick={onCancel}>Cancel</button>
           </form>
         </div>
       </div>

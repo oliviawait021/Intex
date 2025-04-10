@@ -11,7 +11,7 @@ export default defineConfig({
       'Content-Security-Policy':
         "default-src 'self'; " +
         "script-src 'self' 'unsafe-inline' 'unsafe-eval' https://accounts.google.com https://apis.google.com; " +
-        "style-src 'self' 'unsafe-inline' fonts.googleapis.com; " +
+        "style-src 'self' 'unsafe-inline' fonts.googleapis.com https://accounts.google.com; " +
         "img-src 'self' data: https://movie-posters8.s3.us-east-1.amazonaws.com; " +
         'frame-src https://accounts.google.com; ' +
         "frame-ancestors 'none'; " +
