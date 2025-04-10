@@ -24,11 +24,9 @@ function Logout(props: { children: React.ReactNode }) {
             .replace(/^ +/, "")
             .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
         });
-        setTimeout(() => {
-          alert('You have been logged out.');
-          navigate('/');
-          window.location.reload(); // Ensure React state resets
-        }, 300); // Delay to allow cookies/session to sync
+        alert('You have been logged out.');
+        navigate('/');
+        window.location.reload(); // Ensure React state resets
       } else {
         console.error('Logout failed:', response.status);
       }
