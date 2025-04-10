@@ -179,26 +179,50 @@ app.MapPost("/logout", async (HttpContext context, SignInManager<IdentityUser> s
     return Results.Ok(new { message = "Logout successful" });
 }).RequireAuthorization();
 
-// Ping Aut api enpoint
+// Ping Auth api endpoint
 app.MapGet("/pingauth", async (ClaimsPrincipal user, UserManager<IdentityUser> userManager) =>
 {
-    if (!user.Identity?.IsAuthenticated ?? false)
+    try
     {
-        return Results.Unauthorized();
+        Console.WriteLine("🔔 /pingauth called");
+
+        if (!user.Identity?.IsAuthenticated ?? false)
+        {
+            Console.WriteLine("⚠️ User is not authenticated.");
+            return Results.Unauthorized();
+        }
+
+        var email = user.FindFirstValue(ClaimTypes.Email) ?? "unknown@example.com";
+        Console.WriteLine($"📧 Email from claims: {email}");
+
+        var identityUser = await userManager.FindByEmailAsync(email);
+
+        if (identityUser == null)
+        {
+            Console.WriteLine("❌ No user found with that email.");
+            return Results.BadRequest(new { error = "User not found for email: " + email });
+        }
+
+        var roles = await userManager.GetRolesAsync(identityUser);
+        var isAdmin = roles.Contains("Admin");
+
+        Console.WriteLine("✅ User and roles successfully retrieved.");
+
+        return Results.Json(new
+        {
+            email = email,
+            roles = roles,
+            isAdmin = isAdmin,
+            isAuthenticated = true
+        });
     }
-
-    var email = user.FindFirstValue(ClaimTypes.Email) ?? "unknown@example.com";
-    var identityUser = await userManager.FindByEmailAsync(email);
-    var roles = identityUser != null ? await userManager.GetRolesAsync(identityUser) : new List<string>();
-    var isAdmin = user.IsInRole("Admin");
-
-    return Results.Json(new
+    catch (Exception ex)
     {
-        email = email,
-        roles = roles,
-        isAdmin = isAdmin,
-        isAuthenticated = user.Identity?.IsAuthenticated ?? false
-    });
+        Console.WriteLine("🔥 PingAuth error:");
+        Console.WriteLine(ex.ToString());
+
+        return Results.Problem($"PingAuth error: {ex.Message}\n{ex.StackTrace}");
+    }
 }).RequireAuthorization().RequireCors("AllowReactAppBlah");
 
 // google login and logout endpoints
