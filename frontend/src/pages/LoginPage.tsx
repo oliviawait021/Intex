@@ -4,7 +4,30 @@ import './Identity.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 import { GoogleLogin } from '@react-oauth/google';
 
-function LoginPage() {
+const fetchUser = async () => {
+  try {
+    const res = await fetch('https://localhost:5000/pingauth', {
+      credentials: 'include',
+    });
+
+    if (res.ok) {
+      const data = await res.json();
+      localStorage.setItem('authToken', 'true');
+      const role =
+        data.roles && data.roles.length > 0 ? data.roles[0] : 'Customer';
+      localStorage.setItem('userRole', role);
+    } else {
+      localStorage.removeItem('authToken');
+      localStorage.removeItem('userRole');
+    }
+  } catch (error) {
+    console.error('Error checking authentication:', error);
+    localStorage.removeItem('authToken');
+    localStorage.removeItem('userRole');
+  }
+};
+
+function LoginPage({ setIsAuthenticated }: { setIsAuthenticated: (value: boolean) => void }) {
   // state variables for email and passwords
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -66,12 +89,13 @@ function LoginPage() {
 
       // Store username in localStorage (or sessionStorage, depending on your preference)
       localStorage.setItem('username', email);
+      await fetchUser();
+      setIsAuthenticated(true);
 
-      
       setTimeout(() => {
-        window.location.reload();
-      }, 200); // short delay to ensure cookies/session updates are processed
-      navigate('/movies');
+        navigate('/movies');
+        // window.location.reload(); // optional: only if absolutely needed
+      }, 300); // short delay to ensure cookies/session updates are processed
     } catch (error: any) {
       // handle network or fetch error
       setError(error.message || 'Error logging in.');
@@ -82,6 +106,9 @@ function LoginPage() {
   return (
     <div className="auth-wrapper">
       <div className="auth-content">
+      <div className="back-button" onClick={() => window.history.back()}>
+        &#x2B95;
+      </div>
         <img src="/images/logo.png" alt="Logo" className="auth-logo" />
         <div className="auth-card">
           <h2 className="auth-title">Sign in to continue</h2>
@@ -113,15 +140,19 @@ function LoginPage() {
             </div>
 
             {/* Remember me checkbox */}
-            <div className="auth-input-group" style={{ fontSize: '1rem' }}>
+            <div
+              className="auth-input-group"
+              style={{ fontSize: '1rem', display: 'flex', alignItems: 'left', justifyContent: 'flex-start', gap: '0.25rem' }}
+            >
               <input
                 type="checkbox"
                 id="rememberme"
                 name="rememberme"
                 checked={rememberme}
                 onChange={handleChange}
+                style={{ transform: 'scale(0.8)' }}
               />
-              <label htmlFor="rememberme" style={{ marginLeft: '0.5rem' }}>
+              <label htmlFor="rememberme">
                 Remember me?
               </label>
             </div>
@@ -171,10 +202,12 @@ function LoginPage() {
 
                   const data = await response.json();
                   console.log('Backend login success:', data);
+                  await fetchUser();
+                  setIsAuthenticated(true);
                   setTimeout(() => {
-                    window.location.reload();
-                  }, 200);
-                  navigate('/movies');
+                    navigate('/movies');
+                    // window.location.reload(); // optional
+                  }, 300);
                   
                 } catch (error) {
                   console.error('Error during Google login:', error);

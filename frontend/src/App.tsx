@@ -179,9 +179,8 @@ function AppContent({
         </>
       )}
       <Routes>
-        <Route path="/login" element={<LoginPage />} />
-        <Route path="/register" element={<RegisterPage />} />
-        {isAuthenticated ? (
+        <Route path="/login" element={<LoginPage setIsAuthenticated={setIsAuthenticated} />} />        <Route path="/register" element={<RegisterPage />} />
+          {isAuthenticated ? (
           <>
             <Route path="/" element={<HomePage />} />
             <Route path="/movies" element={<MoviesPage />} />
@@ -189,7 +188,7 @@ function AppContent({
             <Route
               path="/adminmovies"
               element={
-                userRole === "Admin" ? (
+                isAuthenticated && userRole === "Admin" ? (
                   <AdminMoviesPage />
                 ) : (
                   <Navigate to="/" replace />

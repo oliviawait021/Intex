@@ -1,4 +1,4 @@
-import React, { useEffect } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 
 interface NavDrawerProps {
@@ -11,6 +11,33 @@ const NavDrawer: React.FC<NavDrawerProps> = ({ isOpen, onClose, setIsAuthenticat
   if (!isOpen) return null;
 
   const navigate = useNavigate();
+  const [userRole, setUserRole] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchUser = async () => {
+      try {
+        const res = await fetch('https://localhost:5000/pingauth', {
+          credentials: 'include',
+        });
+
+        if (res.ok) {
+          const data = await res.json();
+          const role = data.roles && data.roles.length > 0 ? data.roles[0] : 'Customer';
+          setUserRole(role);
+          localStorage.setItem('userRole', role);
+        } else {
+          setUserRole(null);
+          localStorage.removeItem('userRole');
+        }
+      } catch (error) {
+        console.error('Error checking authentication:', error);
+        setUserRole(null);
+        localStorage.removeItem('userRole');
+      }
+    };
+
+    fetchUser();
+  }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
@@ -49,7 +76,11 @@ const NavDrawer: React.FC<NavDrawerProps> = ({ isOpen, onClose, setIsAuthenticat
         <br />
         <Link to="/" style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'white', textDecoration: 'none' }}>Home</Link>
         <Link to="/movies" style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'white', textDecoration: 'none' }}>Movies</Link>
-        <Link to="/adminmovies" style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'white', textDecoration: 'none' }}>Manage Movies</Link>
+        {userRole === 'Admin' && (
+          <Link to="/adminmovies" style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'white', textDecoration: 'none' }}>
+            Manage Movies
+          </Link>
+        )}
         <br /><br /><br /><br /><br /><br /><br />
         <br /><br /><br /><br /><br />
         <Link to="/privacy" style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'white', textDecoration: 'none' }}>Privacy Policy</Link>

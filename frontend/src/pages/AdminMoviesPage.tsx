@@ -104,10 +104,6 @@ const AdminMoviesPage = () => {
     <>
       <div className="admin-page">
         <AuthorizeView>
-          <Logout>
-            Logout <AuthorizedUser value="role" />
-          </Logout>
-
           <div className="admin-controls">
             <div className="admin-header">
               <br />
