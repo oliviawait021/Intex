@@ -165,5 +165,20 @@ namespace cineNiche.API.Controllers
             }
         }
 
+        // Get movie details by ShowId
+        [HttpGet("GetMovieById/{showId}")]
+        public IActionResult GetMovieById(string showId)
+        {
+            var movie = _movieContext.MoviesTitles.FirstOrDefault(m => m.ShowId == showId);
+
+            if (movie == null)
+            {
+                return NotFound(new { message = "Movie not found" });
+            }
+
+            return Ok(movie);
+        }
+
+
     }
 }

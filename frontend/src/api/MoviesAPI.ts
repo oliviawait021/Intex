@@ -144,3 +144,16 @@ export const fetchUserInfo = async (): Promise<UserInfo> => {
 
   return await res.json();
 };
+
+// 🔹 Get movie by showId
+export const fetchMovieById = async (showId: string): Promise<Movie> => {
+  const response = await fetch(`${API_URL}/GetMovieById/${showId}`, {
+    credentials: 'include',
+  });
+
+  if (!response.ok) {
+    throw new Error(`Failed to fetch movie with ID: ${showId}`);
+  }
+
+  return await response.json();
+};

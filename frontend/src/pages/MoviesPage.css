@@ -129,7 +129,6 @@
   justify-content: center;
   text-align: center;
   padding: 0.5rem;
-  border: 2px solid #ccc;
   border-radius: 12px;
   background-color: white;
   cursor: pointer;
@@ -137,7 +136,6 @@
   font-size: 0.9rem;
   transition: background-color 0.2s ease-in-out;
   flex-shrink: 0;
-  color: black; /* 🟢 Make default text black */
 }
 
 .genre-box:hover {
@@ -240,7 +238,42 @@
   font-weight: 600;
   color: white;
   text-align: center;
-  margin-bottom: 20px;
+  margin-bottom: 20px; /* Space between text and buttons */
+}
+
+.genre-filter-bar {
+  display: flex;
+  justify-content: center;
+  gap: 0.75rem;
+  padding: 1rem 2rem;
+  margin: 30px 0;
+  flex-wrap: wrap; /* Wrap if needed on smaller screens */
+}
+
+.genre-box {
+  width: 150px;
+  height: 50px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 0.5rem;
+  border-radius: 50px;
+  background-color: #4a3dbd;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 0.9rem;
+  transition: background-color 0.2s ease-in-out;
+  flex-shrink: 0;
+}
+
+.genre-box:hover {
+  background-color: #6f5df5;
+}
+
+.genre-box.active {
+  background-color: #8678f2;
+  color: white;
 }
 
 .placeholder-text {
