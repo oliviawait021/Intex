@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import './MoviesPage.css';
 import WelcomeBand from '../components/WelcomeBand';
 import axios from 'axios';
+import { fetchUserInfo } from '../api/MoviesAPI';
 
 const genreOptions = [
   'Documentary & Reality',
@@ -25,6 +26,7 @@ const MoviesPage: React.FC = () => {
   const [pageNum, setPageNum] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [userInfo, setUserInfo] = useState<{ isAuthenticated: boolean }>({ isAuthenticated: true });
 
   const observer = useRef<IntersectionObserver | null>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -78,7 +80,7 @@ const MoviesPage: React.FC = () => {
       setMovies((prev) => {
         const existingIds = new Set(prev.map((m) => m.showId));
         const uniqueNewMovies = newMovies.filter(
-          (m) => !existingIds.has(m.showId)
+          (m: { showId: string; }) => !existingIds.has(m.showId)
         );
         return [...prev, ...uniqueNewMovies];
       });
@@ -97,6 +99,19 @@ const MoviesPage: React.FC = () => {
   useEffect(() => {
     console.log('Movies data:', movies);
   }, [movies]);
+
+  useEffect(() => {
+    fetchUserInfo()
+      .then((info) => {
+        setUserInfo(info);
+        if (!info.isAuthenticated) {
+          alert('You must be logged in to view this page.');
+        }
+      })
+      .catch((err) => {
+        console.error('User info fetch failed', err);
+      });
+  }, []);
 
   useEffect(() => {
     if (observer.current) observer.current.disconnect();
