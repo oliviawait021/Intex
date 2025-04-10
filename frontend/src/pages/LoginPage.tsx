@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Identity.css';
+import './identity.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 import { GoogleLogin } from '@react-oauth/google';
 import { baseURL } from '../api/MoviesAPI';
