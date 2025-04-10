@@ -106,7 +106,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowReactAppBlah",
     policy =>
     {
-        policy.WithOrigins("https://localhost:3000", "http://localhost:3000")
+        policy.WithOrigins("https://localhost:3000", "http://localhost:3000", "https://purple-moss-0726eb41e.6.azurestaticapps.net/")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
