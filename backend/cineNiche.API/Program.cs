@@ -118,10 +118,11 @@ builder.Services.AddSingleton<IEmailSender<IdentityUser>, NoOpEmailSender<Identi
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
-    options.Cookie.SameSite = SameSiteMode.None;
+    //options.Cookie.SameSite = SameSiteMode.None; // Important for cross-site cookies
     options.Cookie.Name = ".AspNetCore.Identity.Application";
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-
+    options.LoginPath = "/login";
+    
     options.Events = new CookieAuthenticationEvents
     {
         OnRedirectToLogin = context =>
@@ -169,7 +170,14 @@ app.MapPost("/logout", async (HttpContext context, SignInManager<IdentityUser> s
     await signInManager.SignOutAsync();
 
     // Ensure authentication cookie is removed
-    context.Response.Cookies.Delete(".AspNetCore.Identity.Application");
+    context.Response.Cookies.Delete(".AspNetCore.Identity.Application", new CookieOptions
+    {
+        HttpOnly = true,
+        Secure = true,
+        SameSite = SameSiteMode.None,
+        Path = "/",
+        Domain = "localhost" // 👈 IMPORTANT: matches the cookie domain
+    });
 
     return Results.Ok(new { message = "Logout successful" });
 }).RequireAuthorization();
@@ -211,6 +219,13 @@ app.MapGet("/login-google", async context =>
 app.MapGet("/logout", async context =>
 {
     await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+    context.Response.Cookies.Delete(".AspNetCore.Identity.Application", new CookieOptions
+    {
+        HttpOnly = true,
+        Secure = true,
+        SameSite = SameSiteMode.None,
+        Path = "/",
+    });
     context.Response.Redirect("/");
 });
 
