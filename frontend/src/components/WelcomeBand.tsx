@@ -12,6 +12,7 @@ function WelcomeBand() {
     const storedUsername = localStorage.getItem('username');
     if (storedUsername) {
       setUsername(storedUsername);
+      console.log("username from localStorage:", storedUsername);
     }
   }, []);
 
