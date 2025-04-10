@@ -62,3 +62,9 @@
   font-weight: 200;
   font-style: normal;
 }
+
+.movie-poster {
+  width: 180px !important;
+  height: 270px !important;
+  object-fit: cover;
+}
