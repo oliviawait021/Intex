@@ -118,7 +118,7 @@ builder.Services.AddSingleton<IEmailSender<IdentityUser>, NoOpEmailSender<Identi
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
-    //options.Cookie.SameSite = SameSiteMode.None; // Important for cross-site cookies
+    options.Cookie.SameSite = SameSiteMode.Strict; // Important for cross-site cookies
     options.Cookie.Name = ".AspNetCore.Identity.Application";
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.LoginPath = "/login";
@@ -174,7 +174,7 @@ app.MapPost("/logout", async (HttpContext context, SignInManager<IdentityUser> s
     {
         HttpOnly = true,
         Secure = true,
-        SameSite = SameSiteMode.None,
+        SameSite = SameSiteMode.Strict,
         Path = "/",
         Domain = "localhost" // 👈 IMPORTANT: matches the cookie domain
     });
