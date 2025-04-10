@@ -18,6 +18,12 @@ function Logout(props: { children: React.ReactNode }) {
       if (response.ok) {
         localStorage.removeItem('userRole');
         localStorage.removeItem('authToken');
+        localStorage.clear();
+        document.cookie.split(";").forEach((c) => {
+          document.cookie = c
+            .replace(/^ +/, "")
+            .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+        });
         setTimeout(() => {
           alert('You have been logged out.');
           navigate('/');

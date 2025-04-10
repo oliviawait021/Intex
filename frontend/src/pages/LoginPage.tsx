@@ -13,17 +13,15 @@ const fetchUser = async () => {
     if (res.ok) {
       const data = await res.json();
       localStorage.setItem('authToken', 'true');
-      const role =
-        data.roles && data.roles.length > 0 ? data.roles[0] : 'Customer';
+      const role = data.roles && data.roles.length > 0 ? data.roles[0] : 'Customer';
       localStorage.setItem('userRole', role);
+      localStorage.setItem('username', data.username || data.email); // Save name if available, otherwise fallback to email
     } else {
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('userRole');
+      localStorage.clear();
     }
   } catch (error) {
     console.error('Error checking authentication:', error);
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userRole');
+    localStorage.clear();
   }
 };
 
@@ -202,6 +200,7 @@ function LoginPage({ setIsAuthenticated }: { setIsAuthenticated: (value: boolean
 
                   const data = await response.json();
                   console.log('Backend login success:', data);
+                  localStorage.setItem('username', data.email);
                   await fetchUser();
                   setIsAuthenticated(true);
                   setTimeout(() => {
