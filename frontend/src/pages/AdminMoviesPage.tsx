@@ -27,6 +27,10 @@ const AdminMoviesPage = () => {
   const [searchTerm, setSearchTerm] = useState('');
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
+  const handlePosterClick = (showId: string) => {
+    navigate(`/admin/${showId}`);
+  };
+
   useEffect(() => {
     const loadMovies = async () => {
       try {
@@ -90,46 +94,54 @@ const AdminMoviesPage = () => {
   if (loading) return <p>loading movies</p>;
   if (error) return <p className="text-red-500">Error: {error}</p>;
 
+  const formatTitleForS3 = (title: string) =>
+    encodeURIComponent(title.trim()).replace(/%20/g, '+');
+
+  const getPosterUrl = (title: string) =>
+    `https://movie-posters8.s3.us-east-1.amazonaws.com/Movie+Posters/${formatTitleForS3(title)}.jpg`;
+
   return (
     <>
-      <AuthorizeView>
-        <Logout>
-          Logout <AuthorizedUser value="role" />
-        </Logout>
+      <div className="admin-page">
+        <AuthorizeView>
+          <Logout>
+            Logout <AuthorizedUser value="role" />
+          </Logout>
 
-        <div className="admin-controls">
-          <div className="admin-header">
-            <br />
-            <h1>Manage Movie Collection</h1>
-            <div className="admin-controls-row">
-              {userInfo.isAdmin && (
-                <>
-                  <button
-                    className="add-movie-button"
-                    onClick={() => {
-                      console.log('CLICKED ADD MOVIE');
-                      console.log('admin: ' + userInfo.isAdmin);
-                      console.log('auth: ' + userInfo.isAuthenticated);
-                      setShowForm(true);
-                    }}
-                  >
-                    Add Movie
-                  </button>
-                  <div className="search-bar-container">
-                    <div className="search-bar">
-                      <input
-                        type="text"
-                        placeholder="Search for a movie..."
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                      />
+          <div className="admin-controls">
+            <div className="admin-header">
+              <br />
+              <h1>Manage Movie Collection</h1>
+              <div className="admin-controls-row">
+                {userInfo.isAdmin && (
+                  <>
+                    <button
+                      className="add-movie-button"
+                      onClick={() => {
+                        console.log('CLICKED ADD MOVIE');
+                        console.log('admin: ' + userInfo.isAdmin);
+                        console.log('auth: ' + userInfo.isAuthenticated);
+                        setShowForm(true);
+                      }}
+                    >
+                      Add Movie
+                    </button>
+                    <div className="search-bar-container">
+                      <div className="search-bar">
+                        <input
+                          type="text"
+                          placeholder="Search for a movie..."
+                          value={searchTerm}
+                          onChange={(e) => setSearchTerm(e.target.value)}
+                        />
+                      </div>
                     </div>
-                  </div>
-                </>
-              )}
+                  </>
+                )}
+              </div>
             </div>
           </div>
-        </div>
+        </AuthorizeView>
 
         {editingMovie && (
           <div className="modal-backdrop">
@@ -159,30 +171,45 @@ const AdminMoviesPage = () => {
               m.title.toLowerCase().includes(searchTerm.toLowerCase())
             )
             .map((m) => (
-              <div key={m.showId} className="movie-card">
+              <div
+                onClick={() => handlePosterClick(m.showId)}
+                key={m.showId}
+                className="movie-card"
+              >
                 <div className="movie-poster-container">
                   <img
-                    src="/images/avatar.jpg"
-                    alt="Movie Poster"
+                    src={getPosterUrl(m.title)}
+                    alt={m.title}
                     className="movie-poster"
+                    onError={(e) => {
+                      console.warn('Missing poster for:', m.title);
+                      (e.currentTarget as HTMLImageElement).src =
+                        '/images/default-poster.png';
+                    }}
                   />
                 </div>
                 <div className="movie-info">
                   <h2>{m.title}</h2>
-                  <p>Director: {m.director}</p>
                   <p>
                     ID: {m.showId} - {m.type} - {m.releaseYear}
                   </p>
+                  <p>Type: {m.type}</p>
                 </div>
                 <div className="movie-actions">
                   <button
-                    onClick={() => setEditingMovie(m)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      setEditingMovie(m);
+                    }}
                     className="edit-btn"
                   >
                     <img src="/icons/editing.png" alt="Edit" />
                   </button>
                   <button
-                    onClick={() => handleDelete(m.showId)}
+                    onClick={(e) => {
+                      e.stopPropagation();
+                      handleDelete(m.showId);
+                    }}
                     className="delete-btn"
                   >
                     <img src="/icons/bin.png" alt="Delete" />
@@ -227,7 +254,7 @@ const AdminMoviesPage = () => {
             </div>
           </div>
         )}
-      </AuthorizeView>
+      </div>
     </>
   );
 };

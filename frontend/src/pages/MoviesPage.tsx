@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import './MoviesPage.css';
 import WelcomeBand from '../components/WelcomeBand';
 import { fetchUserInfo } from '../api/MoviesAPI';
+import { useNavigate } from 'react-router-dom';
 
 const genreOptions = [
   'Documentary & Reality',
@@ -25,7 +26,14 @@ const MoviesPage: React.FC = () => {
   const [pageNum, setPageNum] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
-  const [userInfo, setUserInfo] = useState<{ isAuthenticated: boolean }>({ isAuthenticated: true });
+  const [userInfo, setUserInfo] = useState<{ isAuthenticated: boolean }>({
+    isAuthenticated: true,
+  });
+
+  const navigate = useNavigate();
+  const handlePosterClick = (showId: string) => {
+    navigate(`/movie/${showId}`);
+  };
 
   const observer = useRef<IntersectionObserver | null>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
@@ -79,7 +87,7 @@ const MoviesPage: React.FC = () => {
       setMovies((prev) => {
         const existingIds = new Set(prev.map((m) => m.showId));
         const uniqueNewMovies = newMovies.filter(
-          (m: { showId: string; }) => !existingIds.has(m.showId)
+          (m: { showId: string }) => !existingIds.has(m.showId)
         );
         return [...prev, ...uniqueNewMovies];
       });
@@ -133,7 +141,8 @@ const MoviesPage: React.FC = () => {
       ? movies
       : movies.filter((movie) => selectedGenres.includes(movie.genre));
 
-  const formatTitleForS3 = (title: string) => title.replace(/ /g, '+');
+  const formatTitleForS3 = (title: string) =>
+    encodeURIComponent(title.trim()).replace(/%20/g, '+');
 
   const getPosterUrl = (title: string) =>
     `https://movie-posters8.s3.us-east-1.amazonaws.com/Movie+Posters/${formatTitleForS3(title)}.jpg`;
@@ -170,7 +179,11 @@ const MoviesPage: React.FC = () => {
           </button>
           <div className="movie-container" ref={topPicksRef}>
             {topPicks.map((movie) => (
-              <div className="movie-item" key={movie.showId}>
+              <div
+                onClick={() => handlePosterClick(movie.showId)}
+                className="movie-item"
+                key={movie.showId}
+              >
                 <img
                   src={getPosterUrl(movie.title)}
                   alt={movie.title}
@@ -204,7 +217,11 @@ const MoviesPage: React.FC = () => {
           </button>
           <div className="movie-container" ref={becauseYouLikedRef}>
             {becauseYouLiked.map((movie) => (
-              <div className="movie-item" key={movie.showId}>
+              <div
+                onClick={() => handlePosterClick(movie.showId)}
+                className="movie-item"
+                key={movie.showId}
+              >
                 <img
                   src={getPosterUrl(movie.title)}
                   alt={movie.title}
@@ -232,13 +249,18 @@ const MoviesPage: React.FC = () => {
       <h2 className="section-title">Movies</h2>
       <div className="movie-grid">
         {filteredMovies.map((movie) => (
-          <div className="movie-item" key={movie.showId}>
+          <div
+            onClick={() => handlePosterClick(movie.showId)}
+            className="movie-item"
+            key={movie.showId}
+          >
             <img
               src={getPosterUrl(movie.title)}
               alt={movie.title}
               className="movie-poster"
+              style={{ objectFit: 'contain' }}
               onError={(e) => {
-                console.log('Image not found for:', movie.title);
+                console.warn('Missing poster for:', movie.title);
                 (e.currentTarget as HTMLImageElement).src =
                   '/images/default-poster.png';
               }}

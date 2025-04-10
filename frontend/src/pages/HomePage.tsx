@@ -100,16 +100,28 @@ const faqData = [
   },
 ];
 
-const posterPaths = [
-  '/images/the-matrix.jpg',
-  '/images/inception.jpg',
-  '/images/the-dark-night.jpg',
-  '/images/avatar.jpg',
-  '/images/interstellar.jpg',
-  '/images/the-avengers.jpg',
-  '/images/the-godfather.jpg',
-  '/images/forrest-gump.jpg',
-  // Add more groups as needed
+//This is for Top screen
+const posterPaths1 = [
+  '/images/imagesForTop/Case Closed.jpg',
+  '/images/imagesForTop/Look Whos Back.jpg',
+  '/images/imagesForTop/Oh My Ghost.jpg',
+  '/images/imagesForTop/One Strange Rock.jpg',
+  '/images/imagesForTop/Our Planet.jpg',
+  '/images/imagesForTop/Pulp Fiction.jpg',
+  '/images/imagesForTop/Ratched.jpg',
+  '/images/imagesForTop/Reckoning.jpg',
+  '/images/imagesForTop/Rugal.jpg',
+];
+const posterPaths2 = [
+  '/images/imagesForTop/Sam  Cat.jpg',
+  '/images/imagesForTop/Swiss Army Man.jpg',
+  '/images/imagesForTop/The Adventures of Puss in Boots.jpg',
+  '/images/imagesForTop/The Five Venoms.jpg',
+  '/images/imagesForTop/The Little Mermaid.jpg',
+  '/images/imagesForTop/The Silence.jpg',
+  '/images/imagesForTop/The Trap.jpg',
+  '/images/imagesForTop/Twilight.jpg',
+  '/images/imagesForTop/Jaws.jpg',
 ];
 
 const HomePage: React.FC = () => {
@@ -139,7 +151,7 @@ const HomePage: React.FC = () => {
     <>
       <div className="collage-container">
         <div className="collage-scroll scroll-row-1">
-          {posterPaths.map((src, index) => (
+          {posterPaths1.map((src, index) => (
             <img
               key={index}
               src={src}
@@ -157,7 +169,7 @@ const HomePage: React.FC = () => {
           <h1 className="title">CineNiche</h1>
         </div>
         <div className="collage-scroll scroll-row-2">
-          {posterPaths.concat(posterPaths).map((src, index) => (
+          {posterPaths2.map((src, index) => (
             <img
               key={index}
               src={src}

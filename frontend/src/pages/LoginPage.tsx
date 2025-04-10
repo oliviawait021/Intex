@@ -67,10 +67,11 @@ function LoginPage() {
       // Store username in localStorage (or sessionStorage, depending on your preference)
       localStorage.setItem('username', email);
 
-      navigate('/movies');
+      
       setTimeout(() => {
         window.location.reload();
       }, 200); // short delay to ensure cookies/session updates are processed
+      navigate('/movies');
     } catch (error: any) {
       // handle network or fetch error
       setError(error.message || 'Error logging in.');
@@ -170,10 +171,11 @@ function LoginPage() {
 
                   const data = await response.json();
                   console.log('Backend login success:', data);
-                  navigate('/movies');
                   setTimeout(() => {
                     window.location.reload();
                   }, 200);
+                  navigate('/movies');
+                  
                 } catch (error) {
                   console.error('Error during Google login:', error);
                 }

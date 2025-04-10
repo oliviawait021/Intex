@@ -17,6 +17,7 @@ import MovieDetailPage from './pages/MovieDetailPage';
 import PrivacyPage from './pages/PrivacyPage';
 import UserSignUp from './pages/UserSignUp';
 import NavDrawer from './components/NavDrawer';
+import AdminDetailPage from './pages/AdminDetailPage';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -195,6 +196,16 @@ function AppContent({
                 )
               }
             />
+            <Route
+              path="/admin/:showId"
+              element={
+                userRole === "Admin" ? (
+                  <AdminDetailPage />
+                ) : (
+                  <Navigate to="/" replace />
+                )
+              }
+            />
             <Route path="/details" element={<MovieDetailPage />} />
             <Route path="/privacy" element={<PrivacyPage />} />
             <Route path="/signup" element={<UserSignUp />} />
@@ -202,7 +213,6 @@ function AppContent({
         ) : (
           <Route path="/" element={<HomePage />} />
         )}
-        <Route path="*" element={<Navigate to="/" replace />} />
       </Routes>
     </>
   );

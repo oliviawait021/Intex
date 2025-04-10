@@ -48,7 +48,6 @@ const NavDrawer: React.FC<NavDrawerProps> = ({ isOpen, onClose, setIsAuthenticat
       <nav style={{ display: 'flex', flexDirection: 'column', gap: '16px' }}>
         <br />
         <Link to="/" style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'white', textDecoration: 'none' }}>Home</Link>
-        <Link to="/tvshows" style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'white', textDecoration: 'none' }}>TV Shows</Link>
         <Link to="/movies" style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'white', textDecoration: 'none' }}>Movies</Link>
         <Link to="/adminmovies" style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'white', textDecoration: 'none' }}>Manage Movies</Link>
         <br /><br /><br /><br /><br /><br /><br />

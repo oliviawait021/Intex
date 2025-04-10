@@ -15,17 +15,15 @@
 
 a {
   font-weight: 500;
-  color: #0B061B;
+  color: #0b061b;
   text-decoration: inherit;
 }
 a:hover {
-  color: #0B061B;
+  color: #0b061b;
 }
 
 body {
   margin: 0;
-  display: flex;
-  place-items: center;
   min-width: 320px;
   min-height: 100vh;
 }
