@@ -16,7 +16,7 @@ export default defineConfig({
         'frame-src https://accounts.google.com; ' +
         "frame-ancestors 'none'; " +
         "font-src 'self' fonts.gstatic.com data:; " +
-        "connect-src 'self' https://localhost:5000 https://oauth2.googleapis.com; " +
+        "connect-src 'self' https://localhost:5000 https://oauth2.googleapis.com wss://localhost:3000; " +
         "object-src 'none'; " +
         "base-uri 'self'; " +
         "form-action 'self';",
