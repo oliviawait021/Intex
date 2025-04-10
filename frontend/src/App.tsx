@@ -18,6 +18,7 @@ import PrivacyPage from './pages/PrivacyPage';
 import UserSignUp from './pages/UserSignUp';
 import NavDrawer from './components/NavDrawer';
 import AdminDetailPage from './pages/AdminDetailPage';
+import { baseURL } from './api/MoviesAPI';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -30,7 +31,7 @@ function App() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch('https://localhost:5000/pingauth', {
+        const res = await fetch(`${baseURL}/pingauth`, {
           credentials: 'include',
         });
 

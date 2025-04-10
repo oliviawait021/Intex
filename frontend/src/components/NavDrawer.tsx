@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { baseURL } from '../api/MoviesAPI';
 
 interface NavDrawerProps {
   isOpen: boolean;
@@ -16,7 +17,7 @@ const NavDrawer: React.FC<NavDrawerProps> = ({ isOpen, onClose, setIsAuthenticat
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch('https://localhost:5000/pingauth', {
+        const res = await fetch(`${baseURL}/pingauth`, {
           credentials: 'include',
         });
 

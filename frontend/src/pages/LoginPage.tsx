@@ -3,10 +3,11 @@ import { useNavigate } from 'react-router-dom';
 import './Identity.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 import { GoogleLogin } from '@react-oauth/google';
+import { baseURL } from '../api/MoviesAPI';
 
 const fetchUser = async () => {
   try {
-    const res = await fetch('https://localhost:5000/pingauth', {
+    const res = await fetch(`${baseURL}/pingauth`, {
       credentials: 'include',
     });
 
@@ -63,8 +64,8 @@ function LoginPage({ setIsAuthenticated }: { setIsAuthenticated: (value: boolean
     }
 
     const loginUrl = rememberme
-      ? 'https://localhost:5000/login?useCookies=true'
-      : 'https://localhost:5000/login?useSessionCookies=true';
+      ? `${baseURL}/login?useCookies=true`
+      : `${baseURL}/login?useSessionCookies=true`;
 
     try {
       const response = await fetch(loginUrl, {
@@ -181,7 +182,7 @@ function LoginPage({ setIsAuthenticated }: { setIsAuthenticated: (value: boolean
 
                 try {
                   const response = await fetch(
-                    'https://localhost:5000/api/auth/google',
+                    `${baseURL}/api/auth/google`,
                     {
                       method: 'POST',
                       headers: {

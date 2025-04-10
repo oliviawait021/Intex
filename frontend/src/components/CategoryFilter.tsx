@@ -1,5 +1,6 @@
 import { useEffect, useState } from 'react';
 import './CategoryFilter.css';
+import { baseURL } from '../api/MoviesAPI';
 
 function CategoryFilter({
   selectedCategories,
@@ -14,7 +15,7 @@ function CategoryFilter({
     const fetchCategories = async () => {
       try {
         const response = await fetch(
-          'https://localhost:5000/movie/getmovietypes',
+          `${baseURL}/getmovietypes`,
           {
             credentials: 'include',
             headers: {

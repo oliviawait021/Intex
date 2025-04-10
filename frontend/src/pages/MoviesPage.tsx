@@ -1,7 +1,7 @@
 import React, { useState, useRef, useEffect } from 'react';
 import './MoviesPage.css';
 import WelcomeBand from '../components/WelcomeBand';
-import { fetchUserInfo } from '../api/MoviesAPI';
+import { baseURL, fetchUserInfo } from '../api/MoviesAPI';
 import { useNavigate } from 'react-router-dom';
 
 const genreOptions = [
@@ -75,7 +75,7 @@ const MoviesPage: React.FC = () => {
     setIsLoading(true);
     try {
       const response = await fetch(
-        `https://localhost:5000/Movie/AllMovies?pageHowMany=54&pageNum=${page}`,
+        `${baseURL}/Movie/AllMovies?pageHowMany=54&pageNum=${page}`,
         {
           credentials: 'include',
         }

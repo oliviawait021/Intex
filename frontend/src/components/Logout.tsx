@@ -1,4 +1,5 @@
 import { useNavigate } from 'react-router-dom';
+import { baseURL } from '../api/MoviesAPI';
 
 function Logout(props: { children: React.ReactNode }) {
   const navigate = useNavigate();
@@ -7,7 +8,7 @@ function Logout(props: { children: React.ReactNode }) {
     e.preventDefault();
 
     try {
-      const response = await fetch('https://localhost:5000/logout', {
+      const response = await fetch(`${baseURL}/logout`, {
         method: 'POST',
         credentials: 'include',
         headers: {

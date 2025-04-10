@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './identity.css';
 import { GoogleLogin } from '@react-oauth/google';
+import { baseURL } from '../api/MoviesAPI';
 
 function Register() {
   // state variables for email and passwords
@@ -41,7 +42,7 @@ function Register() {
       setError('');
 
       // post data to the /register api
-      fetch('https://localhost:5000/register', {
+      fetch(`${baseURL}/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
