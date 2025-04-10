@@ -189,7 +189,10 @@ function AppContent({
         </>
       )}
       <Routes>
-        <Route path="/login" element={<LoginPage setIsAuthenticated={setIsAuthenticated} />} />        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/login" element={<LoginPage setIsAuthenticated={setIsAuthenticated} />} /> 
+        <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/signup" element={<UserSignUp />} />       
+          <Route path="/register" element={<RegisterPage />} />
           {isAuthenticated ? (
           <>
             <Route path="/" element={<HomePage />} />
@@ -217,8 +220,6 @@ function AppContent({
             />
             <Route path="/movie/:showId" element={<MovieDetailPage />} />
             <Route path="/details" element={<MovieDetailPage />} />
-            <Route path="/privacy" element={<PrivacyPage />} />
-            <Route path="/signup" element={<UserSignUp />} />
           </>
         ) : (
           <Route path="/" element={<HomePage />} />
