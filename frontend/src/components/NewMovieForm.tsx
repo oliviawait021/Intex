@@ -1,6 +1,6 @@
 import { useState } from 'react';
 import { Movie } from '../types/Movie';
-import { addMovie, getNextShowId } from '../api/MoivesAPI';
+import { addMovie, getNextShowId } from '../api/MoviesAPI';
 import '../pages/AdminMoviesPage.css';
 
 interface NewMovieFormProps {
