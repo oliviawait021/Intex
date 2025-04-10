@@ -52,8 +52,16 @@ builder.Services.AddAuthentication(options =>
     })
     .AddGoogle(options =>
     {
-        options.ClientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");
-        options.ClientSecret = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET");
+        var clientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");
+        var clientSecret = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET");
+
+        if (string.IsNullOrWhiteSpace(clientId))
+            throw new InvalidOperationException("Missing GOOGLE_CLIENT_ID environment variable.");
+        if (string.IsNullOrWhiteSpace(clientSecret))
+            throw new InvalidOperationException("Missing GOOGLE_CLIENT_SECRET environment variable.");
+
+        options.ClientId = clientId;
+        options.ClientSecret = clientSecret;
         options.Events.OnCreatingTicket = async context =>
         {
             var email = context.Principal.FindFirstValue(ClaimTypes.Email);
@@ -118,9 +126,9 @@ builder.Services.AddSingleton<IEmailSender<IdentityUser>, NoOpEmailSender<Identi
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
-    options.Cookie.SameSite = SameSiteMode.Strict; // Important for cross-site cookies
+    options.Cookie.SameSite = SameSiteMode.Strict; // Updated for cross-origin support
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Ensure cookies are secure
     options.Cookie.Name = ".AspNetCore.Identity.Application";
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
     options.LoginPath = "/login";
     
     options.Events = new CookieAuthenticationEvents
@@ -128,14 +136,12 @@ builder.Services.ConfigureApplicationCookie(options =>
         OnRedirectToLogin = context =>
         {
             context.Response.StatusCode = 401;
-            context.Response.ContentType = "application/json";
-            return context.Response.WriteAsync("{\"error\": \"You must be logged in to access this resource.\"}");
+            return context.Response.WriteAsync("{\"error\": \"Login required.\"}");
         },
         OnRedirectToAccessDenied = context =>
         {
             context.Response.StatusCode = 403;
-            context.Response.ContentType = "application/json";
-            return context.Response.WriteAsync("{\"error\": \"Access denied. Admins only.\"}");
+            return context.Response.WriteAsync("{\"error\": \"Access denied.\"}");
         }
     };
 });
@@ -171,7 +177,7 @@ app.MapPost("/logout", async (HttpContext context, SignInManager<IdentityUser> s
     {
         HttpOnly = true,
         Secure = true,
-        SameSite = SameSiteMode.Strict,
+        SameSite = SameSiteMode.Strict, // Updated for cross-origin support
         Path = "/",
         Domain = "localhost" // 👈 IMPORTANT: matches the cookie domain
     });
@@ -230,7 +236,7 @@ app.MapGet("/login-google", async context =>
 {
     await context.ChallengeAsync(GoogleDefaults.AuthenticationScheme, new AuthenticationProperties
     {
-        RedirectUri = "http://localhost:3000/movies"
+        RedirectUri = "https://purple-moss-0726eb41e.6.azurestaticapps.net/movies" // Updated for production
     });
 });
 
@@ -241,7 +247,7 @@ app.MapGet("/logout", async context =>
     {
         HttpOnly = true,
         Secure = true,
-        SameSite = SameSiteMode.None,
+        SameSite = SameSiteMode.Strict, // Updated for cross-origin support
         Path = "/",
     });
     context.Response.Redirect("/");
