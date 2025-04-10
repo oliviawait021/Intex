@@ -77,6 +77,40 @@ namespace cineNiche.API.Controllers
             return Ok(newMovie);
         }
 
+        public class RatingRequest
+        {
+            public int user_id { get; set; }
+            public int rating { get; set; }
+        }
+
+        [HttpPost("{showId}/rating")] // Adjusted route to match frontend
+        public async Task<IActionResult> PostRating(string showId, [FromBody] RatingRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+
+            var movie = await _movieContext.MoviesTitles.FirstOrDefaultAsync(m => m.ShowId == showId);
+
+            if (movie == null)
+            {
+                return NotFound(new { message = "Movie not found" });
+            }
+
+            var movieRating = new MoviesRating
+            {
+                ShowId = showId,
+                UserId = request.user_id,
+                Rating = request.rating
+            };
+
+            _movieContext.MoviesRatings.Add(movieRating);
+            await _movieContext.SaveChangesAsync();
+
+            return Ok(movieRating); // return ok.
+        }
+
         // Update an existing movie
         [HttpPut("UpdateMovie/{showId}")]
         // [Authorize(Roles = "Admin")]

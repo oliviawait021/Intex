@@ -1,29 +1,28 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import './Identity.css';
+import './identity.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 import { GoogleLogin } from '@react-oauth/google';
+import { baseURL } from '../api/MoviesAPI';
 
 const fetchUser = async () => {
   try {
-    const res = await fetch('https://localhost:5000/pingauth', {
+    const res = await fetch(`${baseURL}/pingauth`, {
       credentials: 'include',
     });
 
     if (res.ok) {
       const data = await res.json();
       localStorage.setItem('authToken', 'true');
-      const role =
-        data.roles && data.roles.length > 0 ? data.roles[0] : 'Customer';
+      const role = data.roles && data.roles.length > 0 ? data.roles[0] : 'Customer';
       localStorage.setItem('userRole', role);
+      localStorage.setItem('username', data.username || data.email); // Save name if available, otherwise fallback to email
     } else {
-      localStorage.removeItem('authToken');
-      localStorage.removeItem('userRole');
+      localStorage.clear();
     }
   } catch (error) {
     console.error('Error checking authentication:', error);
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userRole');
+    localStorage.clear();
   }
 };
 
@@ -65,8 +64,8 @@ function LoginPage({ setIsAuthenticated }: { setIsAuthenticated: (value: boolean
     }
 
     const loginUrl = rememberme
-      ? 'https://localhost:5000/login?useCookies=true'
-      : 'https://localhost:5000/login?useSessionCookies=true';
+      ? `${baseURL}/login?useCookies=true`
+      : `${baseURL}/login?useSessionCookies=true`;
 
     try {
       const response = await fetch(loginUrl, {
@@ -183,7 +182,7 @@ function LoginPage({ setIsAuthenticated }: { setIsAuthenticated: (value: boolean
 
                 try {
                   const response = await fetch(
-                    'https://localhost:5000/api/auth/google',
+                    `${baseURL}/api/auth/google`,
                     {
                       method: 'POST',
                       headers: {
@@ -202,6 +201,7 @@ function LoginPage({ setIsAuthenticated }: { setIsAuthenticated: (value: boolean
 
                   const data = await response.json();
                   console.log('Backend login success:', data);
+                  localStorage.setItem('username', data.email);
                   await fetchUser();
                   setIsAuthenticated(true);
                   setTimeout(() => {

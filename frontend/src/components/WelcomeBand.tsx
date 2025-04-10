@@ -2,6 +2,7 @@ import { Search } from 'lucide-react';
 import { useState, useEffect, SetStateAction } from 'react';
 import './WelcomeBand.css';
 import NavDrawer from './NavDrawer';
+import { baseURL } from '../api/MoviesAPI';
 
 function WelcomeBand() {
   const [searchTerm, setSearchTerm] = useState('');
@@ -9,10 +10,33 @@ function WelcomeBand() {
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
   useEffect(() => {
-    const storedUsername = localStorage.getItem('username');
-    if (storedUsername) {
-      setUsername(storedUsername);
-    }
+    const checkAuth = async () => {
+      try {
+        const response = await fetch(`${baseURL}/pingauth`, {
+          credentials: "include",
+        });
+
+        if (response.ok) {
+          const data = await response.json();
+          console.log("✅ Auth check:", data);
+
+          localStorage.setItem("username", data.email);
+          localStorage.setItem("isAdmin", data.isAdmin);
+          localStorage.setItem("isAuthenticated", "true");
+          setUsername(data.email);
+        } else {
+          console.log("🚫 Not authenticated");
+          localStorage.removeItem("username");
+          localStorage.removeItem("isAdmin");
+          localStorage.setItem("isAuthenticated", "false");
+          setUsername('');
+        }
+      } catch (err) {
+        console.error("⚠️ Error checking auth:", err);
+      }
+    };
+
+    checkAuth();
   }, []);
 
   return (
@@ -52,7 +76,7 @@ function WelcomeBand() {
         </div>
       </header>
 
-      <NavDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} setIsAuthenticated={function (value: SetStateAction<boolean>): void {
+      <NavDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} setIsAuthenticated={function (_: SetStateAction<boolean>): void {
         throw new Error('Function not implemented.');
       } } />
     </>

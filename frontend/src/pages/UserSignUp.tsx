@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './identity.css';
+import { baseURL } from '../api/MoviesAPI';
 
 interface UserFormData {
   name: string;
@@ -66,7 +67,7 @@ const UserSignUp = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
-    const response = await fetch('https://localhost:5000/Movie/RegisterUser', {
+    const response = await fetch(`${baseURL}/Movie/RegisterUser`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(formData),

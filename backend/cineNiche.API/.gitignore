@@ -11,3 +11,6 @@ obj/
 
 *.log
 *.tlog
+
+# Prevent private backend credentials from being tracked
+backend.env

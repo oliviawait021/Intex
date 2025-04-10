@@ -26,16 +26,18 @@ var builder = WebApplication.CreateBuilder(args);
 //     });
 // });
 
+DotNetEnv.Env.Load("backend.env"); // or just .Env.Load() if it's in the root
+
 // Add services to the container.
 
 builder.Services.AddControllers();
+
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 // Database Context
 builder.Services.AddDbContext<MoviesContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("MovieConnection")));
-
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("IdentityConnection")));
 
@@ -50,8 +52,16 @@ builder.Services.AddAuthentication(options =>
     })
     .AddGoogle(options =>
     {
-        options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+        var clientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");
+        var clientSecret = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET");
+
+        if (string.IsNullOrWhiteSpace(clientId))
+            throw new InvalidOperationException("Missing GOOGLE_CLIENT_ID environment variable.");
+        if (string.IsNullOrWhiteSpace(clientSecret))
+            throw new InvalidOperationException("Missing GOOGLE_CLIENT_SECRET environment variable.");
+
+        options.ClientId = clientId;
+        options.ClientSecret = clientSecret;
         options.Events.OnCreatingTicket = async context =>
         {
             var email = context.Principal.FindFirstValue(ClaimTypes.Email);
@@ -104,7 +114,7 @@ builder.Services.AddCors(options =>
     options.AddPolicy("AllowReactAppBlah",
     policy =>
     {
-        policy.WithOrigins("https://localhost:3000", "http://localhost:3000")
+        policy.WithOrigins("https://localhost:3000", "http://localhost:3000", "https://purple-moss-0726eb41e.6.azurestaticapps.net")
             .AllowAnyHeader()
             .AllowAnyMethod()
             .AllowCredentials();
@@ -116,23 +126,22 @@ builder.Services.AddSingleton<IEmailSender<IdentityUser>, NoOpEmailSender<Identi
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
-    options.Cookie.SameSite = SameSiteMode.None;
+    options.Cookie.SameSite = SameSiteMode.None; // Updated for cross-origin support
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Ensure cookies are secure
     options.Cookie.Name = ".AspNetCore.Identity.Application";
-    options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
-
+    options.LoginPath = "/login";
+    
     options.Events = new CookieAuthenticationEvents
     {
         OnRedirectToLogin = context =>
         {
             context.Response.StatusCode = 401;
-            context.Response.ContentType = "application/json";
-            return context.Response.WriteAsync("{\"error\": \"You must be logged in to access this resource.\"}");
+            return context.Response.WriteAsync("{\"error\": \"Login required.\"}");
         },
         OnRedirectToAccessDenied = context =>
         {
             context.Response.StatusCode = 403;
-            context.Response.ContentType = "application/json";
-            return context.Response.WriteAsync("{\"error\": \"Access denied. Admins only.\"}");
+            return context.Response.WriteAsync("{\"error\": \"Access denied.\"}");
         }
     };
 });
@@ -151,13 +160,10 @@ if (app.Environment.IsDevelopment())
 
 app.UseCors("AllowReactAppBlah");
 
-// HTTPS redirction
 app.UseHttpsRedirection();
 
-// Both authentication and authorization
 app.UseAuthentication();
 
-// Authorization middleware
 app.UseAuthorization();
 
 app.MapControllers();
@@ -170,49 +176,70 @@ app.MapPost("/logout", async (HttpContext context, SignInManager<IdentityUser> s
     await signInManager.SignOutAsync();
 
     // Ensure authentication cookie is removed
-    context.Response.Cookies.Delete(".AspNetCore.Identity.Application");
+    context.Response.Cookies.Delete(".AspNetCore.Identity.Application", new CookieOptions
+    {
+        HttpOnly = true,
+        Secure = true,
+        SameSite = SameSiteMode.None, // Updated for cross-origin support
+        Path = "/",
+    });
 
     return Results.Ok(new { message = "Logout successful" });
 }).RequireAuthorization();
 
-// Ping Aut api enpoint
+// Ping Auth api endpoint
 app.MapGet("/pingauth", async (ClaimsPrincipal user, UserManager<IdentityUser> userManager) =>
 {
-    if (!user.Identity?.IsAuthenticated ?? false)
+    try
     {
-        return Results.Unauthorized();
+        Console.WriteLine("🔔 /pingauth called");
+
+        if (!user.Identity?.IsAuthenticated ?? false)
+        {
+            Console.WriteLine("⚠️ User is not authenticated.");
+            return Results.Unauthorized();
+        }
+
+        var email = user.FindFirstValue(ClaimTypes.Email) ?? "unknown@example.com";
+        Console.WriteLine($"📧 Email from claims: {email}");
+
+        var identityUser = await userManager.FindByEmailAsync(email);
+
+        if (identityUser == null)
+        {
+            Console.WriteLine("❌ No user found with that email.");
+            return Results.BadRequest(new { error = "User not found for email: " + email });
+        }
+
+        var roles = await userManager.GetRolesAsync(identityUser);
+        var isAdmin = roles.Contains("Admin");
+
+        Console.WriteLine("✅ User and roles successfully retrieved.");
+
+        return Results.Json(new
+        {
+            email = email,
+            roles = roles,
+            isAdmin = isAdmin,
+            isAuthenticated = true
+        });
     }
-
-    var email = user.FindFirstValue(ClaimTypes.Email) ?? "unknown@example.com";
-    var identityUser = await userManager.FindByEmailAsync(email);
-    var roles = identityUser != null ? await userManager.GetRolesAsync(identityUser) : new List<string>();
-    var isAdmin = user.IsInRole("Admin");
-
-    Console.WriteLine("🔐 IsInRole(Admin): " + isAdmin);
-    Console.WriteLine("👤 User.Identity.Name: " + user.Identity?.Name);
-
-    return Results.Json(new
+    catch (Exception ex)
     {
-        email = email,
-        roles = roles,
-        isAdmin = isAdmin,
-        isAuthenticated = user.Identity?.IsAuthenticated ?? false
-    });
-}).RequireAuthorization();
+        Console.WriteLine("🔥 PingAuth error:");
+        Console.WriteLine(ex.ToString());
 
-// google login and logout endpoints
+        return Results.Problem($"PingAuth error: {ex.Message}\n{ex.StackTrace}");
+    }
+}).RequireAuthorization().RequireCors("AllowReactAppBlah");
+
+// google login endpoint
 app.MapGet("/login-google", async context =>
 {
     await context.ChallengeAsync(GoogleDefaults.AuthenticationScheme, new AuthenticationProperties
     {
-        RedirectUri = "http://localhost:3000/movies"
+        RedirectUri = "https://purple-moss-0726eb41e.6.azurestaticapps.net/movies" // Updated for production
     });
-});
-
-app.MapGet("/logout", async context =>
-{
-    await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-    context.Response.Redirect("/");
 });
 
 app.Run();

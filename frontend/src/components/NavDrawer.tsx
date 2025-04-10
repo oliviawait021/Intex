@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
+import { baseURL } from '../api/MoviesAPI';
+import Logout from './Logout';
 
 interface NavDrawerProps {
   isOpen: boolean;
@@ -16,7 +18,7 @@ const NavDrawer: React.FC<NavDrawerProps> = ({ isOpen, onClose, setIsAuthenticat
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch('https://localhost:5000/pingauth', {
+        const res = await fetch(`${baseURL}/pingauth`, {
           credentials: 'include',
         });
 
@@ -84,12 +86,8 @@ const NavDrawer: React.FC<NavDrawerProps> = ({ isOpen, onClose, setIsAuthenticat
         <br /><br /><br /><br /><br /><br /><br />
         <br /><br /><br /><br /><br />
         <Link to="/privacy" style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'white', textDecoration: 'none' }}>Privacy Policy</Link>
-        <span
-          onClick={handleLogout}
-          style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'white', textDecoration: 'none', cursor: 'pointer' }}
-        >
-          Log out
-        </span>
+        
+        <Logout style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'white', textDecoration: 'none', cursor: 'pointer' }}>Log out</Logout>
       </nav>
     </div>
   );

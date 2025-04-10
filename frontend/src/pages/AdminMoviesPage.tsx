@@ -10,8 +10,7 @@ import {
 import Pagination from '../components/Pagination';
 import NewMovieForm from '../components/NewMovieForm';
 import EditMovieForm from '../components/EditMovieForm';
-import AuthorizeView, { AuthorizedUser } from '../components/AuthorizeView';
-import Logout from '../components/Logout';
+import AuthorizeView from '../components/AuthorizeView';
 import './AdminMoviesPage.css';
 
 const AdminMoviesPage = () => {

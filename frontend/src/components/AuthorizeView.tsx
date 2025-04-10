@@ -1,5 +1,6 @@
 import React, { useState, useEffect, createContext } from 'react';
 import { Navigate } from 'react-router-dom';
+import { baseURL } from '../api/MoviesAPI';
 
 const UserContext = createContext<User | null>(null);
 
@@ -43,7 +44,7 @@ function AuthorizeView(props: { children: React.ReactNode }) {
       }
     }
 
-    fetchWithRetry('https://localhost:5000/pingauth', {
+    fetchWithRetry(`${baseURL}/pingauth`, {
       method: 'GET',
       credentials: 'include',
     });

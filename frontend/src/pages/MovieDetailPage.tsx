@@ -80,11 +80,53 @@ const movieData = [
 ];
 
 const MovieDetailPage = () => {
-  const { showId } = useParams();
+  const user_id = 1;
+  const { show_id: show_id } = useParams();
   const [movie, setMovie] = useState<Movie | null>(null);
   const [error, setError] = useState<string | null>(null);
+  const [rating, setRating] = useState(0); // Add rating state
   // Explicitly typing the refs as an array of HTMLDivElement or null
   const movieContainerRefs = useRef<(HTMLDivElement | null)[]>([]);
+
+  // Assuming you have an API endpoint like /api/movies/:movieId/rating
+  const saveMovieRating = async (
+    user_id: number,
+    show_id: string,
+    rating: number
+  ) => {
+    try {
+      const response = await fetch(`/Movie/${show_id}/rating`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ user_id, rating }),
+      });
+
+      if (!response.ok) {
+        throw new Error(`Failed to save rating: ${response.status}`);
+      }
+      // Optionally, handle success (e.g., show a message)
+      console.log('Rating saved successfully');
+    } catch (error: any) {
+      console.error('Error saving rating:', error);
+      // Optionally, handle error (e.g., show an error message)
+    }
+  };
+
+  const handleStarClick = (index: number) => {
+    const newRating = index + 1;
+    setRating(newRating);
+    // Here you would call your database function to save the rating.
+    console.log('Movie rating:', newRating);
+    // Example database call (replace with your actual database logic):
+    // saveMovieRatingToDatabase(newRating);
+    if (show_id) {
+      saveMovieRating(user_id, show_id, newRating);
+    } else {
+      console.error('showID is undefined');
+    }
+  };
 
   const scrollMovies = (index: number, direction: 'left' | 'right') => {
     if (movieContainerRefs.current[index]) {
@@ -101,22 +143,22 @@ const MovieDetailPage = () => {
 
   useEffect(() => {
     const loadMovie = async () => {
-      console.log("showId:", showId);
-      if (!showId) {
-        setError("No movie ID provided");
+      console.log('show_id:', show_id);
+      if (!show_id) {
+        setError('No movie ID provided');
         return;
       }
       try {
-        const data = await fetchMovieById(showId);
+        const data = await fetchMovieById(show_id);
         setMovie(data);
       } catch (err: any) {
-        console.error("Failed to fetch movie:", err);
+        console.error('Failed to fetch movie:', err);
         setError(err.message || 'Failed to load movie');
       }
     };
 
     loadMovie();
-  }, [showId]);
+  }, [show_id]);
 
   if (error) return <div className="error-message">Error: {error}</div>;
   if (!movie) return <div className="loading-message">Loading...</div>;
@@ -150,9 +192,18 @@ const MovieDetailPage = () => {
           <button className="watch-button">Watch Now</button>
           <div className="stars">
             {Array(5)
-              .fill('★')
-              .map((star, index) => (
-                <span key={index}>{star}</span>
+              .fill(0)
+              .map((_, index) => (
+                <span
+                  key={index}
+                  onClick={() => handleStarClick(index)}
+                  style={{
+                    cursor: 'pointer',
+                    color: index < rating ? 'gold' : 'gray',
+                  }}
+                >
+                  ★
+                </span>
               ))}
           </div>
         </div>
