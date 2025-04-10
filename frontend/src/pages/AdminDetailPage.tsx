@@ -63,91 +63,93 @@ const AdminDetailPage = () => {
     `https://movie-posters8.s3.us-east-1.amazonaws.com/Movie+Posters/${filename}`;
 
   return (
-    <div className="movie-detail-container">
-      <div className="back-button" onClick={() => window.history.back()}>
-        &#x2B95;
-      </div>
-      <div className="movie-detail-grid">
-        {/* Poster */}
-        <div className="poster-section">
-          <br />
-          <br />
-          <br />
-          <img
-            src={getPosterUrl(
-              `${movie.title.replace(/[^\p{L}\p{N}\s]/gu, '').trim()}.jpg`
-            )}
-            alt={movie.title}
-            className="poster-image"
-            onError={(e) => {
-              console.warn('Poster not found for:', movie.title);
-              (e.currentTarget as HTMLImageElement).src =
-                '/images/default-poster.png';
-            }}
-          />
-          <br />
-          <br />
-          <div className="edit-delete-button-container">
-            <button
-              onClick={() => setEditingMovie(movie)}
-              className="edit-delete-button"
-            >
-              Edit
-            </button>
+    <div className="movie-detail">
+      <div className="movie-detail-container">
+        <div className="back-button" onClick={() => window.history.back()}>
+          &#x2B95;
+        </div>
+        <div className="movie-detail-grid">
+          {/* Poster */}
+          <div className="poster-section">
             <br />
-            <button
-              onClick={() => handleDelete(movie.showId)}
-              className="edit-delete-button"
-            >
-              Delete
-            </button>
-          </div>
-        </div>
-
-        {/* Movie Info */}
-        <div className="info-section">
-          <h1 className="movie-title">{movie.title}</h1>
-          <div className="movie-meta">
-            <p>{movie.rating}</p>
-            <p>{movie.duration}</p>
-          </div>
-
-          <div className="movie-description">
-            <p className="label">Description:</p>
-            <p>{movie.description}</p>
-          </div>
-
-          <div className="movie-cast">
-            <p className="label">Cast:</p>
-            <p>{movie.cast}</p>
-          </div>
-
-          <p className="movie-footer">
-            <span className="label">Released Year:</span> {movie.releaseYear}
-          </p>
-
-          <p className="movie-footer">
-            <span className="label">Released Country:</span> {movie.country}
-          </p>
-
-          <p className="movie-footer">
-            <span className="label">Director:</span> {movie.director}
-          </p>
-        </div>
-      </div>
-
-      {/* Edit Modal */}
-      {editingMovie && (
-        <div className="modal-backdrop">
-          <div className="modal-content">
-            <EditMovieForm
-              movie={editingMovie}
-              onSuccess={handleEditSuccess}
-              onCancel={() => setEditingMovie(null)}
+            <br />
+            <br />
+            <img
+              src={getPosterUrl(
+                `${movie.title.replace(/[^\p{L}\p{N}\s]/gu, '').trim()}.jpg`
+              )}
+              alt={movie.title}
+              className="poster-image"
+              onError={(e) => {
+                console.warn('Poster not found for:', movie.title);
+                (e.currentTarget as HTMLImageElement).src =
+                  '/images/default-poster.png';
+              }}
             />
+            <br />
+            <br />
+            <div className="edit-delete-button-container">
+              <button
+                onClick={() => setEditingMovie(movie)}
+                className="edit-delete-button"
+              >
+                Edit
+              </button>
+              <br />
+              <button
+                onClick={() => handleDelete(movie.showId)}
+                className="edit-delete-button"
+              >
+                Delete
+              </button>
+            </div>
+          </div>
+
+          {/* Movie Info */}
+          <div className="info-section">
+            <h1 className="movie-title">{movie.title}</h1>
+            <div className="movie-meta">
+              <p>{movie.rating}</p>
+              <p>{movie.duration}</p>
+            </div>
+
+            <div className="movie-description">
+              <p className="label">Description:</p>
+              <p>{movie.description}</p>
+            </div>
+
+            <div className="movie-cast">
+              <p className="label">Cast:</p>
+              <p>{movie.cast}</p>
+            </div>
+
+            <p className="movie-footer">
+              <span className="label">Released Year:</span> {movie.releaseYear}
+            </p>
+
+            <p className="movie-footer">
+              <span className="label">Released Country:</span> {movie.country}
+            </p>
+
+            <p className="movie-footer">
+              <span className="label">Director:</span> {movie.director}
+            </p>
           </div>
         </div>
-      )}
+
+        {/* Edit Modal */}
+        {editingMovie && (
+          <div className="modal-backdrop">
+            <div className="modal-content">
+              <EditMovieForm
+                movie={editingMovie}
+                onSuccess={handleEditSuccess}
+                onCancel={() => setEditingMovie(null)}
+              />
+            </div>
+          </div>
+        )}
+      </div>
     </div>
   );
 };
