@@ -26,6 +26,8 @@ var builder = WebApplication.CreateBuilder(args);
 //     });
 // });
 
+DotNetEnv.Env.Load("backend.env"); // or just .Env.Load() if it's in the root
+
 // Add services to the container.
 
 builder.Services.AddControllers();
@@ -50,8 +52,8 @@ builder.Services.AddAuthentication(options =>
     })
     .AddGoogle(options =>
     {
-        options.ClientId = builder.Configuration["Authentication:Google:ClientId"];
-        options.ClientSecret = builder.Configuration["Authentication:Google:ClientSecret"];
+        options.ClientId = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_ID");
+        options.ClientSecret = Environment.GetEnvironmentVariable("GOOGLE_CLIENT_SECRET");
         options.Events.OnCreatingTicket = async context =>
         {
             var email = context.Principal.FindFirstValue(ClaimTypes.Email);
