@@ -1,6 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { baseURL } from '../api/MoviesAPI';
+import Logout from './Logout';
 
 interface NavDrawerProps {
   isOpen: boolean;
@@ -8,7 +9,8 @@ interface NavDrawerProps {
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const NavDrawer: React.FC<NavDrawerProps> = ({ isOpen, setIsAuthenticated }) => {  if (!isOpen) return null;
+const NavDrawer: React.FC<NavDrawerProps> = ({ isOpen, onClose, setIsAuthenticated }) => {
+  if (!isOpen) return null;
 
   const navigate = useNavigate();
   const [userRole, setUserRole] = useState<string | null>(null);
@@ -84,12 +86,8 @@ const NavDrawer: React.FC<NavDrawerProps> = ({ isOpen, setIsAuthenticated }) => 
         <br /><br /><br /><br /><br /><br /><br />
         <br /><br /><br /><br /><br />
         <Link to="/privacy" style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'white', textDecoration: 'none' }}>Privacy Policy</Link>
-        <span
-          onClick={handleLogout}
-          style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'white', textDecoration: 'none', cursor: 'pointer' }}
-        >
-          Log out
-        </span>
+        
+        <Logout style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'white', textDecoration: 'none', cursor: 'pointer' }}>Log out</Logout>
       </nav>
     </div>
   );

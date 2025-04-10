@@ -1,7 +1,7 @@
 import { useNavigate } from 'react-router-dom';
 import { baseURL } from '../api/MoviesAPI';
 
-function Logout(props: { children: React.ReactNode }) {
+function Logout(props: { children: React.ReactNode,  style?: React.CSSProperties; }) {
   const navigate = useNavigate();
 
   const handleLogout = async (e: React.MouseEvent<HTMLAnchorElement>) => {

@@ -126,7 +126,7 @@ builder.Services.AddSingleton<IEmailSender<IdentityUser>, NoOpEmailSender<Identi
 builder.Services.ConfigureApplicationCookie(options =>
 {
     options.Cookie.HttpOnly = true;
-    options.Cookie.SameSite = SameSiteMode.Lax; // Updated for cross-origin support
+    options.Cookie.SameSite = SameSiteMode.None; // Updated for cross-origin support
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Ensure cookies are secure
     options.Cookie.Name = ".AspNetCore.Identity.Application";
     options.LoginPath = "/login";
@@ -177,9 +177,8 @@ app.MapPost("/logout", async (HttpContext context, SignInManager<IdentityUser> s
     {
         HttpOnly = true,
         Secure = true,
-        SameSite = SameSiteMode.Lax, // Updated for cross-origin support
+        SameSite = SameSiteMode.None, // Updated for cross-origin support
         Path = "/",
-        Domain = "localhost" // 👈 IMPORTANT: matches the cookie domain
     });
 
     return Results.Ok(new { message = "Logout successful" });
@@ -231,7 +230,7 @@ app.MapGet("/pingauth", async (ClaimsPrincipal user, UserManager<IdentityUser> u
     }
 }).RequireAuthorization().RequireCors("AllowReactAppBlah");
 
-// google login and logout endpoints
+// google login endpoint
 app.MapGet("/login-google", async context =>
 {
     await context.ChallengeAsync(GoogleDefaults.AuthenticationScheme, new AuthenticationProperties
@@ -239,18 +238,5 @@ app.MapGet("/login-google", async context =>
         RedirectUri = "https://purple-moss-0726eb41e.6.azurestaticapps.net/movies" // Updated for production
     });
 });
-
-app.MapGet("/logout", async context =>
-{
-    await context.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-    context.Response.Cookies.Delete(".AspNetCore.Identity.Application", new CookieOptions
-    {
-        HttpOnly = true,
-        Secure = true,
-        SameSite = SameSiteMode.Lax, // Updated for cross-origin support
-        Path = "/",
-    });
-    context.Response.Redirect("/");
-}).RequireCors("AllowReactAppBlah");
 
 app.Run();
