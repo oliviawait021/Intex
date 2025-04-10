@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 import { baseURL } from '../api/MoviesAPI';
 import Logout from './Logout';
 
@@ -9,10 +9,9 @@ interface NavDrawerProps {
   setIsAuthenticated: React.Dispatch<React.SetStateAction<boolean>>;
 }
 
-const NavDrawer: React.FC<NavDrawerProps> = ({ isOpen, onClose, setIsAuthenticated }) => {
+const NavDrawer: React.FC<NavDrawerProps> = ({ isOpen }) => {
   if (!isOpen) return null;
 
-  const navigate = useNavigate();
   const [userRole, setUserRole] = useState<string | null>(null);
 
   useEffect(() => {
@@ -41,13 +40,6 @@ const NavDrawer: React.FC<NavDrawerProps> = ({ isOpen, onClose, setIsAuthenticat
     fetchUser();
   }, []);
 
-  const handleLogout = () => {
-    localStorage.removeItem('authToken');
-    localStorage.removeItem('userRole');
-    alert('You have been logged out.');
-    setIsAuthenticated(false);
-    navigate('/');
-  };
 
   return (
     <div style={{
