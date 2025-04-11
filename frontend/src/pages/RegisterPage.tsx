@@ -38,7 +38,7 @@ function Register() {
       setError('Please enter a valid email address.');
     } else if (password !== confirmPassword) {
       setError('Passwords do not match.');
-    } else if ((password.length < 15) && (confirmPassword.length)) {
+    } else if ((password.length < 15) && (confirmPassword.length < 15)) {
       setError('Password must be at least 15 characters long.');
     } else {
       // clear error message
