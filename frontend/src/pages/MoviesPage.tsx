@@ -5,6 +5,11 @@ import { baseURL, fetchUserInfo } from '../api/MoviesAPI';
 import { useNavigate } from 'react-router-dom';
 import SearchBar from '../components/SearchBar';
 
+const cleanTitle = (title: string): string => {
+  const cleaned = title.replace(/[^a-zA-Z0-9 ]/g, ''); // remove special characters but keep spaces
+  return encodeURIComponent(cleaned.trim()); // encode once here
+};
+
 const genreOptions = [
   'Documentary & Reality',
   'Drama',
@@ -205,7 +210,7 @@ const MoviesPage: React.FC = () => {
   }, [pageNum]);
 
   useEffect(() => {
-    console.log("Recommendations state:", recommendations); //Log recommendations state
+    console.log('Recommendations state:', recommendations); //Log recommendations state
     if (recommendations.length > 0) {
       const getMovieDetails = async () => {
         setForYouLoading(true);
@@ -216,7 +221,7 @@ const MoviesPage: React.FC = () => {
           const recMovies = await Promise.all(moviePromises);
           const filteredMovies = recMovies.filter((movie) => movie !== null);
           setForYou(filteredMovies);
-          console.log("forYou state:", filteredMovies); //Log forYou state
+          console.log('forYou state:', filteredMovies); //Log forYou state
         } catch (error) {
           console.error('Error fetching movie details:', error);
         } finally {
@@ -260,7 +265,12 @@ const MoviesPage: React.FC = () => {
     <>
       <WelcomeBand />
       <br /> <br />
-      <SearchBar onSearchResults={(results) => setSearchResults(results as unknown as Movie[])} />      <div className="genre-filter-bar">
+      <SearchBar
+        onSearchResults={(results) =>
+          setSearchResults(results as unknown as Movie[])
+        }
+      />{' '}
+      <div className="genre-filter-bar">
         {['Show All', ...genreOptions].map((genre) => (
           <button
             key={genre}
@@ -276,7 +286,6 @@ const MoviesPage: React.FC = () => {
           </button>
         ))}
       </div>
-
       <div className="recommendation-section">
         <h2 className="section-title">Personalized Picks</h2>
         {forYouLoading && <p>Loading top picks...</p>}
@@ -296,7 +305,7 @@ const MoviesPage: React.FC = () => {
                   key={movie.show_id}
                 >
                   <img
-                    src={`/api/movie/poster-image/${encodeURIComponent(movie.title)}`}
+                    src={`https://movieposters9.blob.core.windows.net/movieposters9/${cleanTitle(movie.title)}.jpg`}
                     alt={movie.title}
                     className="movie-poster"
                     style={{ objectFit: 'contain' }}
@@ -336,7 +345,7 @@ const MoviesPage: React.FC = () => {
                 key={movie.show_id}
               >
                 <img
-                  src={`/api/movie/poster-image/${encodeURIComponent(movie.title)}`}
+                  src={`https://movieposters9.blob.core.windows.net/movieposters9/${cleanTitle(movie.title)}.jpg`}
                   alt={movie.title}
                   className="movie-poster"
                   style={{ objectFit: 'contain' }}
@@ -359,7 +368,6 @@ const MoviesPage: React.FC = () => {
           </button>
         </div>
       </div>
-
       <div className="recommendation-section">
         <h2 className="section-title">Inspired by your ratings</h2>
         <div className="movie-scroll-container">
@@ -377,7 +385,7 @@ const MoviesPage: React.FC = () => {
                 key={movie.show_id}
               >
                 <img
-                  src={`/api/movie/poster-image/${encodeURIComponent(movie.title)}`}
+                  src={`https://movieposters9.blob.core.windows.net/movieposters9/${cleanTitle(movie.title)}.jpg`}
                   alt={movie.title}
                   className="movie-poster"
                   style={{ objectFit: 'contain' }}
@@ -400,7 +408,6 @@ const MoviesPage: React.FC = () => {
           </button>
         </div>
       </div>
-
       <h2 className="section-title">Movies</h2>
       <div className="movie-grid">
         {displayedMovies.map((movie) => (
@@ -410,7 +417,7 @@ const MoviesPage: React.FC = () => {
             key={movie.show_id}
           >
             <img
-              src={`/api/movie/poster-image/${encodeURIComponent(movie.title)}`}
+              src={`https://movieposters9.blob.core.windows.net/movieposters9/${cleanTitle(movie.title)}.jpg`}
               alt={movie.title}
               className="movie-poster"
               style={{ objectFit: 'contain' }}
@@ -423,7 +430,6 @@ const MoviesPage: React.FC = () => {
           </div>
         ))}
       </div>
-
       <div ref={sentinelRef} style={{ height: '1px' }} />
       {isLoading && <p className="loading-text">Loading more movies...</p>}
     </>

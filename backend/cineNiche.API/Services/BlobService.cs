@@ -21,7 +21,8 @@ public class BlobService
 
     public string GenerateMoviePosterBlobName(string movieTitle)
     {
-        return $"{movieTitle}.jpg";
+        string processedTitle = Regex.Replace(movieTitle, @"[\\/:*?""<>|]", ""); 
+        return $"{processedTitle}.jpg";
     }
 
     public string GetMoviePosterBlobUrl(string blobName)

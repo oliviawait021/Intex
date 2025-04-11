@@ -5,6 +5,12 @@ import Footer from '../components/Footer';
 import { Movie } from '../types/Movie';
 import { baseURL } from '../api/MoviesAPI';
 
+const cleanTitle = (title: string): string => {
+  const cleaned = title.replace(/[^a-zA-Z0-9 ]/g, ''); // remove special characters but keep letters, numbers, spaces
+  return encodeURIComponent(cleaned.trim()); // URL encode the result
+};
+
+
 const faqData = [
   {
     question: 'What is CineNiche?',
