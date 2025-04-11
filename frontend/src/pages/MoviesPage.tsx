@@ -210,15 +210,11 @@ const MoviesPage: React.FC = () => {
       const getMovieDetails = async () => {
         setForYouLoading(true);
         try {
-          const moviePromises = recommendations.map(rec => {
-            console.log("Fetching movie details for show_id:", rec.show_id);
-            console.log("Poster URL:", getPosterUrl(rec.show_id));
+          const moviePromises = recommendations.map((rec) => {
             return fetchMovieImgandTitle(rec.show_id);
           });
           const recMovies = await Promise.all(moviePromises);
-          console.log("recMovies:", recMovies); //Log recMovies
-          const filteredMovies = recMovies.filter(movie => movie !== null);
-          console.log("Filtered movies:", filteredMovies); //Log filteredMovies
+          const filteredMovies = recMovies.filter((movie) => movie !== null);
           setForYou(filteredMovies);
           console.log("forYou state:", filteredMovies); //Log forYou state
         } catch (error) {
@@ -258,17 +254,7 @@ const MoviesPage: React.FC = () => {
       ? movies
       : movies.filter((movie) => selectedGenres.includes(movie.genre));
 
-  const formatTitleForS3 = (title: string) =>
-    encodeURIComponent(title.trim()).replace(/%20/g, '+');
-
-  // const getPosterUrl = (title: string) =>
-  //   `https://movie-posters8.s3.us-east-1.amazonaws.com/Movie+ Posters/${formatTitleForS3(title)}.jpg`;
-
-  const displayedMovies =
-    searchResults !== null ? searchResults : filteredMovies;
-
-  const getPosterUrl = (title: string) =>
-    `https://movie-posters8.s3.us-east-1.amazonaws.com/Movie+Posters/${formatTitleForS3(title)}.jpg`;
+  const displayedMovies = searchResults || filteredMovies;
 
   return (
     <>
@@ -310,7 +296,7 @@ const MoviesPage: React.FC = () => {
                   key={movie.show_id}
                 >
                   <img
-                    src={getPosterUrl(movie.title)}
+                    src={`/api/movie/poster-url/${encodeURIComponent(movie.title)}`}
                     alt={movie.title}
                     className="movie-poster"
                     style={{ objectFit: 'contain' }}
@@ -350,7 +336,7 @@ const MoviesPage: React.FC = () => {
                 key={movie.show_id}
               >
                 <img
-                  src={getPosterUrl(movie.title)}
+                  src={`/api/movie/poster-url/${encodeURIComponent(movie.title)}`}
                   alt={movie.title}
                   className="movie-poster"
                   style={{ objectFit: 'contain' }}
@@ -391,7 +377,7 @@ const MoviesPage: React.FC = () => {
                 key={movie.show_id}
               >
                 <img
-                  src={getPosterUrl(movie.title)}
+                  src={`/api/movie/poster-url/${encodeURIComponent(movie.title)}`}
                   alt={movie.title}
                   className="movie-poster"
                   style={{ objectFit: 'contain' }}
@@ -424,7 +410,7 @@ const MoviesPage: React.FC = () => {
             key={movie.show_id}
           >
             <img
-              src={getPosterUrl(movie.title)}
+              src={`/api/movie/poster-url/${encodeURIComponent(movie.title)}`}
               alt={movie.title}
               className="movie-poster"
               style={{ objectFit: 'contain' }}

@@ -17,6 +17,11 @@ using Microsoft.AspNetCore.Authentication.Google;
 
 var builder = WebApplication.CreateBuilder(args);
 
+var azureStorageKey = builder.Configuration["AzureStorageKey"];
+if (string.IsNullOrEmpty(azureStorageKey))
+{
+    throw new InvalidOperationException("Missing AzureStorageKey in user-secrets or configuration.");
+}
 
 DotNetEnv.Env.Load("backend.env"); // or just .Env.Load() if it's in the root
 
@@ -139,6 +144,8 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddHttpClient();
+
+builder.Services.AddSingleton<BlobService>(new BlobService(azureStorageKey));
 
 var app = builder.Build();
 
