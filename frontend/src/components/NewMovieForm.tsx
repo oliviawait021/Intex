@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { Movie } from '../types/Movie';
 import { addMovie, getNextShowId } from '../api/MoviesAPI';
 import '../pages/AdminMoviesPage.css';
-import Footer from './Footer';
-import WelcomeBand from './WelcomeBand';
 
 interface NewMovieFormProps {
   onSuccess: () => void;
@@ -36,7 +34,7 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
     e.preventDefault();
 
     const newShowId = await getNextShowId();
-    const newMovie = { ...formData, show_id: newShowId };
+    const newMovie = { ...formData, show_Id: newShowId };
 
     await addMovie(newMovie);
     onSuccess();
