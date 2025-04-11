@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './identity.css';
 import { GoogleLogin } from '@react-oauth/google';
@@ -10,6 +10,7 @@ function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
   const [confirmPassword, setConfirmPassword] = useState('');
+  const [showPopup, setShowPopup] = useState(false);
   const navigate = useNavigate();
 
   // state variable for error messages
@@ -38,8 +39,9 @@ function Register() {
       setError('Please enter a valid email address.');
     } else if (password !== confirmPassword) {
       setError('Passwords do not match.');
-    } else if ((password.length < 15) && (confirmPassword.length < 15)) {
+    } else if (password.length < 15 || confirmPassword.length < 15) {
       setError('Password must be at least 15 characters long.');
+      setShowPopup(true);
     } else {
       // clear error message
       setError('');
@@ -70,10 +72,33 @@ function Register() {
     }
   };
 
+  useEffect(() => {
+    if (showPopup) {
+      const timer = setTimeout(() => setShowPopup(false), 3000);
+      return () => clearTimeout(timer);
+    }
+  }, [showPopup]);
+
   return (
     <>
     <div className="auth-wrapper">
       <div className="auth-content">
+      {showPopup && (
+        <div style={{
+          position: 'absolute',
+          top: '1rem',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          backgroundColor: '#f44336',
+          color: 'white',
+          padding: '0.75rem 1.5rem',
+          borderRadius: '4px',
+          boxShadow: '0px 0px 10px rgba(0,0,0,0.2)',
+          zIndex: 999
+        }}>
+          {error}
+        </div>
+      )}
       <div className="back-button" onClick={() => window.history.back()}>
         &#x2B95;
       </div>
