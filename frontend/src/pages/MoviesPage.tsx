@@ -272,7 +272,6 @@ const MoviesPage: React.FC = () => {
 
       <div ref={sentinelRef} style={{ height: '1px' }} />
       {isLoading && <p className="loading-text">Loading more movies...</p>}
-      <Footer />
     </>
   );
 };
