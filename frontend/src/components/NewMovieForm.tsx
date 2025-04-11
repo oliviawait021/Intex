@@ -118,7 +118,7 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
               </select>
             </div>
             <div className="auth-input-group">
-              <label htmlFor="rating">IMDB Rating</label>
+              <label htmlFor="rating">Rating</label>
               <select
                 name="rating"
                 value={formData.rating}
