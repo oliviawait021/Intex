@@ -205,18 +205,22 @@ const MoviesPage: React.FC = () => {
   }, [pageNum]);
 
   useEffect(() => {
+    console.log("Recommendations state:", recommendations); //Log recommendations state
     if (recommendations.length > 0) {
       const getMovieDetails = async () => {
         setForYouLoading(true);
         try {
           const moviePromises = recommendations.map(rec => {
             console.log("Fetching movie details for show_id:", rec.show_id);
-            console.log("Poster URL:", getPosterUrl(rec.show_id)); //Log the poster url
+            console.log("Poster URL:", getPosterUrl(rec.show_id));
             return fetchMovieImgandTitle(rec.show_id);
           });
           const recMovies = await Promise.all(moviePromises);
+          console.log("recMovies:", recMovies); //Log recMovies
           const filteredMovies = recMovies.filter(movie => movie !== null);
+          console.log("Filtered movies:", filteredMovies); //Log filteredMovies
           setForYou(filteredMovies);
+          console.log("forYou state:", filteredMovies); //Log forYou state
         } catch (error) {
           console.error('Error fetching movie details:', error);
         } finally {
