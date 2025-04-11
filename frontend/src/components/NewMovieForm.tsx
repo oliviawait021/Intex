@@ -67,9 +67,9 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
               />
             </div>
             <div className="auth-input-group">
-              <label htmlFor="releaseYear">Year</label>
+              <label htmlFor="release_year">Year</label>
               <select
-                name="releaseYear"
+                name="release_year"
                 value={formData.release_year}
                 onChange={handleChange}
                 className="auth-input"
@@ -132,22 +132,22 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
               >
                 <option value="">Value</option>
                 <option value="Drama">Drama</option>
-                <option value="Comedy">Documentary & Reality</option>
-                <option value="Action">Action & Adventure</option>
+                <option value="Action">Action &  Adventure</option>
                 <option value="Comedy">Comedy</option>
-                <option value="Comedy">Family & Kids</option>
-                <option value="Comedy">Other/Miscellaneous</option>
+                <option value="Documentary & Reality">Documentary & Reality</option>
+                <option value="Family & Kids">Family & Kids</option>
+                <option value="Other / Miscellaneous">Other / Miscellaneous</option>
               </select>
             </div>
             <div className="auth-input-group">
               <label htmlFor="country">Country Made</label>
               <input
-              type="text"
-              name="country"
-              value={formData.country}
-              onChange={handleChange}
-              className="auth-input"
-            />
+                type="text"
+                name="country"
+                value={formData.country}
+                onChange={handleChange}
+                className="auth-input"
+              />
             </div>
             <div className="auth-input-group">
               <label htmlFor="cast">Cast List</label>
