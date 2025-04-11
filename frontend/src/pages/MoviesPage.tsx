@@ -34,6 +34,22 @@ const MoviesPage: React.FC = () => {
   const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
   const [forYou, setForYou] = useState<Movie[]>([]);
   const [forYouLoading, setForYouLoading] = useState(false);
+  const becauseYouWatchedIds = [
+    's8381',
+    's3466',
+    's3181',
+    's294',
+    's7739',
+    's2917',
+    's5899',
+    's2361',
+    's493',
+    's7361',
+    's242',
+  ];
+  const [becauseTitle, setBecauseTitle] = useState('');
+  const [becauseMovies, setBecauseMovies] = useState<Movie[]>([]);
+  const [userRatedMovies, setUserRatedMovies] = useState<Movie[]>([]);
 
   const navigate = useNavigate();
   const handlePosterClick = (show_id: string) => {
@@ -44,6 +60,7 @@ const MoviesPage: React.FC = () => {
   const sentinelRef = useRef<HTMLDivElement>(null);
   const topPicksRef = useRef<HTMLDivElement>(null!);
   const becauseYouLikedRef = useRef<HTMLDivElement>(null!);
+  const userRatedRef = useRef<HTMLDivElement>(null!);
 
   const toggleGenre = (genre: string) => {
     if (genre === 'Show All') {
@@ -144,9 +161,46 @@ const MoviesPage: React.FC = () => {
     }
   };
 
+  const fetchBecauseRecommendations = async () => {
+    const randomId =
+      becauseYouWatchedIds[
+        Math.floor(Math.random() * becauseYouWatchedIds.length)
+      ];
+    try {
+      const res = await fetch(
+        `${baseURL}/Movie/BecauseRecommendations/${randomId}`,
+        {
+          credentials: 'include',
+        }
+      );
+      if (!res.ok) throw new Error('Failed to fetch because movies');
+      const movies = await res.json();
+      setBecauseMovies(movies);
+      const mainMovie = await fetchMovieImgandTitle(randomId);
+      if (mainMovie) setBecauseTitle(mainMovie.title);
+    } catch (err) {
+      console.error('Error fetching because recommendations:', err);
+    }
+  };
+
+  const fetchUserRatedRecommendations = async () => {
+    try {
+      const res = await fetch(`${baseURL}/Movie/UserBasedRecommendations/1`, {
+        credentials: 'include',
+      });
+      if (!res.ok) throw new Error('Failed to fetch user rated movies');
+      const movies = await res.json();
+      setUserRatedMovies(movies);
+    } catch (err) {
+      console.error('Error fetching user rated recommendations:', err);
+    }
+  };
+
   useEffect(() => {
     fetchMovies(pageNum);
     fetchRecommendations();
+    fetchBecauseRecommendations();
+    fetchUserRatedRecommendations();
   }, [pageNum]);
 
   useEffect(() => {
@@ -218,7 +272,7 @@ const MoviesPage: React.FC = () => {
       </div>
 
       <div className="recommendation-section">
-        <h2 className="section-title">Top Picks for You</h2>
+        <h2 className="section-title">Personalized Picks</h2>
         {forYouLoading && <p>Loading top picks...</p>}
         {!forYouLoading && (
           <div className="movie-scroll-container">
@@ -260,7 +314,7 @@ const MoviesPage: React.FC = () => {
           </div>
         )}
 
-        <h2 className="section-title">Recommended For You</h2>
+        <h2 className="section-title">Because you watched {becauseTitle}</h2>
         <div className="movie-scroll-container">
           <button
             className="scroll-arrow left"
@@ -268,10 +322,73 @@ const MoviesPage: React.FC = () => {
           >
             &#60;
           </button>
-          <div className="movie-container" ref={becauseYouLikedRef}></div>
+          <div className="movie-container" ref={becauseYouLikedRef}>
+            {becauseMovies.map((movie) => (
+              <div
+                onClick={() => handlePosterClick(movie.show_id)}
+                className="movie-item"
+                key={movie.show_id}
+              >
+                <img
+                  src={getPosterUrl(movie.title)}
+                  alt={movie.title}
+                  className="movie-poster"
+                  style={{ objectFit: 'contain' }}
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src =
+                      '/images/default-poster.png';
+                  }}
+                />
+                <div className="movies-page-carousel-titles-size">
+                  {movie.title}
+                </div>
+              </div>
+            ))}
+          </div>
           <button
             className="scroll-arrow right"
             onClick={() => scrollCarousel(becauseYouLikedRef, 'right')}
+          >
+            &#62;
+          </button>
+        </div>
+      </div>
+
+      <div className="recommendation-section">
+        <h2 className="section-title">Inspired by your ratings</h2>
+        <div className="movie-scroll-container">
+          <button
+            className="scroll-arrow left"
+            onClick={() => scrollCarousel(userRatedRef, 'left')}
+          >
+            &#60;
+          </button>
+          <div className="movie-container" ref={userRatedRef}>
+            {userRatedMovies.map((movie) => (
+              <div
+                onClick={() => handlePosterClick(movie.show_id)}
+                className="movie-item"
+                key={movie.show_id}
+              >
+                <img
+                  src={getPosterUrl(movie.title)}
+                  alt={movie.title}
+                  className="movie-poster"
+                  style={{ objectFit: 'contain' }}
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src =
+                      '/images/default-poster.png';
+                  }}
+                />
+                <div className="movies-page-carousel-titles-size">
+                  {movie.title}
+                </div>
+              </div>
+            ))}
+          </div>
+          <button
+            className="scroll-arrow right"
+            onClick={() => scrollCarousel(userRatedRef, 'right')}
           >
             &#62;
           </button>

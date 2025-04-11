@@ -4,37 +4,14 @@ import { baseURL, fetchMovieById } from '../api/MoviesAPI';
 import { Movie } from '../types/Movie';
 import './MovieDetailPage.css';
 
-const movieData = [
-  { name: 'The Matrix', poster: '/images/the-matrix.jpg' },
-  { name: 'Inception', poster: '/images/inception.jpg' },
-  { name: 'The Dark Knight', poster: '/images/the-dark-night.jpg' },
-  { name: 'Avatar', poster: '/images/avatar.jpg' },
-  { name: 'Interstellar', poster: '/images/interstellar.jpg' },
-  { name: 'The Avengers', poster: '/images/the-avengers.jpg' },
-  { name: 'The Godfather', poster: '/images/the-godfather.jpg' },
-  { name: 'Forrest Gump', poster: '/images/forrest-gump.jpg' },
-  { name: 'Titanic', poster: '/images/titanic.jpg' },
-  { name: 'Brother Bear', poster: '/images/brother-bear.jpg' },
-  { name: 'Mission: Impossible', poster: '/images/mission-impossible.jpg' },
-  { name: 'Top Gun: Maverick', poster: '/images/topgun.jpg' },
-  { name: 'Back to the Future', poster: '/images/back-to-the-future.jpg' },
-  { name: 'Jurassic Park', poster: '/images/jurassic-park.jpg' },
-  {
-    name: 'The Silence of the Lambs',
-    poster: '/images/the-silence-of-the-lambs.jpg',
-  },
-  { name: 'The Terminator', poster: '/images/the-terminator.jpg' },
-  { name: 'The Green Mile', poster: '/images/the-green-mile.jpg' },
-  { name: 'Coco', poster: '/images/coco.jpg' },
-];
-
 const MovieDetailPage = () => {
   const { show_id } = useParams();
   const [movie, setMovie] = useState<Movie | null>(null);
   const [error, setError] = useState<string | null>(null);
   const [rating, setRating] = useState(0);
+  const [similarMovies, setSimilarMovies] = useState<Movie[]>([]);
 
-  const user_id = 1; // ⚠️ Replace with actual user ID if needed
+  const user_id = 1;
   const movieContainerRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const scrollMovies = (index: number, direction: 'left' | 'right') => {
@@ -76,6 +53,17 @@ const MovieDetailPage = () => {
     }
   };
 
+  const fetchSimilarMovies = async () => {
+    try {
+      const res = await fetch(`${baseURL}/Movie/SimilarMovies/${show_id}`);
+      if (!res.ok) throw new Error('Failed to fetch similar movies');
+      const data = await res.json();
+      setSimilarMovies(data);
+    } catch (err) {
+      console.error('Error fetching similar movies:', err);
+    }
+  };
+
   useEffect(() => {
     const loadMovie = async () => {
       if (!show_id) {
@@ -93,6 +81,7 @@ const MovieDetailPage = () => {
     };
 
     loadMovie();
+    fetchSimilarMovies();
   }, [show_id]);
 
   if (error) return <div className="error-message">Error: {error}</div>;
@@ -185,14 +174,26 @@ const MovieDetailPage = () => {
               movieContainerRefs.current[0] = el;
             }}
           >
-            {movieData.map((movie, index) => (
-              <div className="movie-item" key={index}>
+            {similarMovies.map((movie, index) => (
+              <div
+                className="movie-item"
+                key={movie.show_id}
+                onClick={() =>
+                  (window.location.href = `/movie/${movie.show_id}`)
+                }
+              >
                 <img
-                  src={movie.poster}
-                  alt={movie.name}
+                  src={getPosterUrl(
+                    `${movie.title.replace(/[^\p{L}\p{N}\s]/gu, '').trim()}.jpg`
+                  )}
+                  alt={movie.title}
                   className="movie-poster"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src =
+                      '/images/default-poster.png';
+                  }}
                 />
-                <div className="movie-title">{movie.name}</div>
+                <div className="movie-title-detail">{movie.title}</div>
               </div>
             ))}
           </div>

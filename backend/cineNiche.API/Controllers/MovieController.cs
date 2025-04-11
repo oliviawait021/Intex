@@ -248,5 +248,61 @@ namespace cineNiche.API.Controllers
             return Ok(movieRating); // return ok.
         }
 
+        [HttpGet("BecauseRecommendations/{sourceShowId}")]
+        public async Task<IActionResult> GetBecauseRecommendations(string sourceShowId)
+        {
+            var recommendedIds = await _movieContext.allContent_recs
+                .Where(b => b.source_show_id == sourceShowId)
+                .Select(b => b.recommended_show_id)
+                .ToListAsync();
+
+            var recommendedMovies = await _movieContext.MoviesTitles
+                .Where(m => recommendedIds.Contains(m.show_id))
+                .ToListAsync();
+
+            return Ok(recommendedMovies);
+        }
+
+    [HttpGet("UserBasedRecommendations/{userId}")]
+    public async Task<ActionResult<IEnumerable<MoviesTitle>>> GetUserBasedRecommendations(int userId)
+    {
+        var userRecs = await _movieContext.user_recs_all.FirstOrDefaultAsync(u => u.user_id == userId);
+        if (userRecs == null) return NotFound("No recommendations found for this user.");
+
+        var recIds = new List<string>
+        {
+            userRecs.recommendation_1, userRecs.recommendation_2, userRecs.recommendation_3,
+            userRecs.recommendation_4, userRecs.recommendation_5, userRecs.recommendation_6,
+            userRecs.recommendation_7, userRecs.recommendation_8, userRecs.recommendation_9,
+            userRecs.recommendation_10, userRecs.recommendation_11, userRecs.recommendation_12,
+            userRecs.recommendation_13, userRecs.recommendation_14, userRecs.recommendation_15,
+            userRecs.recommendation_16, userRecs.recommendation_17, userRecs.recommendation_18,
+            userRecs.recommendation_19, userRecs.recommendation_20,
+        };
+
+        var recommendedMovies = await _movieContext.MoviesTitles
+            .Where(m => recIds.Contains(m.show_id))
+            .ToListAsync();
+
+        return Ok(recommendedMovies);
+    }
+
+    [HttpGet("SimilarMovies/{show_id}")]
+    public async Task<IActionResult> GetSimilarMovies(string show_id)
+    {
+        var recommendations = await _movieContext.hybrid
+            .Where(s => s.show_id == show_id)
+            .Select(s => s.recommendation)
+            .ToListAsync();
+
+        var movies = await _movieContext.MoviesTitles
+            .Where(m => recommendations.Contains(m.show_id))
+            .ToListAsync();
+
+        return Ok(movies);
+    }
+
+
+
     }
 }
