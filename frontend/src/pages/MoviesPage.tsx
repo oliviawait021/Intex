@@ -296,7 +296,7 @@ const MoviesPage: React.FC = () => {
                   key={movie.show_id}
                 >
                   <img
-                    src={`/api/movie/poster-url/${encodeURIComponent(movie.title)}`}
+                    src={`/api/movie/poster-image/${encodeURIComponent(movie.title)}`}
                     alt={movie.title}
                     className="movie-poster"
                     style={{ objectFit: 'contain' }}
@@ -336,7 +336,7 @@ const MoviesPage: React.FC = () => {
                 key={movie.show_id}
               >
                 <img
-                  src={`/api/movie/poster-url/${encodeURIComponent(movie.title)}`}
+                  src={`/api/movie/poster-image/${encodeURIComponent(movie.title)}`}
                   alt={movie.title}
                   className="movie-poster"
                   style={{ objectFit: 'contain' }}
@@ -377,7 +377,7 @@ const MoviesPage: React.FC = () => {
                 key={movie.show_id}
               >
                 <img
-                  src={`/api/movie/poster-url/${encodeURIComponent(movie.title)}`}
+                  src={`/api/movie/poster-image/${encodeURIComponent(movie.title)}`}
                   alt={movie.title}
                   className="movie-poster"
                   style={{ objectFit: 'contain' }}
@@ -410,7 +410,7 @@ const MoviesPage: React.FC = () => {
             key={movie.show_id}
           >
             <img
-              src={`/api/movie/poster-url/${encodeURIComponent(movie.title)}`}
+              src={`/api/movie/poster-image/${encodeURIComponent(movie.title)}`}
               alt={movie.title}
               className="movie-poster"
               style={{ objectFit: 'contain' }}

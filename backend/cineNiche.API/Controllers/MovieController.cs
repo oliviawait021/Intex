@@ -342,6 +342,22 @@ namespace cineNiche.API.Controllers
         return Ok(posterUrl);
     }
 
+    [HttpGet("poster-image/{title}")]
+    [AllowAnonymous]
+    public async Task<IActionResult> GetPosterImage(string title)
+    {
+        if (string.IsNullOrWhiteSpace(title))
+            return BadRequest("Missing title.");
+
+        string blobName = _blobService.GenerateMoviePosterBlobName(title);
+        var blobClient = _blobService.GetBlobClient(blobName); // <-- we'll add this helper next
+
+        if (!await blobClient.ExistsAsync())
+            return NotFound();
+
+        var stream = await blobClient.OpenReadAsync();
+        return File(stream, "image/jpeg");
+    }
 
     }
 }

@@ -44,4 +44,10 @@ public class BlobService
             return "/images/default-poster.png"; // Make sure this image exists in React public/
         }
     }
+
+    public BlobClient GetBlobClient(string blobName)
+{
+    return _blobContainerClient.GetBlobClient(blobName);
 }
+}
+
