@@ -3,6 +3,7 @@ import './MoviesPage.css';
 import WelcomeBand from '../components/WelcomeBand';
 import { baseURL, fetchUserInfo } from '../api/MoviesAPI';
 import { useNavigate } from 'react-router-dom';
+import SearchBar from '../components/SearchBar';
 
 const genreOptions = [
   'Documentary & Reality',
@@ -50,7 +51,7 @@ const MoviesPage: React.FC = () => {
   const [becauseTitle, setBecauseTitle] = useState('');
   const [becauseMovies, setBecauseMovies] = useState<Movie[]>([]);
   const [userRatedMovies, setUserRatedMovies] = useState<Movie[]>([]);
-
+  const [searchResults, setSearchResults] = useState<Movie[] | null>(null);
   const navigate = useNavigate();
   const handlePosterClick = (show_id: string) => {
     navigate(`/movie/${show_id}`);
@@ -204,6 +205,7 @@ const MoviesPage: React.FC = () => {
   }, [pageNum]);
 
   useEffect(() => {
+    console.log("Recommendations state:", recommendations); //Log recommendations state
     if (recommendations.length > 0) {
       const getMovieDetails = async () => {
         setForYouLoading(true);
@@ -214,6 +216,7 @@ const MoviesPage: React.FC = () => {
           const recMovies = await Promise.all(moviePromises);
           const filteredMovies = recMovies.filter((movie) => movie !== null);
           setForYou(filteredMovies);
+          console.log("forYou state:", filteredMovies); //Log forYou state
         } catch (error) {
           console.error('Error fetching movie details:', error);
         } finally {
@@ -251,11 +254,13 @@ const MoviesPage: React.FC = () => {
       ? movies
       : movies.filter((movie) => selectedGenres.includes(movie.genre));
 
+  const displayedMovies = searchResults || filteredMovies;
+
   return (
     <>
       <WelcomeBand />
-
-      <div className="genre-filter-bar">
+      <br /> <br />
+      <SearchBar onSearchResults={(results) => setSearchResults(results as unknown as Movie[])} />      <div className="genre-filter-bar">
         {['Show All', ...genreOptions].map((genre) => (
           <button
             key={genre}
@@ -398,7 +403,7 @@ const MoviesPage: React.FC = () => {
 
       <h2 className="section-title">Movies</h2>
       <div className="movie-grid">
-        {filteredMovies.map((movie) => (
+        {displayedMovies.map((movie) => (
           <div
             onClick={() => handlePosterClick(movie.show_id)}
             className="movie-item"

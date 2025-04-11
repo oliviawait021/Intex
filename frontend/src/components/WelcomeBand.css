@@ -1,8 +1,9 @@
 .welcome-band {
   display: flex;
   flex-direction: row; /* this ensures horizontal layout */
-  justify-content: space-between;
+  justify-content: start;
   align-items: center;
+  gap: 20rem;
   padding: 10px 20px;
   background: linear-gradient(to right, #0b061b, #3b277f);
   position: fixed;
@@ -18,6 +19,7 @@
 .search-bar-container {
   display: flex;
   align-items: center;
+  margin-left: 20px; /* Adjust this value to add more space */
 }
 
 /* Welcome text */
@@ -36,8 +38,10 @@
   margin-right: 10px;
 }
 
-.logo {
-  height: 40px;
+.logo-in-band {
+  height: 60px; /* Increase this to make the logo bigger */
+  width: auto; /* Maintain the aspect ratio */
+  margin-top: 5px; /* Adds more space at the top of the logo */
 }
 
 /* Search bar */

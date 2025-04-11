@@ -82,10 +82,10 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
               />
             </div>
             <div className="auth-input-group">
-              <label htmlFor="releaseYear">Release Year</label>
+              <label htmlFor="release_year">Release Year</label>
               <input
                 type="number"
-                name="releaseYear"
+                name="release_year"
                 value={formData.release_year}
                 onChange={handleChange}
                 className="auth-input"

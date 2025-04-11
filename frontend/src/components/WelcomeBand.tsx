@@ -1,11 +1,9 @@
-import { Search } from 'lucide-react';
 import { useState, useEffect, SetStateAction } from 'react';
 import './WelcomeBand.css';
 import NavDrawer from './NavDrawer';
 import { baseURL } from '../api/MoviesAPI';
 
 function WelcomeBand() {
-  const [searchTerm, setSearchTerm] = useState('');
   const [username, setUsername] = useState<string>('');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
@@ -54,7 +52,7 @@ function WelcomeBand() {
               &#9776;
             </span>
           </div>
-          <img src="/images/logo.png" alt="CineNiche Logo" className="logo" />
+          <img src="/images/logo.png" alt="CineNiche Logo" className="logo-in-band" />
         </div>
 
         <div className="welcome-text-container">
@@ -63,7 +61,7 @@ function WelcomeBand() {
           </h2>
         </div>
 
-        <div className="search-bar-container">
+        {/* <div className="search-bar-container">
           <div className="search-bar">
             <Search size={18} className="search-icon" />
             <input
@@ -72,8 +70,8 @@ function WelcomeBand() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-          </div>
-        </div>
+          </div> 
+        </div>*/}
       </header>
 
       <NavDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} setIsAuthenticated={function (_: SetStateAction<boolean>): void {
