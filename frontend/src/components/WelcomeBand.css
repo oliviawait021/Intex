@@ -1,8 +1,9 @@
 .welcome-band {
   display: flex;
   flex-direction: row; /* this ensures horizontal layout */
-  justify-content: space-between;
+  justify-content: start;
   align-items: center;
+  gap: 25rem;
   padding: 10px 20px;
   background: linear-gradient(to right, #0b061b, #3b277f);
   position: fixed;
