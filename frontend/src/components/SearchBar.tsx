@@ -81,6 +81,25 @@ const SearchBar: React.FC<SearchBarProps> = ({ onSearchResults }) => {
                     if (e.key === 'Enter') handleSearch();
                 }}
             />
+            {searchTerm.length > 0 && (
+                <button
+                    type="button"
+                    onClick={() => {
+                        setSearchTerm('');
+                        onSearchResults([]);
+                    }}
+                    style={{
+                        background: 'none',
+                        border: 'none',
+                        fontSize: '1.2rem',
+                        color: '#888',
+                        cursor: 'pointer',
+                        marginLeft: '0.5rem',
+                    }}
+                >
+                    ×
+                </button>
+            )}
         </div>
     );
 };
