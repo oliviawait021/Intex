@@ -1,7 +1,12 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Movie } from '../types/Movie';
-import { fetchMovies, fetchUserInfo, deleteMovie, UserInfo } from '../api/MoviesAPI';
+import {
+  fetchMovies,
+  fetchUserInfo,
+  deleteMovie,
+  UserInfo,
+} from '../api/MoviesAPI';
 import Pagination from '../components/Pagination';
 import NewMovieForm from '../components/NewMovieForm';
 import EditMovieForm from '../components/EditMovieForm';
@@ -10,6 +15,11 @@ import SearchBar from '../components/SearchBar';
 import './AdminMoviesPage.css';
 import Footer from '../components/Footer';
 import WelcomeBand from '../components/WelcomeBand';
+
+const cleanTitle = (title: string): string => {
+  const cleaned = title.replace(/[^a-zA-Z0-9 ]/g, ''); // remove special characters but keep letters, numbers, spaces
+  return encodeURIComponent(cleaned.trim()); // URL encode the result
+};
 
 const AdminMoviesPage = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -101,12 +111,6 @@ const AdminMoviesPage = () => {
   if (loading) return <p>loading movies</p>;
   if (error) return <p className="text-red-500">Error: {error}</p>;
 
-  const formatTitleForS3 = (title: string) =>
-    encodeURIComponent(title.trim()).replace(/%20/g, '+');
-
-  const getPosterUrl = (title: string) =>
-    `https://movie-posters8.s3.us-east-1.amazonaws.com/Movie+Posters/${formatTitleForS3(title)}.jpg`;
-
   const displayedMovies = searchResults !== null ? searchResults : movies;
 
   return (
@@ -133,7 +137,7 @@ const AdminMoviesPage = () => {
                     >
                       Add Movie
                     </button>
-                        <SearchBar onSearchResults={setSearchResults} />
+                    <SearchBar onSearchResults={setSearchResults} />
                   </>
                 )}
               </div>
@@ -169,7 +173,12 @@ const AdminMoviesPage = () => {
               m.title.toLowerCase().includes(searchTerm.toLowerCase())
             )
             .map((m) => {
-              console.log('Rendering movie:', m.title, 'with show_id:', m.show_id);
+              console.log(
+                'Rendering movie:',
+                m.title,
+                'with show_id:',
+                m.show_id
+              );
               return (
                 <div
                   onClick={() => handlePosterClick(m.show_id)}
@@ -178,11 +187,11 @@ const AdminMoviesPage = () => {
                 >
                   <div className="movie-poster-container">
                     <img
-                      src={getPosterUrl(m.title)}
+                      src={`https://movieposters9.blob.core.windows.net/movieposters9/${cleanTitle(m.title)}.jpg`}
                       alt={m.title}
                       className="movie-poster"
+                      style={{ objectFit: 'contain' }}
                       onError={(e) => {
-                        console.warn('Missing poster for:', m.title);
                         (e.currentTarget as HTMLImageElement).src =
                           '/images/default-poster.png';
                       }}
@@ -195,7 +204,9 @@ const AdminMoviesPage = () => {
                     </p>
                     <p>Type: {m.type}</p>
                     {!m.show_id && (
-                      <p style={{ color: 'red' }}>⚠️ Warning: Movie missing show_id!</p>
+                      <p style={{ color: 'red' }}>
+                        ⚠️ Warning: Movie missing show_id!
+                      </p>
                     )}
                   </div>
                   {userInfo.isAdmin && (
@@ -205,7 +216,10 @@ const AdminMoviesPage = () => {
                           e.stopPropagation();
                           console.log('Clicked edit for:', m);
                           if (!m.show_id) {
-                            console.error('❌ Cannot edit movie with missing show_id:', m);
+                            console.error(
+                              '❌ Cannot edit movie with missing show_id:',
+                              m
+                            );
                           }
                           setEditingMovie(m);
                         }}
@@ -218,7 +232,10 @@ const AdminMoviesPage = () => {
                           e.stopPropagation();
                           console.log('Clicked delete for:', m);
                           if (!m.show_id) {
-                            console.error('❌ Cannot delete movie with missing show_id:', m);
+                            console.error(
+                              '❌ Cannot delete movie with missing show_id:',
+                              m
+                            );
                           }
                           handleDelete(m.show_id);
                         }}

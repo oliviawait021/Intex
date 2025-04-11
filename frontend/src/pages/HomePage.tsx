@@ -10,7 +10,6 @@ const cleanTitle = (title: string): string => {
   return encodeURIComponent(cleaned.trim()); // URL encode the result
 };
 
-
 const faqData = [
   {
     question: 'What is CineNiche?',
@@ -102,12 +101,6 @@ const HomePage: React.FC = () => {
       .catch((err) => console.error('Failed to fetch new releases:', err));
   }, []);
 
-  const formatTitleForS3 = (title: string) =>
-    encodeURIComponent(title.trim()).replace(/%20/g, '+');
-
-  const getPosterUrl = (title: string) =>
-    `https://movie-posters8.s3.us-east-1.amazonaws.com/Movie+Posters/${formatTitleForS3(title)}.jpg`;
-
   return (
     <>
       <div className="collage-container">
@@ -174,9 +167,10 @@ const HomePage: React.FC = () => {
               {trendingMovies.map((movie, index) => (
                 <div className="movie-item" key={index}>
                   <img
-                    src={getPosterUrl(movie.title)}
+                    src={`https://movieposters9.blob.core.windows.net/movieposters9/${cleanTitle(movie.title)}.jpg`}
                     alt={movie.title}
                     className="movie-poster"
+                    style={{ objectFit: 'contain' }}
                     onError={(e) => {
                       (e.currentTarget as HTMLImageElement).src =
                         '/images/default-poster.png';
@@ -219,9 +213,10 @@ const HomePage: React.FC = () => {
               {newReleases.map((movie, index) => (
                 <div className="movie-item" key={index}>
                   <img
-                    src={getPosterUrl(movie.title)}
+                    src={`https://movieposters9.blob.core.windows.net/movieposters9/${cleanTitle(movie.title)}.jpg`}
                     alt={movie.title}
                     className="movie-poster"
+                    style={{ objectFit: 'contain' }}
                     onError={(e) => {
                       (e.currentTarget as HTMLImageElement).src =
                         '/images/default-poster.png';
