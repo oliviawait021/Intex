@@ -1,0 +1,66 @@
+.welcome-band {
+  display: flex;
+  flex-direction: row; /* this ensures horizontal layout */
+  justify-content: space-between;
+  align-items: center;
+  padding: 10px 20px;
+  background: linear-gradient(to right, #0b061b, #3b277f);
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: 1000;
+}
+
+/* Sections */
+.left-header,
+.welcome-text-container,
+.search-bar-container {
+  display: flex;
+  align-items: center;
+}
+
+/* Welcome text */
+.welcome-text {
+  font-size: 2rem;
+  font-weight: 600;
+  color: white;
+  margin: 0;
+}
+
+/* Logo and hamburger */
+.hamburger-icon {
+  font-size: 24px;
+  color: white;
+  cursor: pointer;
+  margin-right: 10px;
+}
+
+.logo {
+  height: 40px;
+}
+
+/* Search bar */
+.search-bar {
+  display: flex;
+  align-items: center;
+  padding: 8px 12px;
+  border: 2px solid white;
+  border-radius: 30px;
+  background-color: white;
+  width: 300px;
+}
+
+.search-bar input {
+  border: none;
+  outline: none;
+  font-size: 1rem;
+  color: black;
+  background-color: white;
+  width: 100%;
+  margin-left: 8px;
+}
+
+.search-icon {
+  color: #4a3dbd;
+}

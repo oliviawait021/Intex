@@ -1,0 +1,99 @@
+/* Global background */
+body {
+  background: linear-gradient(to right, #0b061b, #3b277f);
+}
+
+/* Wrapper around the form */
+.auth-wrapper {
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+/* The white card */
+.auth-card {
+  background-color: white;
+  padding: 3rem;
+  border-radius: 16px;
+  width: 600px;
+  max-height: 90vh;
+  overflow-y: auto;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+/* Title/header */
+.auth-title {
+  text-align: center;
+  font-weight: bold;
+  margin-bottom: 2rem;
+  font-size: 2rem;
+}
+
+/* Input group (label + input) */
+.auth-input-group {
+  margin-bottom: 1.5rem;
+}
+
+.auth-input-group label {
+  display: block;
+  margin-bottom: 0.5rem;
+  font-size: 1.1rem;
+  text-align: left;
+}
+
+.auth-input-group input {
+  width: 100%;
+  padding: 0.4rem 0.6rem; /* ⬅️ smaller padding */
+  font-size: 0.85rem; /* ⬅️ slightly smaller text */
+  border-radius: 4px; /* ⬅️ smaller rounding if desired */
+  border: 1px solid #ccc;
+  height: 3rem;
+}
+
+/* Button */
+.auth-button {
+  background-color: #0a0617;
+  color: white;
+  width: 100%;
+  padding: 0.75rem;
+  font-size: 1.1rem;
+  font-weight: bold;
+  border-radius: 6px;
+  border: none;
+  margin-bottom: 1rem;
+  cursor: pointer;
+}
+
+/* Footer link */
+.auth-footer {
+  font-size: 1rem;
+  text-align: center;
+}
+
+.auth-link {
+  text-decoration: underline;
+  color: #333;
+}
+
+/* Error message */
+.error {
+  color: red;
+  margin-top: 1rem;
+  font-size: 1rem;
+  font-weight: bold;
+  text-align: center;
+}
+
+.auth-content {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.auth-logo {
+  width: 120px;
+  margin-bottom: 1rem;
+  opacity: 0.9;
+}

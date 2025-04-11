@@ -1,0 +1,50 @@
+/* Main footer container */
+.footer-container {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 40px;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 50px;
+}
+
+/* Logo section */
+.footer-logo {
+  display: flex;
+  align-items: center;
+  gap: 40px;
+  flex-grow: 1;
+}
+
+.footer-logo-img {
+  height: 60px;
+}
+
+/* Centered links */
+.footer-links {
+  display: flex;
+  justify-content: center;
+  gap: 200px;
+  flex-grow: 5;
+}
+
+.faq-link {
+  color: #4a3dbd;
+  font-weight: 800;
+  text-decoration: none;
+  font-size: 1.1rem;
+  transition: color 0.2s ease-in-out;
+}
+
+.faq-link:hover,
+.faq-link:focus {
+  color: #6f5df5;
+}
+
+/* Right-aligned copyright text */
+.footer-copy {
+  font-size: 0.95rem;
+  color: #4a3dbd;
+  white-space: nowrap;
+}

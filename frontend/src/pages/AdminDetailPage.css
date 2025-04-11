@@ -1,0 +1,138 @@
+.movie-detail .movie-detail-container {
+  min-height: 100vh;
+  color: white;
+  padding: 3rem 1.5rem;
+}
+
+.movie-detail .movie-detail-grid {
+  max-width: 90rem;
+  margin: 0 auto; /* This centers the grid container */
+  display: grid;
+  grid-template-columns: 1fr; /* Single column for mobile */
+  gap: 3rem;
+}
+
+@media (min-width: 768px) {
+  .movie-detail .movie-detail-grid {
+    grid-template-columns: 1fr 2fr; /* Two columns for larger screens */
+  }
+}
+
+.movie-detail .poster-section {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+.movie-detail .movie-detail .poster-image {
+  border-radius: 1rem;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.4);
+  width: 100%;
+  max-width: 300px;
+  margin-bottom: 1.5rem;
+}
+.movie-detail .edit-delete-button-container {
+  display: flex;
+  gap: 20px;
+}
+
+.movie-detail .edit-delete-button {
+  background-color: #4a3dbd;
+  color: white;
+  font-weight: 600;
+  padding: 0.5rem 1.5rem;
+  width: 100px;
+  height: 50px;
+  border-radius: 9999px;
+  transition: background-color 0.3s;
+  border: none;
+  cursor: pointer;
+}
+
+.movie-detail .edit-delete-button:hover {
+  background-color: #6f5df5;
+  color: white;
+}
+
+.movie-detail .info-section {
+  display: flex;
+  flex-direction: column;
+  gap: 1rem;
+  text-align: left;
+}
+
+.movie-detail .movie-title {
+  font-size: 2.25rem;
+  font-weight: bold;
+  margin-bottom: 1rem;
+}
+
+.movie-detail .centered {
+  text-align: center;
+}
+
+.movie-detail .movie-meta {
+  color: white;
+  font-weight: 600;
+  font-size: 1.25rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.movie-detail .label {
+  color: white;
+  font-weight: bold;
+  font-size: 1.25rem;
+  margin-bottom: 0.25rem;
+}
+
+.movie-description,
+.movie-cast {
+  color: #ddd;
+}
+
+.movie-detail .movie-footer {
+  color: #ccc;
+  font-size: 1.125rem;
+  margin-top: 0.5rem;
+}
+
+.error-message {
+  color: red;
+  text-align: center;
+  padding: 2rem;
+}
+
+.loading-message {
+  color: white;
+  text-align: center;
+  padding: 2rem;
+}
+
+.back-button {
+  position: absolute;
+  top: 60px;
+  right: 80px;
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  z-index: 1000;
+  transition: transform 0.2s ease;
+  width: 48px;
+  height: 48px;
+  border-radius: 50%;
+  background-color: white;
+  color: black;
+  font-size: 24px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2px 6px rgba(0, 0, 0, 0.2);
+  transition: background-color 0.2s ease;
+  cursor: pointer;
+}
+
+.back-button:hover {
+  transform: scale(1.1);
+}
