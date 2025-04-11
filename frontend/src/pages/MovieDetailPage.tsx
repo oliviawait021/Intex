@@ -1,128 +1,93 @@
 import { useEffect, useRef, useState } from 'react';
 import { useParams } from 'react-router-dom';
-import { fetchMovieById } from '../api/MoviesAPI';
+import { baseURL, fetchMovieById } from '../api/MoviesAPI';
 import { Movie } from '../types/Movie';
 import './MovieDetailPage.css';
 import Footer from '../components/Footer';
 
-const movieData = [
-  {
-    name: 'The Matrix',
-    poster: '/images/the-matrix.jpg',
-  },
-  {
-    name: 'Inception',
-    poster: '/images/inception.jpg',
-  },
-  {
-    name: 'The Dark Knight',
-    poster: '/images/the-dark-night.jpg',
-  },
-  {
-    name: 'Avatar',
-    poster: '/images/avatar.jpg',
-  },
-  {
-    name: 'Interstellar',
-    poster: '/images/interstellar.jpg',
-  },
-  {
-    name: 'The Avengers',
-    poster: '/images/the-avengers.jpg',
-  },
-  {
-    name: 'The Godfather',
-    poster: '/images/the-godfather.jpg',
-  },
-  {
-    name: 'Forrest Gump',
-    poster: '/images/forrest-gump.jpg',
-  },
-  {
-    name: 'Titanic',
-    poster: '/images/titanic.jpg',
-  },
-  {
-    name: 'Brother Bear',
-    poster: '/images/brother-bear.jpg',
-  },
-  {
-    name: 'Mission: Impossible',
-    poster: '/images/mission-impossible.jpg',
-  },
-  {
-    name: 'Top Gun: Maverick',
-    poster: '/images/topgun.jpg',
-  },
-  {
-    name: 'Back to the Future',
-    poster: '/images/back-to-the-future.jpg',
-  },
-  {
-    name: 'Jurassic Park',
-    poster: '/images/jurassic-park.jpg',
-  },
-  {
-    name: 'The Silence of the Lambs',
-    poster: '/images/the-silence-of-the-lambs.jpg',
-  },
-  {
-    name: 'The Terminator',
-    poster: '/images/the-terminator.jpg',
-  },
-  {
-    name: 'The Green Mile',
-    poster: '/images/the-green-mile.jpg',
-  },
-  {
-    name: 'Coco',
-    poster: '/images/coco.jpg',
-  },
-];
-
 const MovieDetailPage = () => {
-  const { showId } = useParams();
+  const { show_id } = useParams();
   const [movie, setMovie] = useState<Movie | null>(null);
   const [error, setError] = useState<string | null>(null);
-  // Explicitly typing the refs as an array of HTMLDivElement or null
+  const [rating, setRating] = useState(0);
+  const [similarMovies, setSimilarMovies] = useState<Movie[]>([]);
+
+  const user_id = 1;
   const movieContainerRefs = useRef<(HTMLDivElement | null)[]>([]);
 
   const scrollMovies = (index: number, direction: 'left' | 'right') => {
-    if (movieContainerRefs.current[index]) {
+    const container = movieContainerRefs.current[index];
+    if (container) {
       const scrollAmount =
-        direction === 'left'
-          ? -movieContainerRefs.current[index].clientWidth
-          : movieContainerRefs.current[index].clientWidth;
-      movieContainerRefs.current[index].scrollBy({
-        left: scrollAmount,
-        behavior: 'smooth',
+        direction === 'left' ? -container.clientWidth : container.clientWidth;
+      container.scrollBy({ left: scrollAmount, behavior: 'smooth' });
+    }
+  };
+
+  const saveMovieRating = async (
+    user_id: number,
+    show_id: string,
+    rating: number
+  ) => {
+    try {
+      const response = await fetch(`${baseURL}/Movie/${show_id}/rating`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ user_id, rating }),
       });
+
+      if (!response.ok)
+        throw new Error(`Failed to save rating: ${response.status}`);
+      console.log('Rating saved successfully');
+    } catch (error: any) {
+      console.error('Error saving rating:', error);
+    }
+  };
+
+  const handleStarClick = (index: number) => {
+    const newRating = index + 1;
+    setRating(newRating);
+    if (show_id) {
+      saveMovieRating(user_id, show_id, newRating);
+    } else {
+      console.error('show_id is undefined');
+    }
+  };
+
+  const fetchSimilarMovies = async () => {
+    try {
+      const res = await fetch(`${baseURL}/Movie/SimilarMovies/${show_id}`);
+      if (!res.ok) throw new Error('Failed to fetch similar movies');
+      const data = await res.json();
+      setSimilarMovies(data);
+    } catch (err) {
+      console.error('Error fetching similar movies:', err);
     }
   };
 
   useEffect(() => {
     const loadMovie = async () => {
-      console.log("showId:", showId);
-      if (!showId) {
-        setError("No movie ID provided");
+      if (!show_id) {
+        setError('No movie ID provided');
         return;
       }
+
       try {
-        const data = await fetchMovieById(showId);
+        const data = await fetchMovieById(show_id);
         setMovie(data);
       } catch (err: any) {
-        console.error("Failed to fetch movie:", err);
+        console.error('Failed to fetch movie:', err);
         setError(err.message || 'Failed to load movie');
       }
     };
 
     loadMovie();
-  }, [showId]);
+    fetchSimilarMovies();
+  }, [show_id]);
 
   if (error) return <div className="error-message">Error: {error}</div>;
   if (!movie) return <div className="loading-message">Loading...</div>;
 
-  // Helper to get full S3 poster URL
   const getPosterUrl = (filename: string) =>
     `https://movie-posters8.s3.us-east-1.amazonaws.com/Movie+Posters/${filename}`;
 
@@ -152,9 +117,18 @@ const MovieDetailPage = () => {
           <button className="watch-button">Watch Now</button>
           <div className="stars">
             {Array(5)
-              .fill('★')
-              .map((star, index) => (
-                <span key={index}>{star}</span>
+              .fill(0)
+              .map((_, index) => (
+                <span
+                  key={index}
+                  onClick={() => handleStarClick(index)}
+                  style={{
+                    cursor: 'pointer',
+                    color: index < rating ? 'gold' : 'gray',
+                  }}
+                >
+                  ★
+                </span>
               ))}
           </div>
         </div>
@@ -162,38 +136,33 @@ const MovieDetailPage = () => {
         {/* Movie Info */}
         <div className="info-section">
           <h1 className="movie-title">{movie.title}</h1>
-          <div className="movie-meta">
-            <p>{movie.rating}</p>
-            <p>{movie.duration}</p>
-          </div>
-
+          <p className="movie-footer">
+            <span className="label">Released Year:</span> {movie.release_year}
+          </p>
+          <p className="movie-footer">
+            <span className="label">Released Country:</span> {movie.country}
+          </p>
+          <p className="movie-footer">
+            <span className="label">Director:</span> {movie.director}
+          </p>
           <div className="movie-description">
             <p className="label">Description:</p>
             <p>{movie.description}</p>
           </div>
-
           <div className="movie-cast">
             <p className="label">Cast:</p>
             <p>{movie.cast}</p>
           </div>
-
-          <p className="movie-footer">
-            <span className="label">Released Year:</span> {movie.releaseYear}
-          </p>
-
-          <p className="movie-footer">
-            <span className="label">Released Country:</span> {movie.country}
-          </p>
-
-          <p className="movie-footer">
-            <span className="label">Director:</span> {movie.director}
-          </p>
+          <div className="movie-meta">
+            <p>{movie.rating}</p>
+            <p>{movie.duration}</p>
+          </div>
         </div>
       </div>
-      {/* Movie section rendered only once */}
+
+      {/* Recommended Carousel */}
       <div className="movie-section">
         <h2 className="section-title">Recommended for You</h2>
-
         <div className="movie-scroll-container">
           <button
             className="scroll-arrow left"
@@ -205,16 +174,28 @@ const MovieDetailPage = () => {
             className="movie-container"
             ref={(el) => {
               movieContainerRefs.current[0] = el;
-            }} // Assigning ref without type issue
+            }}
           >
-            {movieData.map((movie, movieIndex) => (
-              <div className="movie-item" key={movieIndex}>
+            {similarMovies.map((movie) => (
+              <div
+                className="movie-item"
+                key={movie.show_id}
+                onClick={() =>
+                  (window.location.href = `/movie/${movie.show_id}`)
+                }
+              >
                 <img
-                  src={movie.poster}
-                  alt={movie.name}
+                  src={getPosterUrl(
+                    `${movie.title.replace(/[^\p{L}\p{N}\s]/gu, '').trim()}.jpg`
+                  )}
+                  alt={movie.title}
                   className="movie-poster"
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src =
+                      '/images/default-poster.png';
+                  }}
                 />
-                <div className="movie-title">{movie.name}</div>
+                <div className="movie-title-detail">{movie.title}</div>
               </div>
             ))}
           </div>

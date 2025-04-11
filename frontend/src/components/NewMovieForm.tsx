@@ -11,13 +11,13 @@ interface NewMovieFormProps {
 
 const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
   const [formData, setFormData] = useState<Movie>({
-    showId: '',
+    show_id: '',
     type: '',
     title: '',
     director: '',
     cast: '',
     country: '',
-    releaseYear: 0,
+    release_year: 0,
     rating: '',
     duration: '',
     description: '',
@@ -72,7 +72,7 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
               <label htmlFor="releaseYear">Year</label>
               <select
                 name="releaseYear"
-                value={formData.releaseYear}
+                value={formData.release_year}
                 onChange={handleChange}
                 className="auth-input"
               >
@@ -173,7 +173,9 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
             <button type="submit" className="auth-button">
               Submit
             </button>
-            <button type="button" className="auth-button" onClick={onCancel}>Cancel</button>
+            <button type="button" className="auth-button" onClick={onCancel}>
+              Cancel
+            </button>
           </form>
         </div>
       </div>

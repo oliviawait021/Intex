@@ -142,7 +142,7 @@ function AppContent({
   isDrawerOpen,
   setIsDrawerOpen,
   setIsAuthenticated,
-  loadingAuth
+  loadingAuth,
 }: {
   isAuthenticated: boolean;
   userRole: string | null;
@@ -156,7 +156,7 @@ function AppContent({
 
   const showDrawer =
     isAuthenticated &&
-    ["/", "/movies", "/adminmovies", "/privacy"].includes(
+    ['/', '/movies', '/adminmovies', '/privacy'].includes(
       location.pathname.toLowerCase()
     );
 
@@ -167,19 +167,19 @@ function AppContent({
           <button
             onClick={() => setIsDrawerOpen((prev) => !prev)}
             style={{
-              position: "fixed",
-              top: "20px",
-              left: "20px",
+              position: 'fixed',
+              top: '20px',
+              left: '20px',
               zIndex: 9999,
-              backgroundColor: "#6f5df5",
-              color: "#fff",
-              border: "none",
-              borderRadius: "5px",
-              padding: "10px 15px",
-              cursor: "pointer",
+              backgroundColor: '#6f5df5',
+              color: '#fff',
+              border: 'none',
+              borderRadius: '5px',
+              padding: '10px 15px',
+              cursor: 'pointer',
             }}
           >
-            {isDrawerOpen ? "×" : "☰"}
+            {isDrawerOpen ? '×' : '☰'}
           </button>
           <NavDrawer
             isOpen={isDrawerOpen}
@@ -201,7 +201,7 @@ function AppContent({
             <Route
               path="/adminmovies"
               element={
-                isAuthenticated && userRole === "Admin" ? (
+                isAuthenticated && userRole === 'Admin' ? (
                   <AdminMoviesPage />
                 ) : (
                   <Navigate to="/" replace />
@@ -211,14 +211,14 @@ function AppContent({
             <Route
               path="/admin/:showId"
               element={
-                userRole === "Admin" ? (
+                userRole === 'Admin' ? (
                   <AdminDetailPage />
                 ) : (
                   <Navigate to="/" replace />
                 )
               }
             />
-            <Route path="/movie/:showId" element={<MovieDetailPage />} />
+            <Route path="/movie/:show_id" element={<MovieDetailPage />} />
             <Route path="/details" element={<MovieDetailPage />} />
           </>
         ) : (

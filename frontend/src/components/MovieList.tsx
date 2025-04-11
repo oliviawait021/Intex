@@ -56,7 +56,7 @@ function MovieList({ selectedCategories }: { selectedCategories: string[] }) {
         </div>
       )}
       {movies.map((m) => (
-        <div id="movieCard" className="card" key={m.showId}>
+        <div id="movieCard" className="card" key={m.show_id}>
           <h3 className="card-title">{m.title}</h3>
           <div className="card-body">
             <ul className="list-unstyled">
@@ -73,7 +73,7 @@ function MovieList({ selectedCategories }: { selectedCategories: string[] }) {
                 <strong>Country:</strong> {m.country}
               </li>
               <li>
-                <strong>Release Year:</strong> {m.releaseYear}
+                <strong>Release Year:</strong> {m.release_year}
               </li>
               <li>
                 <strong>Rating:</strong> {m.rating}
@@ -87,7 +87,7 @@ function MovieList({ selectedCategories }: { selectedCategories: string[] }) {
             </ul>
             <button
               className="btn btn-success"
-              onClick={() => navigate(`/details/${m.showId}`)}
+              onClick={() => navigate(`/details/${m.show_id}`)}
             >
               Watch Now
             </button>

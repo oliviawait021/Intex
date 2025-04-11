@@ -289,3 +289,8 @@
   font-size: 1rem;
   margin: 2rem;
 }
+
+.movies-page-carousel-titles-size {
+  font-size: 1.25rem !important;
+  color: white !important;
+}

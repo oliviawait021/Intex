@@ -4,7 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using cineNiche.API.Data;
 using Microsoft.AspNetCore.Authorization;
-
+using Microsoft.EntityFrameworkCore;
 
 namespace cineNiche.API.Controllers
 {
@@ -31,12 +31,12 @@ namespace cineNiche.API.Controllers
                 SameSite = SameSiteMode.Lax,
                 Expires = DateTime.Now.AddMinutes(5)
             });
-            
+
             var query = _movieContext.MoviesTitles.AsQueryable();
 
             if (movieTypes is { Count: > 0 })
             {
-                query = query.Where(m => movieTypes.Contains(m.Type));
+                query = query.Where(m => movieTypes.Contains(m.type));
             }
 
             var movies = query
@@ -58,7 +58,7 @@ namespace cineNiche.API.Controllers
         public IActionResult GetMovieTypes()
         {
             var movieTypes = _movieContext.MoviesTitles
-                .Select(m => m.Type)
+                .Select(m => m.type)
                 .Distinct()
                 .ToList();
 
@@ -70,7 +70,6 @@ namespace cineNiche.API.Controllers
         [Authorize(Roles = "Admin")]
         public IActionResult AddMovie([FromBody] MoviesTitle newMovie)
         {
-
             _movieContext.MoviesTitles.Add(newMovie);
             _movieContext.SaveChanges();
 
@@ -89,15 +88,15 @@ namespace cineNiche.API.Controllers
                 return NotFound(new { message = "Movie not found" });
             }
 
-            existingMovie.Type = updatedMovie.Type;
-            existingMovie.Title = updatedMovie.Title;
-            existingMovie.Director = updatedMovie.Director;
-            existingMovie.Cast = updatedMovie.Cast;
-            existingMovie.Country = updatedMovie.Country;
-            existingMovie.ReleaseYear = updatedMovie.ReleaseYear;
-            existingMovie.Rating = updatedMovie.Rating;
-            existingMovie.Duration = updatedMovie.Duration;
-            existingMovie.Description = updatedMovie.Description;
+            existingMovie.type = updatedMovie.type;
+            existingMovie.title = updatedMovie.title;
+            existingMovie.director = updatedMovie.director;
+            existingMovie.cast = updatedMovie.cast;
+            existingMovie.country = updatedMovie.country;
+            existingMovie.release_year = updatedMovie.release_year;
+            existingMovie.rating = updatedMovie.rating;
+            existingMovie.duration = updatedMovie.duration;
+            existingMovie.description = updatedMovie.description;
 
             _movieContext.SaveChanges();
 
@@ -127,7 +126,7 @@ namespace cineNiche.API.Controllers
         public IActionResult GetMaxShowId()
         {
             var max = _movieContext.MoviesTitles
-                .Select(m => m.ShowId)
+                .Select(m => m.show_id)
                 .Where(id => id.StartsWith("s"))
                 .AsEnumerable()
                 .Select(id =>
@@ -140,7 +139,7 @@ namespace cineNiche.API.Controllers
 
             return Ok($"s{max + 1}");
         }
-        
+
         [AllowAnonymous]
         [HttpPost("RegisterUser")]
         public IActionResult RegisterUser([FromBody] MoviesUser user)
@@ -150,8 +149,8 @@ namespace cineNiche.API.Controllers
                 if (user == null)
                     return BadRequest("User data is null");
 
-                var maxId = _movieContext.MoviesUsers.Max(u => u.UserId);
-                user.UserId = maxId + 1;
+                var maxId = _movieContext.MoviesUsers.Max(u => u.user_id);
+                user.user_id = maxId + 1;
 
                 _movieContext.MoviesUsers.Add(user);
                 _movieContext.SaveChanges();
@@ -169,7 +168,7 @@ namespace cineNiche.API.Controllers
         [HttpGet("GetMovieById/{showId}")]
         public IActionResult GetMovieById(string showId)
         {
-            var movie = _movieContext.MoviesTitles.FirstOrDefault(m => m.ShowId == showId);
+            var movie = _movieContext.MoviesTitles.FirstOrDefault(m => m.show_id == showId);
 
             if (movie == null)
             {
@@ -178,6 +177,131 @@ namespace cineNiche.API.Controllers
 
             return Ok(movie);
         }
+
+        [HttpGet("TrendingNow")]
+        public IActionResult GetTrendingNow()
+        {
+            var trendingShowIds = _movieContext.MoviesRatings
+                .Where(r => r.rating == 5)
+                .Select(r => r.show_id)
+                .Distinct()
+                .ToList();
+
+            if (!trendingShowIds.Any())
+            {
+                return Ok(new List<MoviesTitle>());
+            }
+
+            var trendingMovies = _movieContext.MoviesTitles
+                .Where(m => trendingShowIds.Contains(m.show_id))
+                .Take(20)
+                .ToList();
+
+            return Ok(trendingMovies);
+        }
+
+        [HttpGet("NewReleases")]
+        [AllowAnonymous]
+        public IActionResult GetNewReleases()
+        {
+            try
+            {
+                var newMovies = _movieContext.MoviesTitles
+                    .OrderByDescending(m => m.release_year)
+                    .Take(20)
+                    .ToList();
+
+                return Ok(newMovies);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("🔥 Error in NewReleases endpoint: " + ex.Message);
+                return StatusCode(500, "Internal Server Error: " + ex.Message);
+            }
+        }
+
+        public class RatingRequest
+        {
+            public int user_id { get; set; }
+            public int rating { get; set; }
+        }
+        [HttpPost("{showId}/rating")] // Adjusted route to match frontend
+        public async Task<IActionResult> PostRating(string showId, [FromBody] RatingRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var movie = await _movieContext.MoviesTitles.FirstOrDefaultAsync(m => m.show_id == showId);
+            if (movie == null)
+            {
+                return NotFound(new { message = "Movie not found" });
+            }
+            var movieRating = new MoviesRating
+            {
+                show_id = showId,
+                user_id = request.user_id,
+                rating = request.rating
+            };
+            _movieContext.MoviesRatings.Add(movieRating);
+            await _movieContext.SaveChangesAsync();
+            return Ok(movieRating); // return ok.
+        }
+
+        [HttpGet("BecauseRecommendations/{sourceShowId}")]
+        public async Task<IActionResult> GetBecauseRecommendations(string sourceShowId)
+        {
+            var recommendedIds = await _movieContext.allContent_recs
+                .Where(b => b.source_show_id == sourceShowId)
+                .Select(b => b.recommended_show_id)
+                .ToListAsync();
+
+            var recommendedMovies = await _movieContext.MoviesTitles
+                .Where(m => recommendedIds.Contains(m.show_id))
+                .ToListAsync();
+
+            return Ok(recommendedMovies);
+        }
+
+    [HttpGet("UserBasedRecommendations/{userId}")]
+    public async Task<ActionResult<IEnumerable<MoviesTitle>>> GetUserBasedRecommendations(int userId)
+    {
+        var userRecs = await _movieContext.user_recs_all.FirstOrDefaultAsync(u => u.user_id == userId);
+        if (userRecs == null) return NotFound("No recommendations found for this user.");
+
+        var recIds = new List<string>
+        {
+            userRecs.recommendation_1, userRecs.recommendation_2, userRecs.recommendation_3,
+            userRecs.recommendation_4, userRecs.recommendation_5, userRecs.recommendation_6,
+            userRecs.recommendation_7, userRecs.recommendation_8, userRecs.recommendation_9,
+            userRecs.recommendation_10, userRecs.recommendation_11, userRecs.recommendation_12,
+            userRecs.recommendation_13, userRecs.recommendation_14, userRecs.recommendation_15,
+            userRecs.recommendation_16, userRecs.recommendation_17, userRecs.recommendation_18,
+            userRecs.recommendation_19, userRecs.recommendation_20,
+        };
+
+        var recommendedMovies = await _movieContext.MoviesTitles
+            .Where(m => recIds.Contains(m.show_id))
+            .ToListAsync();
+
+        return Ok(recommendedMovies);
+    }
+
+    [HttpGet("SimilarMovies/{show_id}")]
+    public async Task<IActionResult> GetSimilarMovies(string show_id)
+    {
+        var recommendations = await _movieContext.hybrid
+            .Where(s => s.show_id == show_id)
+            .Select(s => s.recommendation)
+            .ToListAsync();
+
+        var movies = await _movieContext.MoviesTitles
+            .Where(m => recommendations.Contains(m.show_id))
+            .ToListAsync();
+
+        return Ok(movies);
+    }
+
 
 
     }

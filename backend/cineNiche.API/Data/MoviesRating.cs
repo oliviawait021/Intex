@@ -7,10 +7,10 @@ namespace cineNiche.API.Data;
 public partial class MoviesRating
 {
     [Key]
-    public int? UserId { get; set; }
+    public int? user_id { get; set; }
 
     [Key]
-    public string? ShowId { get; set; }
+    public string? show_id { get; set; }
 
-    public int? Rating { get; set; }
+    public int? rating { get; set; }
 }

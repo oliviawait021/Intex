@@ -7,87 +7,87 @@ namespace cineNiche.API.Data;
 public partial class MoviesTitle
 {
     [Key]
-    public string? ShowId { get; set; }
+    public string? show_id { get; set; }
 
-    public string? Type { get; set; }
+    public string? type { get; set; }
 
-    public string? Title { get; set; }
+    public string? title { get; set; }
 
-    public string? Director { get; set; }
+    public string? director { get; set; }
 
-    public string? Cast { get; set; }
+    public string? cast { get; set; }
 
-    public string? Country { get; set; }
+    public string? country { get; set; }
 
-    public int? ReleaseYear { get; set; }
+    public int? release_year { get; set; }
 
-    public string? Rating { get; set; }
+    public string? rating { get; set; }
 
-    public string? Duration { get; set; }
+    public string? duration { get; set; }
 
-    public string? Description { get; set; }
+    public string? description { get; set; }
 
     public int? Action { get; set; }
 
     public int? Adventure { get; set; }
 
-    public int? AnimeSeriesInternationalTvShows { get; set; }
+    public int? Anime_Series_International_TV_Shows { get; set; }
 
-    public int? BritishTvShowsDocuseriesInternationalTvShows { get; set; }
+    public int? British_TV_Shows_Docuseries_International_TV_Shows { get; set; }
 
     public int? Children { get; set; }
 
     public int? Comedies { get; set; }
 
-    public int? ComediesDramasInternationalMovies { get; set; }
+    public int? Comedies_Dramas_International_Movies { get; set; }
 
-    public int? ComediesInternationalMovies { get; set; }
+    public int? Comedies_International_Movies { get; set; }
 
-    public int? ComediesRomanticMovies { get; set; }
+    public int? Comedies_Romantic_Movies { get; set; }
 
-    public int? CrimeTvShowsDocuseries { get; set; }
+    public int? Crime_TV_Shows_Docuseries { get; set; }
 
     public int? Documentaries { get; set; }
 
-    public int? DocumentariesInternationalMovies { get; set; }
+    public int? Documentaries_International_Movies { get; set; }
 
     public int? Docuseries { get; set; }
 
     public int? Dramas { get; set; }
 
-    public int? DramasInternationalMovies { get; set; }
+    public int? Dramas_International_Movies { get; set; }
 
-    public int? DramasRomanticMovies { get; set; }
+    public int? Dramas_Romantic_Movies { get; set; }
 
-    public int? FamilyMovies { get; set; }
+    public int? Family_Movies { get; set; }
 
     public int? Fantasy { get; set; }
 
-    public int? HorrorMovies { get; set; }
+    public int? Horror_Movies { get; set; }
 
-    public int? InternationalMoviesThrillers { get; set; }
+    public int? International_Movies_Thrillers { get; set; }
 
-    public int? InternationalTvShowsRomanticTvShowsTvDramas { get; set; }
+    public int? International_TV_Shows_Romantic_TV_Shows_TV_Dramas { get; set; }
 
-    public int? KidsTv { get; set; }
+    public int? Kids_TV { get; set; }
 
-    public int? LanguageTvShows { get; set; }
+    public int? Language_TV_Shows { get; set; }
 
     public int? Musicals { get; set; }
 
-    public int? NatureTv { get; set; }
+    public int? Nature_TV { get; set; }
 
-    public int? RealityTv { get; set; }
+    public int? Reality_TV { get; set; }
 
     public int? Spirituality { get; set; }
 
-    public int? TvAction { get; set; }
+    public int? TV_Action { get; set; }
 
-    public int? TvComedies { get; set; }
+    public int? TV_Comedies { get; set; }
 
-    public int? TvDramas { get; set; }
+    public int? TV_Dramas { get; set; }
 
-    public int? TalkShowsTvComedies { get; set; }
+    public int? Talk_Shows_TV_Comedies { get; set; }
 
     public int? Thrillers { get; set; }
     public string? Genre { get; set; }

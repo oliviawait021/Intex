@@ -14,10 +14,15 @@ const genreOptions = [
 ];
 
 interface Movie {
-  showId: string;
+  show_id: string;
   title: string;
   imageFileName: string;
   genre: string;
+}
+
+interface Recommendation {
+  rating: number;
+  show_id: string;
 }
 
 const MoviesPage: React.FC = () => {
@@ -26,17 +31,36 @@ const MoviesPage: React.FC = () => {
   const [pageNum, setPageNum] = useState(1);
   const [totalCount, setTotalCount] = useState(0);
   const [isLoading, setIsLoading] = useState(false);
+  const [recommendations, setRecommendations] = useState<Recommendation[]>([]);
+  const [forYou, setForYou] = useState<Movie[]>([]);
+  const [forYouLoading, setForYouLoading] = useState(false);
+  const becauseYouWatchedIds = [
+    's1273',
+    's5534',
+    's4209',
+    's1',
+    's1392',
+    's769',
+    's7607',
+    's6235',
+    's6414',
+    's7361',
+    's722',
+  ];
+  const [becauseTitle, setBecauseTitle] = useState('');
+  const [becauseMovies, setBecauseMovies] = useState<Movie[]>([]);
+  const [userRatedMovies, setUserRatedMovies] = useState<Movie[]>([]);
 
   const navigate = useNavigate();
-  const handlePosterClick = (showId: string) => {
-    navigate(`/movie/${showId}`);
+  const handlePosterClick = (show_id: string) => {
+    navigate(`/movie/${show_id}`);
   };
 
   const observer = useRef<IntersectionObserver | null>(null);
   const sentinelRef = useRef<HTMLDivElement>(null);
-
   const topPicksRef = useRef<HTMLDivElement>(null!);
   const becauseYouLikedRef = useRef<HTMLDivElement>(null!);
+  const userRatedRef = useRef<HTMLDivElement>(null!);
 
   const toggleGenre = (genre: string) => {
     if (genre === 'Show All') {
@@ -65,29 +89,20 @@ const MoviesPage: React.FC = () => {
     }
   };
 
-  const topPicks: Movie[] = [];
-  const becauseYouLiked: Movie[] = [];
-
   const fetchMovies = async (page: number) => {
     setIsLoading(true);
     try {
       const response = await fetch(
         `${baseURL}/Movie/AllMovies?pageHowMany=54&pageNum=${page}`,
-        {
-          credentials: 'include',
-        }
+        { credentials: 'include' }
       );
-
-      if (!response.ok) {
-        throw new Error('Failed to fetch movies');
-      }
-
+      if (!response.ok) throw new Error('Failed to fetch movies');
       const data = await response.json();
       const { movies: newMovies, totalNumber } = data;
       setMovies((prev) => {
-        const existingIds = new Set(prev.map((m) => m.showId));
+        const existingIds = new Set(prev.map((m) => m.show_id));
         const uniqueNewMovies = newMovies.filter(
-          (m: { showId: string }) => !existingIds.has(m.showId)
+          (m: Movie) => !existingIds.has(m.show_id)
         );
         return [...prev, ...uniqueNewMovies];
       });
@@ -99,24 +114,115 @@ const MoviesPage: React.FC = () => {
     }
   };
 
+  const fetchMovieImgandTitle = async (
+    show_id: string
+  ): Promise<Movie | null> => {
+    try {
+      const response = await fetch(`${baseURL}/Movie/GetMovieById/${show_id}`);
+      if (!response.ok)
+        throw new Error(`Failed to fetch movie details for ${show_id}`);
+      return await response.json();
+    } catch (error) {
+      console.error(`Error fetching movie details for ${show_id}:`, error);
+      return null;
+    }
+  };
+
+  const fetchRecommendations = async () => {
+    setForYouLoading(true);
+    try {
+      const response = await fetch(
+        'https://cold-start-recommender-esbaczgkgkhcdyhh.eastus-01.azurewebsites.net/recommend',
+        {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({
+            age: 22,
+            Male: 1,
+            Other: 0,
+            Netflix: 1,
+            'Amazon Prime': 1,
+            'Disney+': 1,
+            'Paramount+': 1,
+            Max: 0,
+            Hulu: 1,
+            'Apple TV+': 1,
+            Peacock: 0,
+          }),
+        }
+      );
+      if (!response.ok) throw new Error('Failed to fetch recommendations');
+      const data = await response.json();
+      setRecommendations(data as Recommendation[]);
+    } catch (error) {
+      console.error('Error fetching recommendations:', error);
+    } finally {
+      setForYouLoading(false);
+    }
+  };
+
+  const fetchBecauseRecommendations = async () => {
+    const randomId =
+      becauseYouWatchedIds[
+        Math.floor(Math.random() * becauseYouWatchedIds.length)
+      ];
+    try {
+      const res = await fetch(
+        `${baseURL}/Movie/BecauseRecommendations/${randomId}`,
+        {
+          credentials: 'include',
+        }
+      );
+      if (!res.ok) throw new Error('Failed to fetch because movies');
+      const movies = await res.json();
+      setBecauseMovies(movies);
+      const mainMovie = await fetchMovieImgandTitle(randomId);
+      if (mainMovie) setBecauseTitle(mainMovie.title);
+    } catch (err) {
+      console.error('Error fetching because recommendations:', err);
+    }
+  };
+
+  const fetchUserRatedRecommendations = async () => {
+    try {
+      const res = await fetch(`${baseURL}/Movie/UserBasedRecommendations/1`, {
+        credentials: 'include',
+      });
+      if (!res.ok) throw new Error('Failed to fetch user rated movies');
+      const movies = await res.json();
+      setUserRatedMovies(movies);
+    } catch (err) {
+      console.error('Error fetching user rated recommendations:', err);
+    }
+  };
+
   useEffect(() => {
     fetchMovies(pageNum);
+    fetchRecommendations();
+    fetchBecauseRecommendations();
+    fetchUserRatedRecommendations();
   }, [pageNum]);
 
   useEffect(() => {
-    console.log('Movies data:', movies);
-  }, [movies]);
+    if (recommendations.length > 0) {
+      const getMovieDetails = async () => {
+        const recMovies: Movie[] = [];
+        for (const rec of recommendations) {
+          const movie = await fetchMovieImgandTitle(rec.show_id);
+          if (movie) recMovies.push(movie);
+        }
+        setForYou(recMovies);
+      };
+      getMovieDetails();
+    }
+  }, [recommendations]);
 
   useEffect(() => {
-    fetchUserInfo()
-      .then((info: { isAuthenticated: boolean }) => {
-        if (!info.isAuthenticated) {
-          alert('You must be logged in to view this page.');
-        }
-      })
-      .catch((err) => {
-        console.error('User info fetch failed', err);
-      });
+    fetchUserInfo().then((info) => {
+      if (!info.isAuthenticated) {
+        alert('You must be logged in to view this page.');
+      }
+    });
   }, []);
 
   useEffect(() => {
@@ -130,9 +236,7 @@ const MoviesPage: React.FC = () => {
         setPageNum((prev) => prev + 1);
       }
     });
-    if (sentinelRef.current) {
-      observer.current.observe(sentinelRef.current);
-    }
+    if (sentinelRef.current) observer.current.observe(sentinelRef.current);
   }, [movies, isLoading, totalCount]);
 
   const filteredMovies =
@@ -168,45 +272,49 @@ const MoviesPage: React.FC = () => {
       </div>
 
       <div className="recommendation-section">
-        <h2 className="section-title">Top Picks for You</h2>
-        <div className="movie-scroll-container">
-          <button
-            className="scroll-arrow left"
-            onClick={() => scrollCarousel(topPicksRef, 'left')}
-          >
-            &#60;
-          </button>
-          <div className="movie-container" ref={topPicksRef}>
-            {topPicks.map((movie) => (
-              <div
-                onClick={() => handlePosterClick(movie.showId)}
-                className="movie-item"
-                key={movie.showId}
-              >
-                <img
-                  src={getPosterUrl(movie.title)}
-                  alt={movie.title}
-                  className="movie-poster"
-                  onError={(e) => {
-                    console.log('Image not found for:', movie.title);
-                    (e.currentTarget as HTMLImageElement).src =
-                      '/images/default-poster.png';
-                  }}
-                />
-
-                <div className="movie-title">{movie.title}</div>
-              </div>
-            ))}
+        <h2 className="section-title">Personalized Picks</h2>
+        {forYouLoading && <p>Loading top picks...</p>}
+        {!forYouLoading && (
+          <div className="movie-scroll-container">
+            <button
+              className="scroll-arrow left"
+              onClick={() => scrollCarousel(topPicksRef, 'left')}
+            >
+              &#60;
+            </button>
+            <div className="movie-container" ref={topPicksRef}>
+              {forYou.map((movie) => (
+                <div
+                  onClick={() => handlePosterClick(movie.show_id)}
+                  className="movie-item"
+                  key={movie.show_id}
+                >
+                  <img
+                    src={getPosterUrl(movie.title)}
+                    alt={movie.title}
+                    className="movie-poster"
+                    style={{ objectFit: 'contain' }}
+                    onError={(e) => {
+                      (e.currentTarget as HTMLImageElement).src =
+                        '/images/default-poster.png';
+                    }}
+                  />
+                  <div className="movies-page-carousel-titles-size">
+                    {movie.title}
+                  </div>
+                </div>
+              ))}
+            </div>
+            <button
+              className="scroll-arrow right"
+              onClick={() => scrollCarousel(topPicksRef, 'right')}
+            >
+              &#62;
+            </button>
           </div>
-          <button
-            className="scroll-arrow right"
-            onClick={() => scrollCarousel(topPicksRef, 'right')}
-          >
-            &#62;
-          </button>
-        </div>
+        )}
 
-        <h2 className="section-title">Recommended For You</h2>
+        <h2 className="section-title">Because you watched {becauseTitle}</h2>
         <div className="movie-scroll-container">
           <button
             className="scroll-arrow left"
@@ -215,24 +323,25 @@ const MoviesPage: React.FC = () => {
             &#60;
           </button>
           <div className="movie-container" ref={becauseYouLikedRef}>
-            {becauseYouLiked.map((movie) => (
+            {becauseMovies.map((movie) => (
               <div
-                onClick={() => handlePosterClick(movie.showId)}
+                onClick={() => handlePosterClick(movie.show_id)}
                 className="movie-item"
-                key={movie.showId}
+                key={movie.show_id}
               >
                 <img
                   src={getPosterUrl(movie.title)}
                   alt={movie.title}
                   className="movie-poster"
+                  style={{ objectFit: 'contain' }}
                   onError={(e) => {
-                    console.log('Image not found for:', movie.title);
                     (e.currentTarget as HTMLImageElement).src =
                       '/images/default-poster.png';
                   }}
                 />
-
-                <div className="movie-title">{movie.title}</div>
+                <div className="movies-page-carousel-titles-size">
+                  {movie.title}
+                </div>
               </div>
             ))}
           </div>
@@ -245,13 +354,54 @@ const MoviesPage: React.FC = () => {
         </div>
       </div>
 
+      <div className="recommendation-section">
+        <h2 className="section-title">Inspired by your ratings</h2>
+        <div className="movie-scroll-container">
+          <button
+            className="scroll-arrow left"
+            onClick={() => scrollCarousel(userRatedRef, 'left')}
+          >
+            &#60;
+          </button>
+          <div className="movie-container" ref={userRatedRef}>
+            {userRatedMovies.map((movie) => (
+              <div
+                onClick={() => handlePosterClick(movie.show_id)}
+                className="movie-item"
+                key={movie.show_id}
+              >
+                <img
+                  src={getPosterUrl(movie.title)}
+                  alt={movie.title}
+                  className="movie-poster"
+                  style={{ objectFit: 'contain' }}
+                  onError={(e) => {
+                    (e.currentTarget as HTMLImageElement).src =
+                      '/images/default-poster.png';
+                  }}
+                />
+                <div className="movies-page-carousel-titles-size">
+                  {movie.title}
+                </div>
+              </div>
+            ))}
+          </div>
+          <button
+            className="scroll-arrow right"
+            onClick={() => scrollCarousel(userRatedRef, 'right')}
+          >
+            &#62;
+          </button>
+        </div>
+      </div>
+
       <h2 className="section-title">Movies</h2>
       <div className="movie-grid">
         {filteredMovies.map((movie) => (
           <div
-            onClick={() => handlePosterClick(movie.showId)}
+            onClick={() => handlePosterClick(movie.show_id)}
             className="movie-item"
-            key={movie.showId}
+            key={movie.show_id}
           >
             <img
               src={getPosterUrl(movie.title)}
@@ -259,7 +409,6 @@ const MoviesPage: React.FC = () => {
               className="movie-poster"
               style={{ objectFit: 'contain' }}
               onError={(e) => {
-                console.warn('Missing poster for:', movie.title);
                 (e.currentTarget as HTMLImageElement).src =
                   '/images/default-poster.png';
               }}
