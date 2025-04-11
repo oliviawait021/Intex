@@ -179,6 +179,7 @@ namespace cineNiche.API.Controllers
         }
 
         [HttpGet("TrendingNow")]
+        [AllowAnonymous]
         public IActionResult GetTrendingNow()
         {
             var trendingShowIds = _movieContext.MoviesRatings
@@ -249,6 +250,7 @@ namespace cineNiche.API.Controllers
         }
 
         [HttpGet("BecauseRecommendations/{sourceShowId}")]
+        [AllowAnonymous]
         public async Task<IActionResult> GetBecauseRecommendations(string sourceShowId)
         {
             var recommendedIds = await _movieContext.allContent_recs
@@ -264,6 +266,7 @@ namespace cineNiche.API.Controllers
         }
 
     [HttpGet("UserBasedRecommendations/{userId}")]
+    [AllowAnonymous]
     public async Task<ActionResult<IEnumerable<MoviesTitle>>> GetUserBasedRecommendations(int userId)
     {
         var userRecs = await _movieContext.user_recs_all.FirstOrDefaultAsync(u => u.user_id == userId);
@@ -288,6 +291,7 @@ namespace cineNiche.API.Controllers
     }
 
     [HttpGet("SimilarMovies/{show_id}")]
+    [AllowAnonymous]
     public async Task<IActionResult> GetSimilarMovies(string show_id)
     {
         var recommendations = await _movieContext.hybrid
