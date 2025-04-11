@@ -1,7 +1,6 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './identity.css';
-
 interface UserFormData {
   name: string;
   phone: string;
@@ -12,12 +11,12 @@ interface UserFormData {
   state: string;
   zip: number;
   netflix: number;
-  amazonPrime: number;
+  amazon_prime: number;
   disney: number;
   paramount: number;
   max: number;
   hulu: number;
-  appleTv: number;
+  apple_tv: number;
   peacock: number;
 }
 
@@ -32,12 +31,12 @@ const UserSignUp = () => {
     state: '',
     zip: 0,
     netflix: 0,
-    amazonPrime: 0,
+    amazon_prime: 0,
     disney: 0,
     paramount: 0,
     max: 0,
     hulu: 0,
-    appleTv: 0,
+    apple_tv: 0,
     peacock: 0,
   });
 
@@ -82,9 +81,9 @@ const UserSignUp = () => {
   return (
     <div className="auth-wrapper">
       <div className="auth-content">
-      <div className="back-button" onClick={() => window.history.back()}>
-        &#x2B95;
-      </div>
+        <div className="back-button" onClick={() => window.history.back()}>
+          &#x2B95;
+        </div>
         <img src="/images/logo.png" alt="Logo" className="auth-logo" />
         <div className="auth-card">
           <h2 className="auth-title">User Sign Up</h2>
@@ -281,12 +280,12 @@ const UserSignUp = () => {
               >
                 {[
                   { key: 'netflix', label: 'Netflix' },
-                  { key: 'amazonPrime', label: 'Amazon Prime' },
+                  { key: 'amazon_prime', label: 'Amazon Prime' },
                   { key: 'disney', label: 'Disney+' },
                   { key: 'paramount', label: 'Paramount+' },
                   { key: 'max', label: 'Max' },
                   { key: 'hulu', label: 'Hulu' },
-                  { key: 'appleTv', label: 'Apple TV+' },
+                  { key: 'apple_tv', label: 'Apple TV+' },
                   { key: 'peacock', label: 'Peacock' },
                 ].map(({ key, label }) => (
                   <label

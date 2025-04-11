@@ -5,7 +5,6 @@ using Microsoft.AspNetCore.Mvc;
 using cineNiche.API.Data;
 using Microsoft.AspNetCore.Authorization;
 
-
 namespace cineNiche.API.Controllers
 {
     [Route("[controller]")]
@@ -36,7 +35,7 @@ namespace cineNiche.API.Controllers
 
             if (movieTypes is { Count: > 0 })
             {
-                query = query.Where(m => movieTypes.Contains(m.Type));
+                query = query.Where(m => movieTypes.Contains(m.type));
             }
 
             var movies = query
@@ -58,7 +57,7 @@ namespace cineNiche.API.Controllers
         public IActionResult GetMovieTypes()
         {
             var movieTypes = _movieContext.MoviesTitles
-                .Select(m => m.Type)
+                .Select(m => m.type)
                 .Distinct()
                 .ToList();
 
@@ -70,7 +69,6 @@ namespace cineNiche.API.Controllers
         // [Authorize(Roles = "Admin")]
         public IActionResult AddMovie([FromBody] MoviesTitle newMovie)
         {
-
             _movieContext.MoviesTitles.Add(newMovie);
             _movieContext.SaveChanges();
 
@@ -89,15 +87,15 @@ namespace cineNiche.API.Controllers
                 return NotFound(new { message = "Movie not found" });
             }
 
-            existingMovie.Type = updatedMovie.Type;
-            existingMovie.Title = updatedMovie.Title;
-            existingMovie.Director = updatedMovie.Director;
-            existingMovie.Cast = updatedMovie.Cast;
-            existingMovie.Country = updatedMovie.Country;
-            existingMovie.ReleaseYear = updatedMovie.ReleaseYear;
-            existingMovie.Rating = updatedMovie.Rating;
-            existingMovie.Duration = updatedMovie.Duration;
-            existingMovie.Description = updatedMovie.Description;
+            existingMovie.type = updatedMovie.type;
+            existingMovie.title = updatedMovie.title;
+            existingMovie.director = updatedMovie.director;
+            existingMovie.cast = updatedMovie.cast;
+            existingMovie.country = updatedMovie.country;
+            existingMovie.release_year = updatedMovie.release_year;
+            existingMovie.rating = updatedMovie.rating;
+            existingMovie.duration = updatedMovie.duration;
+            existingMovie.description = updatedMovie.description;
 
             _movieContext.SaveChanges();
 
@@ -127,7 +125,7 @@ namespace cineNiche.API.Controllers
         public IActionResult GetMaxShowId()
         {
             var max = _movieContext.MoviesTitles
-                .Select(m => m.ShowId)
+                .Select(m => m.show_id)
                 .Where(id => id.StartsWith("s"))
                 .AsEnumerable()
                 .Select(id =>
@@ -150,8 +148,8 @@ namespace cineNiche.API.Controllers
                 if (user == null)
                     return BadRequest("User data is null");
 
-                var maxId = _movieContext.MoviesUsers.Max(u => u.UserId);
-                user.UserId = maxId + 1;
+                var maxId = _movieContext.MoviesUsers.Max(u => u.user_id);
+                user.user_id = maxId + 1;
 
                 _movieContext.MoviesUsers.Add(user);
                 _movieContext.SaveChanges();
@@ -169,7 +167,7 @@ namespace cineNiche.API.Controllers
         [HttpGet("GetMovieById/{showId}")]
         public IActionResult GetMovieById(string showId)
         {
-            var movie = _movieContext.MoviesTitles.FirstOrDefault(m => m.ShowId == showId);
+            var movie = _movieContext.MoviesTitles.FirstOrDefault(m => m.show_id == showId);
 
             if (movie == null)
             {
@@ -178,51 +176,47 @@ namespace cineNiche.API.Controllers
 
             return Ok(movie);
         }
-        
+
         [HttpGet("TrendingNow")]
-    public IActionResult GetTrendingNow()
-    {
-        // Step 1: Get all show_ids with a rating of 5
-        var trendingShowIds = _movieContext.MoviesRatings
-            .Where(r => r.Rating == 5)
-            .Select(r => r.ShowId)
-            .Distinct()
-            .ToList();
-
-        if (!trendingShowIds.Any())
+        public IActionResult GetTrendingNow()
         {
-            return Ok(new List<MoviesTitle>());
-        }
+            var trendingShowIds = _movieContext.MoviesRatings
+                .Where(r => r.rating == 5)
+                .Select(r => r.show_id)
+                .Distinct()
+                .ToList();
 
-        // Step 2: Query MoviesTitles for matching show_ids (limit 20)
-        var trendingMovies = _movieContext.MoviesTitles
-            .Where(m => trendingShowIds.Contains(m.ShowId))
-            .Take(20)
-            .ToList();
+            if (!trendingShowIds.Any())
+            {
+                return Ok(new List<MoviesTitle>());
+            }
 
-        return Ok(trendingMovies);
-    }
-
-    [HttpGet("NewReleases")]
-    [AllowAnonymous]
-    public IActionResult GetNewReleases()
-    {
-        try
-        {
-            var newMovies = _movieContext.MoviesTitles
-                .OrderByDescending(m => m.ReleaseYear)
+            var trendingMovies = _movieContext.MoviesTitles
+                .Where(m => trendingShowIds.Contains(m.show_id))
                 .Take(20)
                 .ToList();
 
-            return Ok(newMovies);
+            return Ok(trendingMovies);
         }
-        catch (Exception ex)
+
+        [HttpGet("NewReleases")]
+        [AllowAnonymous]
+        public IActionResult GetNewReleases()
         {
-            Console.WriteLine("🔥 Error in NewReleases endpoint: " + ex.Message);
-            return StatusCode(500, "Internal Server Error: " + ex.Message);
+            try
+            {
+                var newMovies = _movieContext.MoviesTitles
+                    .OrderByDescending(m => m.release_year)
+                    .Take(20)
+                    .ToList();
+
+                return Ok(newMovies);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine("🔥 Error in NewReleases endpoint: " + ex.Message);
+                return StatusCode(500, "Internal Server Error: " + ex.Message);
+            }
         }
-    }
-
-
     }
 }

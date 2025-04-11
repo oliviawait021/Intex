@@ -7,21 +7,21 @@ namespace cineNiche.API.Data;
 public partial class MoviesUser
 {
     [Key]
-    public int UserId { get; set; }
+    public int user_id { get; set; }
 
-    public string? Name { get; set; }
+    public string? name { get; set; }
 
-    public string? Phone { get; set; }
+    public string? phone { get; set; }
 
-    public string? Email { get; set; }
+    public string? email { get; set; }
 
-    public int? Age { get; set; }
+    public int? age { get; set; }
 
-    public string? Gender { get; set; }
+    public string? gender { get; set; }
 
     public int? Netflix { get; set; }
 
-    public int? AmazonPrime { get; set; }
+    public int? Amazon_Prime { get; set; }
 
     public int? Disney { get; set; }
 
@@ -31,13 +31,13 @@ public partial class MoviesUser
 
     public int? Hulu { get; set; }
 
-    public int? AppleTv { get; set; }
+    public int? Apple_TV { get; set; }
 
     public int? Peacock { get; set; }
 
-    public string? City { get; set; }
+    public string? city { get; set; }
 
-    public string? State { get; set; }
+    public string? state { get; set; }
 
-    public int? Zip { get; set; }
+    public int? zip { get; set; }
 }

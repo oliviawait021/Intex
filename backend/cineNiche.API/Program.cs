@@ -34,7 +34,7 @@ builder.Services.AddSwaggerGen();
 
 // Database Context
 builder.Services.AddDbContext<MoviesContext>(options =>
-    options.UseSqlite(builder.Configuration.GetConnectionString("MovieConnection")));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("AzureConnection")));
 
 builder.Services.AddDbContext<ApplicationDbContext>(options =>
     options.UseSqlite(builder.Configuration.GetConnectionString("IdentityConnection")));

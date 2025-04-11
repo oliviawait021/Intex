@@ -78,7 +78,7 @@ const AdminMoviesPage = () => {
 
     try {
       await deleteMovie(showId);
-      setMovies(movies.filter((m) => m.showId !== showId));
+      setMovies(movies.filter((m) => m.show_id !== showId));
     } catch (error: any) {
       if (error.response?.status === 401) {
         alert('You must be logged in to delete a movie.');
@@ -168,8 +168,8 @@ const AdminMoviesPage = () => {
             )
             .map((m) => (
               <div
-                onClick={() => handlePosterClick(m.showId)}
-                key={m.showId}
+                onClick={() => handlePosterClick(m.show_id)}
+                key={m.show_id}
                 className="movie-card"
               >
                 <div className="movie-poster-container">
@@ -187,7 +187,7 @@ const AdminMoviesPage = () => {
                 <div className="movie-info">
                   <h2>{m.title}</h2>
                   <p>
-                    ID: {m.showId} - {m.type} - {m.releaseYear}
+                    ID: {m.show_id} - {m.type} - {m.release_year}
                   </p>
                   <p>Type: {m.type}</p>
                 </div>
@@ -204,7 +204,7 @@ const AdminMoviesPage = () => {
                   <button
                     onClick={(e) => {
                       e.stopPropagation();
-                      handleDelete(m.showId);
+                      handleDelete(m.show_id);
                     }}
                     className="delete-btn"
                   >

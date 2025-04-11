@@ -14,7 +14,7 @@ const genreOptions = [
 ];
 
 interface Movie {
-  showId: string;
+  show_id: string;
   title: string;
   imageFileName: string;
   genre: string;
@@ -31,8 +31,8 @@ const MoviesPage: React.FC = () => {
   });
 
   const navigate = useNavigate();
-  const handlePosterClick = (showId: string) => {
-    navigate(`/movie/${showId}`);
+  const handlePosterClick = (show_id: string) => {
+    navigate(`/movie/${show_id}`);
   };
 
   const observer = useRef<IntersectionObserver | null>(null);
@@ -88,9 +88,9 @@ const MoviesPage: React.FC = () => {
       const data = await response.json();
       const { movies: newMovies, totalNumber } = data;
       setMovies((prev) => {
-        const existingIds = new Set(prev.map((m) => m.showId));
+        const existingIds = new Set(prev.map((m) => m.show_id));
         const uniqueNewMovies = newMovies.filter(
-          (m: { showId: string }) => !existingIds.has(m.showId)
+          (m: { show_id: string }) => !existingIds.has(m.show_id)
         );
         return [...prev, ...uniqueNewMovies];
       });
@@ -183,9 +183,9 @@ const MoviesPage: React.FC = () => {
           <div className="movie-container" ref={topPicksRef}>
             {topPicks.map((movie) => (
               <div
-                onClick={() => handlePosterClick(movie.showId)}
+                onClick={() => handlePosterClick(movie.show_id)}
                 className="movie-item"
-                key={movie.showId}
+                key={movie.show_id}
               >
                 <img
                   src={getPosterUrl(movie.title)}
@@ -221,9 +221,9 @@ const MoviesPage: React.FC = () => {
           <div className="movie-container" ref={becauseYouLikedRef}>
             {becauseYouLiked.map((movie) => (
               <div
-                onClick={() => handlePosterClick(movie.showId)}
+                onClick={() => handlePosterClick(movie.show_id)}
                 className="movie-item"
-                key={movie.showId}
+                key={movie.show_id}
               >
                 <img
                   src={getPosterUrl(movie.title)}
@@ -253,9 +253,9 @@ const MoviesPage: React.FC = () => {
       <div className="movie-grid">
         {filteredMovies.map((movie) => (
           <div
-            onClick={() => handlePosterClick(movie.showId)}
+            onClick={() => handlePosterClick(movie.show_id)}
             className="movie-item"
-            key={movie.showId}
+            key={movie.show_id}
           >
             <img
               src={getPosterUrl(movie.title)}

@@ -69,9 +69,9 @@ function Register() {
   return (
     <div className="auth-wrapper">
       <div className="auth-content">
-      <div className="back-button" onClick={() => window.history.back()}>
-        &#x2B95;
-      </div>
+        <div className="back-button" onClick={() => window.history.back()}>
+          &#x2B95;
+        </div>
         <img src="/images/logo.png" alt="Logo" className="auth-logo" />
         <div className="auth-card">
           <h2 className="auth-title">Register</h2>

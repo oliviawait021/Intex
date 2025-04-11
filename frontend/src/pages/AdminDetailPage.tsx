@@ -97,7 +97,7 @@ const AdminDetailPage = () => {
               </button>
               <br />
               <button
-                onClick={() => handleDelete(movie.showId)}
+                onClick={() => handleDelete(movie.show_id)}
                 className="edit-delete-button"
               >
                 Delete
@@ -124,7 +124,7 @@ const AdminDetailPage = () => {
             </div>
 
             <p className="movie-footer">
-              <span className="label">Released Year:</span> {movie.releaseYear}
+              <span className="label">Released Year:</span> {movie.release_year}
             </p>
 
             <p className="movie-footer">

@@ -101,16 +101,16 @@ const MovieDetailPage = () => {
 
   useEffect(() => {
     const loadMovie = async () => {
-      console.log("showId:", showId);
+      console.log('showId:', showId);
       if (!showId) {
-        setError("No movie ID provided");
+        setError('No movie ID provided');
         return;
       }
       try {
         const data = await fetchMovieById(showId);
         setMovie(data);
       } catch (err: any) {
-        console.error("Failed to fetch movie:", err);
+        console.error('Failed to fetch movie:', err);
         setError(err.message || 'Failed to load movie');
       }
     };
@@ -160,32 +160,27 @@ const MovieDetailPage = () => {
         {/* Movie Info */}
         <div className="info-section">
           <h1 className="movie-title">{movie.title}</h1>
-          <div className="movie-meta">
-            <p>{movie.rating}</p>
-            <p>{movie.duration}</p>
-          </div>
-
+          <p className="movie-footer">
+            <span className="label">Released Year:</span> {movie.release_year}
+          </p>
+          <p className="movie-footer">
+            <span className="label">Released Country:</span> {movie.country}
+          </p>
+          <p className="movie-footer">
+            <span className="label">Director:</span> {movie.director}
+          </p>
           <div className="movie-description">
             <p className="label">Description:</p>
             <p>{movie.description}</p>
           </div>
-
           <div className="movie-cast">
             <p className="label">Cast:</p>
             <p>{movie.cast}</p>
           </div>
-
-          <p className="movie-footer">
-            <span className="label">Released Year:</span> {movie.releaseYear}
-          </p>
-
-          <p className="movie-footer">
-            <span className="label">Released Country:</span> {movie.country}
-          </p>
-
-          <p className="movie-footer">
-            <span className="label">Director:</span> {movie.director}
-          </p>
+          <div className="movie-meta">
+            <p>{movie.rating}</p>
+            <p>{movie.duration}</p>
+          </div>
         </div>
       </div>
       {/* Movie section rendered only once */}
