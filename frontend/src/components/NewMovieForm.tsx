@@ -3,6 +3,7 @@ import { Movie } from '../types/Movie';
 import { addMovie, getNextShowId } from '../api/MoviesAPI';
 import '../pages/AdminMoviesPage.css';
 import Footer from './Footer';
+import WelcomeBand from './WelcomeBand';
 
 interface NewMovieFormProps {
   onSuccess: () => void;
@@ -42,7 +43,6 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
   };
 
   return (
-    <>
     <div className="auth-wrapper">
       <div className="auth-card">
         <div className="auth-content">
@@ -98,15 +98,6 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
               />
             </div>
             <div className="auth-input-group">
-              <label htmlFor="releaseDate">Release Date</label>
-              <input
-                type="date"
-                name="releaseDate"
-                onChange={handleChange}
-                className="auth-input"
-              />
-            </div>
-            <div className="auth-input-group">
               <label htmlFor="type">Type</label>
               <select
                 name="type"
@@ -143,23 +134,22 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
               >
                 <option value="">Value</option>
                 <option value="Drama">Drama</option>
-                <option value="Action">Action</option>
+                <option value="Comedy">Documentary & Reality</option>
+                <option value="Action">Action & Adventure</option>
                 <option value="Comedy">Comedy</option>
+                <option value="Comedy">Family & Kids</option>
+                <option value="Comedy">Other/Miscellaneous</option>
               </select>
             </div>
             <div className="auth-input-group">
               <label htmlFor="country">Country Made</label>
-              <select
-                name="country"
-                value={formData.country}
-                onChange={handleChange}
-                className="auth-input"
-              >
-                <option value="">Value</option>
-                <option value="USA">USA</option>
-                <option value="UK">UK</option>
-                <option value="Canada">Canada</option>
-              </select>
+              <input
+              type="text"
+              name="country"
+              value={formData.country}
+              onChange={handleChange}
+              className="auth-input"
+            />
             </div>
             <div className="auth-input-group">
               <label htmlFor="cast">Cast List</label>
@@ -180,8 +170,6 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
         </div>
       </div>
     </div>
-    <Footer />
-    </>
   );
 };
 
