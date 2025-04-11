@@ -349,7 +349,9 @@ namespace cineNiche.API.Controllers
         if (string.IsNullOrWhiteSpace(title))
             return BadRequest("Missing title.");
 
-        string blobName = _blobService.GenerateMoviePosterBlobName(title);
+        string decodedTitle = Uri.UnescapeDataString(title);
+
+        string blobName = _blobService.GenerateMoviePosterBlobName(decodedTitle);
         var blobClient = _blobService.GetBlobClient(blobName); // <-- we'll add this helper next
 
         if (!await blobClient.ExistsAsync())
