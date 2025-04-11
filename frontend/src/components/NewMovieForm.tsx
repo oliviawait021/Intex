@@ -67,9 +67,9 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
               />
             </div>
             <div className="auth-input-group">
-              <label htmlFor="releaseYear">Year</label>
+              <label htmlFor="release_year">Year</label>
               <select
-                name="releaseYear"
+                name="release_year"
                 value={formData.release_year}
                 onChange={handleChange}
                 className="auth-input"
@@ -91,15 +91,6 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
                 type="text"
                 name="duration"
                 value={formData.duration}
-                onChange={handleChange}
-                className="auth-input"
-              />
-            </div>
-            <div className="auth-input-group">
-              <label htmlFor="releaseDate">Release Date</label>
-              <input
-                type="date"
-                name="releaseDate"
                 onChange={handleChange}
                 className="auth-input"
               />
@@ -141,23 +132,22 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
               >
                 <option value="">Value</option>
                 <option value="Drama">Drama</option>
-                <option value="Action">Action</option>
+                <option value="Action">Action &  Adventure</option>
                 <option value="Comedy">Comedy</option>
+                <option value="Documentary & Reality">Documentary & Reality</option>
+                <option value="Family & Kids">Family & Kids</option>
+                <option value="Other / Miscellaneous">Other / Miscellaneous</option>
               </select>
             </div>
             <div className="auth-input-group">
               <label htmlFor="country">Country Made</label>
-              <select
+              <input
+                type="text"
                 name="country"
                 value={formData.country}
                 onChange={handleChange}
                 className="auth-input"
-              >
-                <option value="">Value</option>
-                <option value="USA">USA</option>
-                <option value="UK">UK</option>
-                <option value="Canada">Canada</option>
-              </select>
+              />
             </div>
             <div className="auth-input-group">
               <label htmlFor="cast">Cast List</label>
