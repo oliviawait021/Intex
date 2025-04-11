@@ -28,7 +28,7 @@ namespace cineNiche.API.Controllers
             {
                 HttpOnly = true,
                 Secure = true,
-                SameSite = SameSiteMode.None,
+                SameSite = SameSiteMode.Lax,
                 Expires = DateTime.Now.AddMinutes(5)
             });
             
