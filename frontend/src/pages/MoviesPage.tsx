@@ -35,17 +35,17 @@ const MoviesPage: React.FC = () => {
   const [forYou, setForYou] = useState<Movie[]>([]);
   const [forYouLoading, setForYouLoading] = useState(false);
   const becauseYouWatchedIds = [
-    's8381',
-    's3466',
-    's3181',
-    's294',
-    's7739',
-    's2917',
-    's5899',
-    's2361',
-    's493',
+    's1273',
+    's5534',
+    's4209',
+    's1',
+    's1392',
+    's769',s
+    's7607',
+    's6235',
+    's6414',
     's7361',
-    's242',
+    's722',
   ];
   const [becauseTitle, setBecauseTitle] = useState('');
   const [becauseMovies, setBecauseMovies] = useState<Movie[]>([]);
