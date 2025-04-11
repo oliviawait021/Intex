@@ -3,7 +3,6 @@ import './MoviesPage.css';
 import WelcomeBand from '../components/WelcomeBand';
 import { baseURL, fetchUserInfo } from '../api/MoviesAPI';
 import { useNavigate } from 'react-router-dom';
-import Footer from '../components/Footer';
 
 const genreOptions = [
   'Documentary & Reality',
