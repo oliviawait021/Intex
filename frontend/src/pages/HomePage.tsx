@@ -3,6 +3,7 @@ import './HomePage.css';
 import { Link } from 'react-router-dom';
 import Footer from '../components/Footer';
 import { Movie } from '../types/Movie';
+import { baseURL } from '../api/MoviesAPI';
 
 const faqData = [
   {
@@ -74,7 +75,7 @@ const HomePage: React.FC = () => {
   };
 
   useEffect(() => {
-    fetch('https://localhost:5000/Movie/TrendingNow', {
+    fetch(`${baseURL}/Movie/TrendingNow`, {
       credentials: 'include',
     })
       .then((res) => {
@@ -84,7 +85,7 @@ const HomePage: React.FC = () => {
       .then((data: Movie[]) => setTrendingMovies(data))
       .catch((err) => console.error('Failed to fetch trending:', err));
 
-    fetch('https://localhost:5000/Movie/NewReleases', {
+    fetch(`${baseURL}/Movie/NewReleases`, {
       credentials: 'include',
     })
       .then((res) => {
