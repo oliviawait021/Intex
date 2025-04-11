@@ -170,56 +170,69 @@ const AdminMoviesPage = () => {
             .filter((m) =>
               m.title.toLowerCase().includes(searchTerm.toLowerCase())
             )
-            .map((m) => (
-              <div
-                onClick={() => handlePosterClick(m.show_id)}
-                key={m.show_id}
-                className="movie-card"
-              >
-                <div className="movie-poster-container">
-                  <img
-                    src={getPosterUrl(m.title)}
-                    alt={m.title}
-                    className="movie-poster"
-                    onError={(e) => {
-                      console.warn('Missing poster for:', m.title);
-                      (e.currentTarget as HTMLImageElement).src =
-                        '/images/default-poster.png';
-                    }}
-                  />
-                </div>
-                <div className="movie-info">
-                  <h2>{m.title}</h2>
-                  <p>
-                    ID: {m.show_id} - {m.type} - {m.release_year}
-                  </p>
-                  <p>Type: {m.type}</p>
-                </div>
-                {userInfo.isAdmin && (
-                  <div className="movie-actions">
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        console.log('Clicked delete for:', m); // ✅ Debug
-                        setEditingMovie(m);
+            .map((m) => {
+              console.log('Rendering movie:', m.title, 'with show_id:', m.show_id);
+              return (
+                <div
+                  onClick={() => handlePosterClick(m.show_id)}
+                  key={m.show_id}
+                  className="movie-card"
+                >
+                  <div className="movie-poster-container">
+                    <img
+                      src={getPosterUrl(m.title)}
+                      alt={m.title}
+                      className="movie-poster"
+                      onError={(e) => {
+                        console.warn('Missing poster for:', m.title);
+                        (e.currentTarget as HTMLImageElement).src =
+                          '/images/default-poster.png';
                       }}
-                      className="edit-btn"
-                    >
-                      <img src="/icons/editing.png" alt="Edit" />
-                    </button>
-                    <button
-                      onClick={(e) => {
-                        e.stopPropagation();
-                        handleDelete(m.show_id);
-                      }}
-                      className="delete-btn"
-                    >
-                      <img src="/icons/bin.png" alt="Delete" />
-                    </button>
+                    />
                   </div>
-                )}
-              </div>
-            ))}
+                  <div className="movie-info">
+                    <h2>{m.title}</h2>
+                    <p>
+                      ID: {m.show_id} - {m.type} - {m.release_year}
+                    </p>
+                    <p>Type: {m.type}</p>
+                    {!m.show_id && (
+                      <p style={{ color: 'red' }}>⚠️ Warning: Movie missing show_id!</p>
+                    )}
+                  </div>
+                  {userInfo.isAdmin && (
+                    <div className="movie-actions">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          console.log('Clicked edit for:', m);
+                          if (!m.show_id) {
+                            console.error('❌ Cannot edit movie with missing show_id:', m);
+                          }
+                          setEditingMovie(m);
+                        }}
+                        className="edit-btn"
+                      >
+                        <img src="/icons/editing.png" alt="Edit" />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          console.log('Clicked delete for:', m);
+                          if (!m.show_id) {
+                            console.error('❌ Cannot delete movie with missing show_id:', m);
+                          }
+                          handleDelete(m.show_id);
+                        }}
+                        className="delete-btn"
+                      >
+                        <img src="/icons/bin.png" alt="Delete" />
+                      </button>
+                    </div>
+                  )}
+                </div>
+              );
+            })}
         </div>
 
         <Pagination

@@ -26,7 +26,6 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
     }
   };
   return (
-    <>
     <div className="auth-wrapper">
       <div className="auth-card">
         <div className="auth-content">
@@ -132,8 +131,6 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
         </div>
       </div>
     </div>
-    <Footer />
-    </>
   );
 };
 export default EditMovieForm;

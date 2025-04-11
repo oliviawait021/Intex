@@ -36,7 +36,7 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
     e.preventDefault();
 
     const newShowId = await getNextShowId();
-    const newMovie = { ...formData, showId: newShowId };
+    const newMovie = { ...formData, show_id: newShowId };
 
     await addMovie(newMovie);
     onSuccess();
