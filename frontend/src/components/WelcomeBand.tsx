@@ -54,7 +54,7 @@ function WelcomeBand() {
               &#9776;
             </span>
           </div>
-          <img src="/images/logo.png" alt="CineNiche Logo" className="logo" />
+          <img src="/images/logo.png" alt="CineNiche Logo" className="logo-in-band" />
         </div>
 
         <div className="welcome-text-container">

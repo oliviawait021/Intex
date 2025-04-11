@@ -1,12 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Movie } from '../types/Movie';
-import {
-  deleteMovie,
-  fetchMovies,
-  fetchUserInfo,
-  UserInfo,
-} from '../api/MoviesAPI';
+import { fetchMovies, fetchUserInfo, deleteMovie, UserInfo } from '../api/MoviesAPI';
 import Pagination from '../components/Pagination';
 import NewMovieForm from '../components/NewMovieForm';
 import EditMovieForm from '../components/EditMovieForm';
@@ -73,19 +68,28 @@ const AdminMoviesPage = () => {
   }, []);
 
   const handleDelete = async (showId: string) => {
+    if (!showId) {
+      console.error('❌ showId is undefined or empty');
+      alert('Invalid movie ID — cannot delete.');
+      return;
+    }
+
     const confirmDelete = window.confirm('Are you sure you want to delete?');
     if (!confirmDelete) return;
 
     try {
+      console.log('🗑️ Attempting to delete movie:', showId);
       await deleteMovie(showId);
       setMovies(movies.filter((m) => m.show_id !== showId));
     } catch (error: any) {
-      if (error.response?.status === 401) {
+      console.error('Delete failed:', error);
+      const msg = error.message || '';
+      if (msg.includes('401')) {
         alert('You must be logged in to delete a movie.');
-      } else if (error.response?.status === 403) {
+      } else if (msg.includes('403')) {
         alert('Access denied. Only admins can delete movies.');
       } else {
-        alert('Failed to delete movie. Please try again.');
+        alert('Failed to delete movie. Please try again.\n' + msg);
       }
     }
   };
@@ -191,26 +195,29 @@ const AdminMoviesPage = () => {
                   </p>
                   <p>Type: {m.type}</p>
                 </div>
-                <div className="movie-actions">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setEditingMovie(m);
-                    }}
-                    className="edit-btn"
-                  >
-                    <img src="/icons/editing.png" alt="Edit" />
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDelete(m.show_id);
-                    }}
-                    className="delete-btn"
-                  >
-                    <img src="/icons/bin.png" alt="Delete" />
-                  </button>
-                </div>
+                {userInfo.isAdmin && (
+                  <div className="movie-actions">
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        console.log('Clicked delete for:', m); // ✅ Debug
+                        setEditingMovie(m);
+                      }}
+                      className="edit-btn"
+                    >
+                      <img src="/icons/editing.png" alt="Edit" />
+                    </button>
+                    <button
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        handleDelete(m.show_id);
+                      }}
+                      className="delete-btn"
+                    >
+                      <img src="/icons/bin.png" alt="Delete" />
+                    </button>
+                  </div>
+                )}
               </div>
             ))}
         </div>

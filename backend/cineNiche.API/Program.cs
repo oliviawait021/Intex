@@ -121,7 +121,7 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.Cookie.SameSite = SameSiteMode.None; // Updated for cross-origin support
     options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Ensure cookies are secure
     options.Cookie.Name = ".AspNetCore.Identity.Application";
-    options.LoginPath = "/login";
+    //options.LoginPath = "/login";
     
     options.Events = new CookieAuthenticationEvents
     {
