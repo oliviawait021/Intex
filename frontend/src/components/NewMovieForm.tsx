@@ -2,8 +2,6 @@ import { useState } from 'react';
 import { Movie } from '../types/Movie';
 import { addMovie, getNextShowId } from '../api/MoviesAPI';
 import '../pages/AdminMoviesPage.css';
-import Footer from './Footer';
-import WelcomeBand from './WelcomeBand';
 
 interface NewMovieFormProps {
   onSuccess: () => void;
@@ -36,7 +34,8 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
     e.preventDefault();
 
     const newShowId = await getNextShowId();
-    const newMovie = { ...formData, show_id: newShowId };
+
+    const newMovie = { ...formData, show_Id: newShowId };
 
     await addMovie(newMovie);
     onSuccess();
@@ -69,9 +68,9 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
               />
             </div>
             <div className="auth-input-group">
-              <label htmlFor="releaseYear">Year</label>
+              <label htmlFor="release_year">Year</label>
               <select
-                name="releaseYear"
+                name="release_year"
                 value={formData.release_year}
                 onChange={handleChange}
                 className="auth-input"
@@ -144,12 +143,12 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
             <div className="auth-input-group">
               <label htmlFor="country">Country Made</label>
               <input
-              type="text"
-              name="country"
-              value={formData.country}
-              onChange={handleChange}
-              className="auth-input"
-            />
+                type="text"
+                name="country"
+                value={formData.country}
+                onChange={handleChange}
+                className="auth-input"
+              />
             </div>
             <div className="auth-input-group">
               <label htmlFor="cast">Cast List</label>
