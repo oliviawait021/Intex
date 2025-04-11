@@ -4,6 +4,7 @@ import { fetchMovieById, deleteMovie } from '../api/MoviesAPI';
 import { Movie } from '../types/Movie';
 import EditMovieForm from '../components/EditMovieForm';
 import './AdminDetailPage.css';
+import Footer from '../components/Footer';
 
 const AdminDetailPage = () => {
   const { showId } = useParams();
@@ -63,6 +64,7 @@ const AdminDetailPage = () => {
     `https://movie-posters8.s3.us-east-1.amazonaws.com/Movie+Posters/${filename}`;
 
   return (
+    <>
     <div className="movie-detail">
       <div className="movie-detail-container">
         <div className="back-button" onClick={() => window.history.back()}>
@@ -151,6 +153,8 @@ const AdminDetailPage = () => {
         )}
       </div>
     </div>
+    <Footer />
+    </>
   );
 };
 

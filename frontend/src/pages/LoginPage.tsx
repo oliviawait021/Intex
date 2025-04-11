@@ -4,6 +4,7 @@ import './identity.css';
 import '@fortawesome/fontawesome-free/css/all.css';
 import { GoogleLogin } from '@react-oauth/google';
 import { baseURL } from '../api/MoviesAPI';
+import Footer from '../components/Footer';
 
 const fetchUser = async () => {
   try {
@@ -103,6 +104,7 @@ function LoginPage({ setIsAuthenticated }: { setIsAuthenticated: (value: boolean
   };
 
   return (
+    <>
     <div className="auth-wrapper">
       <div className="auth-content">
       <div className="back-button" onClick={() => window.history.back()}>
@@ -225,6 +227,8 @@ function LoginPage({ setIsAuthenticated }: { setIsAuthenticated: (value: boolean
         </div>
       </div>
     </div>
+    <Footer />
+    </>
   );
 }
 

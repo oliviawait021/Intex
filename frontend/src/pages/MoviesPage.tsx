@@ -3,6 +3,7 @@ import './MoviesPage.css';
 import WelcomeBand from '../components/WelcomeBand';
 import { baseURL, fetchUserInfo } from '../api/MoviesAPI';
 import { useNavigate } from 'react-router-dom';
+import Footer from '../components/Footer';
 
 const genreOptions = [
   'Documentary & Reality',
@@ -271,6 +272,7 @@ const MoviesPage: React.FC = () => {
 
       <div ref={sentinelRef} style={{ height: '1px' }} />
       {isLoading && <p className="loading-text">Loading more movies...</p>}
+      <Footer />
     </>
   );
 };

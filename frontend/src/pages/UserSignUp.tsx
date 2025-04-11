@@ -81,6 +81,7 @@ const UserSignUp = () => {
   };
 
   return (
+    <>
     <div className="auth-wrapper">
       <div className="auth-content">
       <div className="back-button" onClick={() => window.history.back()}>
@@ -320,6 +321,7 @@ const UserSignUp = () => {
         </div>
       </div>
     </div>
+    </>
   );
 };
 
