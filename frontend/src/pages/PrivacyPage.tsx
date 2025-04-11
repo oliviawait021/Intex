@@ -6,7 +6,6 @@ function PrivacyPage() {
       padding: '4rem 2rem',
       maxWidth: '1000px',
       margin: 'auto',
-      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
       lineHeight: 1.8,
     },
     heading1: {

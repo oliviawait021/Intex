@@ -79,8 +79,21 @@ const NavDrawer: React.FC<NavDrawerProps> = ({ isOpen }) => {
         <br /><br /><br /><br /><br />
         <Link to="/privacy" style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'white', textDecoration: 'none' }}>Privacy Policy</Link>
         
-        <Logout style={{ fontSize: '1.25rem', fontWeight: 'bold', color: 'white', textDecoration: 'none', cursor: 'pointer' }}>Log out</Logout>
-      </nav>
+        <Logout
+          style={{
+            fontSize: '1.25rem',
+            fontWeight: 'bold',
+            color: 'white',
+            textDecoration: 'none',
+            cursor: 'pointer',
+            background: 'none',
+            border: 'none',
+            padding: 0
+          }}
+        >
+          Log out
+        </Logout>      
+        </nav>
     </div>
   );
 };
