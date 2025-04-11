@@ -285,7 +285,7 @@ const UserSignUp = () => {
                   { key: 'paramount', label: 'Paramount+' },
                   { key: 'max', label: 'Max' },
                   { key: 'hulu', label: 'Hulu' },
-                  { key: 'apple_tv', label: 'Apple TV+' },
+                  { key: 'applev', label: 'Apple TV+' },
                   { key: 'peacock', label: 'Peacock' },
                 ].map(({ key, label }) => (
                   <label

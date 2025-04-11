@@ -174,7 +174,7 @@ const MovieDetailPage = () => {
               movieContainerRefs.current[0] = el;
             }}
           >
-            {similarMovies.map((movie, index) => (
+            {similarMovies.map((movie) => (
               <div
                 className="movie-item"
                 key={movie.show_id}

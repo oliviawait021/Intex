@@ -8,7 +8,7 @@ export default defineConfig({
     {
       name: 'custom-csp',
       configureServer(server) {
-        server.middlewares.use((req, res, next) => {
+        server.middlewares.use((_req, res, next) => {
           res.setHeader(
             'Content-Security-Policy',
             [
