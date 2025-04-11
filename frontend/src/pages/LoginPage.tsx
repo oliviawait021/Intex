@@ -15,7 +15,8 @@ const fetchUser = async () => {
     if (res.ok) {
       const data = await res.json();
       localStorage.setItem('authToken', 'true');
-      const role = data.roles && data.roles.length > 0 ? data.roles[0] : 'Customer';
+      const role =
+        data.roles && data.roles.length > 0 ? data.roles[0] : 'Customer';
       localStorage.setItem('userRole', role);
       localStorage.setItem('username', data.username || data.email); // Save name if available, otherwise fallback to email
     } else {
@@ -27,7 +28,11 @@ const fetchUser = async () => {
   }
 };
 
-function LoginPage({ setIsAuthenticated }: { setIsAuthenticated: (value: boolean) => void }) {
+function LoginPage({
+  setIsAuthenticated,
+}: {
+  setIsAuthenticated: (value: boolean) => void;
+}) {
   // state variables for email and passwords
   const [email, setEmail] = useState<string>('');
   const [password, setPassword] = useState<string>('');
@@ -105,87 +110,93 @@ function LoginPage({ setIsAuthenticated }: { setIsAuthenticated: (value: boolean
 
   return (
     <>
-    <div className="auth-wrapper">
-      <div className="auth-content">
-      <div className="back-button" onClick={() => window.history.back()}>
-        &#x2B95;
-      </div>
-        <img src="/images/logo.png" alt="Logo" className="auth-logo" />
-        <div className="auth-card">
-          <h2 className="auth-title">Sign in to continue</h2>
-          <form onSubmit={handleSubmit}>
-            {/* Email field */}
-            <div className="auth-input-group">
-              <label htmlFor="email">Username</label>
-              <input
-                className="auth-input"
-                type="email"
-                id="email"
-                name="email"
-                value={email}
-                onChange={handleChange}
-              />
-            </div>
+      <div className="auth-wrapper">
+        <div className="auth-content">
+          <div className="back-button" onClick={() => window.history.back()}>
+            &#x2B95;
+          </div>
+          <img src="/images/logo.png" alt="Logo" className="auth-logo" />
+          <div className="auth-card">
+            <h2 className="auth-title">Sign in to continue</h2>
+            <form onSubmit={handleSubmit}>
+              {/* Email field */}
+              <div className="auth-input-group">
+                <label htmlFor="email">Username</label>
+                <input
+                  className="auth-input-group-for-name-and-such"
+                  type="email"
+                  id="email"
+                  name="email"
+                  value={email}
+                  onChange={handleChange}
+                />
+              </div>
 
-            {/* Password field */}
-            <div className="auth-input-group">
-              <label htmlFor="password">Password</label>
-              <input
-                className="auth-input"
-                type="password"
-                id="password"
-                name="password"
-                value={password}
-                onChange={handleChange}
-              />
-            </div>
+              {/* Password field */}
+              <div className="auth-input-group">
+                <label htmlFor="password">Password</label>
+                <input
+                  className="auth-input-group-for-name-and-such"
+                  type="password"
+                  id="password"
+                  name="password"
+                  value={password}
+                  onChange={handleChange}
+                />
+              </div>
 
-            {/* Remember me checkbox */}
-            <div
-              className="auth-input-group"
-              style={{ fontSize: '1rem', display: 'flex', alignItems: 'left', justifyContent: 'flex-start', gap: '0.25rem' }}
-            >
-              <input
-                type="checkbox"
-                id="rememberme"
-                name="rememberme"
-                checked={rememberme}
-                onChange={handleChange}
-                style={{ transform: 'scale(0.8)' }}
-              />
-              <label htmlFor="rememberme">
-                Remember me?
-              </label>
-            </div>
+              {/* Remember me checkbox */}
+              <div
+                // className="auth-input-group" //!!!!!
+                style={{
+                  fontSize: '1rem',
+                  display: 'flex',
+                  alignItems: 'center', // Add this line
+                }}
+              >
+                <input
+                  type="checkbox"
+                  id="rememberme"
+                  name="rememberme"
+                  checked={rememberme}
+                  onChange={handleChange}
+                />
+                <label htmlFor="rememberme" style={{ marginLeft: '0.5rem' }}>
+                  Remember me?
+                </label>
+              </div>
+              <br />
 
-            {/* Submit button */}
-            <button type="submit" className="auth-button">
-              Sign In
-            </button>
+              {/* Submit button */}
+              <button type="submit" className="auth-button">
+                Sign In
+              </button>
 
-            {/* Register link */}
-            <div className="auth-footer">
-              <p>
-                Don’t have an account?{' '}
-                <a href="#" onClick={handleRegisterClick} className="auth-link">
-                  Sign up here
-                </a>
-              </p>
-            </div>
-          </form>
+              {/* Register link */}
+              <div className="auth-footer">
+                <p>
+                  Don’t have an account?{' '}
+                  <a
+                    href="#"
+                    onClick={handleRegisterClick}
+                    className="auth-link"
+                  >
+                    Sign up here
+                  </a>
+                </p>
+              </div>
+            </form>
 
-          {/* Third-party login buttons */}
-          <div className="auth-input-group">
-            <GoogleLogin
-              onSuccess={async (credentialResponse) => {
-                console.log('Google login success:', credentialResponse);
+            {/* Third-party login buttons */}
+            <div className="auth-input-group" style={{ textAlign: 'center' }}>
+              <GoogleLogin
+                onSuccess={async (credentialResponse) => {
+                  console.log('Google login success:', credentialResponse);
 
-                const token = credentialResponse.credential;
+                  const token = credentialResponse.credential;
 
-                try {
-                  const response = await fetch(
-                    `${baseURL}/api/auth/google`,
-                    {
+                  try {
+                    const response = await fetch(`${baseURL}/api/auth/google`, {
                       method: 'POST',
                       headers: {
                         'Content-Type': 'application/json',
@@ -194,40 +205,38 @@ function LoginPage({ setIsAuthenticated }: { setIsAuthenticated: (value: boolean
                       body: JSON.stringify({
                         token: token,
                       }),
+                    });
+
+                    if (!response.ok) {
+                      throw new Error('Failed to log in via Google');
                     }
-                  );
 
-                  if (!response.ok) {
-                    throw new Error('Failed to log in via Google');
+                    const data = await response.json();
+                    console.log('Backend login success:', data);
+                    localStorage.setItem('username', data.email);
+                    await fetchUser();
+                    setIsAuthenticated(true);
+                    setTimeout(() => {
+                      navigate('/movies');
+                      // window.location.reload(); // optional
+                    }, 300);
+                  } catch (error) {
+                    console.error('Error during Google login:', error);
                   }
+                }}
+                onError={() => {
+                  console.log('Google login failed');
+                  setError('Google login failed');
+                }}
+              />
+            </div>
 
-                  const data = await response.json();
-                  console.log('Backend login success:', data);
-                  localStorage.setItem('username', data.email);
-                  await fetchUser();
-                  setIsAuthenticated(true);
-                  setTimeout(() => {
-                    navigate('/movies');
-                    // window.location.reload(); // optional
-                  }, 300);
-                  
-                } catch (error) {
-                  console.error('Error during Google login:', error);
-                }
-              }}
-              onError={() => {
-                console.log('Google login failed');
-                setError('Google login failed');
-              }}
-            />
+            {/* Error message display */}
+            {error && <p className="error">{error}</p>}
           </div>
-
-          {/* Error message display */}
-          {error && <p className="error">{error}</p>}
         </div>
       </div>
-    </div>
-    <Footer />
+      <Footer />
     </>
   );
 }
