@@ -4,7 +4,7 @@ import { baseURL } from '../api/MoviesAPI';
 function Logout(props: { children: React.ReactNode,  style?: React.CSSProperties; }) {
   const navigate = useNavigate();
 
-  const handleLogout = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     try {
@@ -37,9 +37,9 @@ function Logout(props: { children: React.ReactNode,  style?: React.CSSProperties
   };
 
   return (
-    <a className="logout" href="#" onClick={handleLogout}>
+    <button type="button" onClick={handleLogout} style={props.style}>
       {props.children}
-    </a>
+    </button>
   );
 }
 
