@@ -21,8 +21,7 @@ public class BlobService
 
     public string GenerateMoviePosterBlobName(string movieTitle)
     {
-        string processedTitle = movieTitle.Replace(" ", "%20");
-        processedTitle = Regex.Replace(processedTitle, "[^a-zA-Z0-9%]", "");
+        string processedTitle = Regex.Replace(movieTitle, "[^a-zA-Z0-9 .]", "");
         return $"{processedTitle}.jpg";
     }
 
