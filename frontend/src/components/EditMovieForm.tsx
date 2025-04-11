@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Movie } from '../types/Movie';
 import { updateMovie } from '../api/MoviesAPI';
+import Footer from './Footer';
 interface EditMovieFormProps {
   movie: Movie;
   onSuccess: () => void;
@@ -25,6 +26,7 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
     }
   };
   return (
+    <>
     <div className="auth-wrapper">
       <div className="auth-card">
         <div className="auth-content">
@@ -72,6 +74,8 @@ const EditMovieForm = ({ movie, onSuccess, onCancel }: EditMovieFormProps) => {
         </div>
       </div>
     </div>
+    <Footer />
+    </>
   );
 };
 export default EditMovieForm;

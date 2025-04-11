@@ -2,6 +2,7 @@ import { useState } from 'react';
 import { Movie } from '../types/Movie';
 import { addMovie, getNextShowId } from '../api/MoviesAPI';
 import '../pages/AdminMoviesPage.css';
+import Footer from './Footer';
 
 interface NewMovieFormProps {
   onSuccess: () => void;
@@ -41,6 +42,7 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
   };
 
   return (
+    <>
     <div className="auth-wrapper">
       <div className="auth-card">
         <div className="auth-content">
@@ -176,6 +178,8 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
         </div>
       </div>
     </div>
+    <Footer />
+    </>
   );
 };
 

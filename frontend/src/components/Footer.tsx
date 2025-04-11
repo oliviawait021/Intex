@@ -4,20 +4,21 @@ import './Footer.css';
 function Footer() {
   return (
     <footer className="footer-container">
-      {/* Left: Logo */}
+      {/* Left: Links */}
       <div className="footer-logo">
+        <Link to="/privacy" className="faq-link">
+          Privacy Policy
+        </Link>
+      </div>
+      
+      
+      {/* Center: Logo */}
+      <div className="footer-links">
         <img
           src="/images/logo.png"
           alt="CineNiche Logo"
           className="footer-logo-img"
         />
-      </div>
-
-      {/* Center: Links */}
-      <div className="footer-links">
-        <Link to="/privacy" className="faq-link">
-          Privacy Policy
-        </Link>
       </div>
 
       {/* Right: Copyright */}

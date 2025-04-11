@@ -3,6 +3,7 @@ import { useParams } from 'react-router-dom';
 import { fetchMovieById } from '../api/MoviesAPI';
 import { Movie } from '../types/Movie';
 import './MovieDetailPage.css';
+import Footer from '../components/Footer';
 
 const movieData = [
   {
@@ -126,6 +127,7 @@ const MovieDetailPage = () => {
     `https://movie-posters8.s3.us-east-1.amazonaws.com/Movie+Posters/${filename}`;
 
   return (
+    <>
     <div className="movie-detail-container">
       <div className="back-button" onClick={() => window.history.back()}>
         &#x2B95;
@@ -225,6 +227,8 @@ const MovieDetailPage = () => {
         </div>
       </div>
     </div>
+    <Footer />
+    </>
   );
 };
 

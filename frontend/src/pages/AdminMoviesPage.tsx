@@ -12,6 +12,7 @@ import NewMovieForm from '../components/NewMovieForm';
 import EditMovieForm from '../components/EditMovieForm';
 import AuthorizeView from '../components/AuthorizeView';
 import './AdminMoviesPage.css';
+import Footer from '../components/Footer';
 
 const AdminMoviesPage = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -250,6 +251,7 @@ const AdminMoviesPage = () => {
           </div>
         )}
       </div>
+      <Footer />
     </>
   );
 };

@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import './identity.css';
 import { GoogleLogin } from '@react-oauth/google';
 import { baseURL } from '../api/MoviesAPI';
+import Footer from '../components/Footer';
 
 function Register() {
   // state variables for email and passwords
@@ -68,6 +69,7 @@ function Register() {
   };
 
   return (
+    <>
     <div className="auth-wrapper">
       <div className="auth-content">
       <div className="back-button" onClick={() => window.history.back()}>
@@ -153,6 +155,8 @@ function Register() {
         </div>
       </div>
     </div>
+    <Footer />
+    </>
   );
 }
 

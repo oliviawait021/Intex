@@ -1,3 +1,4 @@
+import Footer from '../components/Footer';
 import WelcomeBand from '../components/WelcomeBand';
 function PrivacyPage() {
   const styles = {
@@ -211,6 +212,7 @@ function PrivacyPage() {
           latest version.
         </p>
       </div>
+      <Footer />
     </>
   );
 }
