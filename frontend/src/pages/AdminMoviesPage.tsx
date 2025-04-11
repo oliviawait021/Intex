@@ -1,12 +1,7 @@
 import { useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { Movie } from '../types/Movie';
-import {
-  deleteMovie,
-  fetchMovies,
-  fetchUserInfo,
-  UserInfo,
-} from '../api/MoviesAPI';
+import { fetchMovies, fetchUserInfo, deleteMovie, UserInfo } from '../api/MoviesAPI';
 import Pagination from '../components/Pagination';
 import NewMovieForm from '../components/NewMovieForm';
 import EditMovieForm from '../components/EditMovieForm';
@@ -73,19 +68,28 @@ const AdminMoviesPage = () => {
   }, []);
 
   const handleDelete = async (showId: string) => {
+    if (!showId) {
+      console.error('❌ showId is undefined or empty');
+      alert('Invalid movie ID — cannot delete.');
+      return;
+    }
+
     const confirmDelete = window.confirm('Are you sure you want to delete?');
     if (!confirmDelete) return;
 
     try {
+      console.log('🗑️ Attempting to delete movie:', showId);
       await deleteMovie(showId);
       setMovies(movies.filter((m) => m.show_id !== showId));
     } catch (error: any) {
-      if (error.response?.status === 401) {
+      console.error('Delete failed:', error);
+      const msg = error.message || '';
+      if (msg.includes('401')) {
         alert('You must be logged in to delete a movie.');
-      } else if (error.response?.status === 403) {
+      } else if (msg.includes('403')) {
         alert('Access denied. Only admins can delete movies.');
       } else {
-        alert('Failed to delete movie. Please try again.');
+        alert('Failed to delete movie. Please try again.\n' + msg);
       }
     }
   };
@@ -166,53 +170,69 @@ const AdminMoviesPage = () => {
             .filter((m) =>
               m.title.toLowerCase().includes(searchTerm.toLowerCase())
             )
-            .map((m) => (
-              <div
-                onClick={() => handlePosterClick(m.show_id)}
-                key={m.show_id}
-                className="movie-card"
-              >
-                <div className="movie-poster-container">
-                  <img
-                    src={getPosterUrl(m.title)}
-                    alt={m.title}
-                    className="movie-poster"
-                    onError={(e) => {
-                      console.warn('Missing poster for:', m.title);
-                      (e.currentTarget as HTMLImageElement).src =
-                        '/images/default-poster.png';
-                    }}
-                  />
+            .map((m) => {
+              console.log('Rendering movie:', m.title, 'with show_id:', m.show_id);
+              return (
+                <div
+                  onClick={() => handlePosterClick(m.show_id)}
+                  key={m.show_id}
+                  className="movie-card"
+                >
+                  <div className="movie-poster-container">
+                    <img
+                      src={getPosterUrl(m.title)}
+                      alt={m.title}
+                      className="movie-poster"
+                      onError={(e) => {
+                        console.warn('Missing poster for:', m.title);
+                        (e.currentTarget as HTMLImageElement).src =
+                          '/images/default-poster.png';
+                      }}
+                    />
+                  </div>
+                  <div className="movie-info">
+                    <h2>{m.title}</h2>
+                    <p>
+                      ID: {m.show_id} - {m.type} - {m.release_year}
+                    </p>
+                    <p>Type: {m.type}</p>
+                    {!m.show_id && (
+                      <p style={{ color: 'red' }}>⚠️ Warning: Movie missing show_id!</p>
+                    )}
+                  </div>
+                  {userInfo.isAdmin && (
+                    <div className="movie-actions">
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          console.log('Clicked edit for:', m);
+                          if (!m.show_id) {
+                            console.error('❌ Cannot edit movie with missing show_id:', m);
+                          }
+                          setEditingMovie(m);
+                        }}
+                        className="edit-btn"
+                      >
+                        <img src="/icons/editing.png" alt="Edit" />
+                      </button>
+                      <button
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          console.log('Clicked delete for:', m);
+                          if (!m.show_id) {
+                            console.error('❌ Cannot delete movie with missing show_id:', m);
+                          }
+                          handleDelete(m.show_id);
+                        }}
+                        className="delete-btn"
+                      >
+                        <img src="/icons/bin.png" alt="Delete" />
+                      </button>
+                    </div>
+                  )}
                 </div>
-                <div className="movie-info">
-                  <h2>{m.title}</h2>
-                  <p>
-                    ID: {m.show_id} - {m.type} - {m.release_year}
-                  </p>
-                  <p>Type: {m.type}</p>
-                </div>
-                <div className="movie-actions">
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      setEditingMovie(m);
-                    }}
-                    className="edit-btn"
-                  >
-                    <img src="/icons/editing.png" alt="Edit" />
-                  </button>
-                  <button
-                    onClick={(e) => {
-                      e.stopPropagation();
-                      handleDelete(m.show_id);
-                    }}
-                    className="delete-btn"
-                  >
-                    <img src="/icons/bin.png" alt="Delete" />
-                  </button>
-                </div>
-              </div>
-            ))}
+              );
+            })}
         </div>
 
         <Pagination

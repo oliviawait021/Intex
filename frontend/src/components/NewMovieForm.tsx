@@ -34,6 +34,7 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
     e.preventDefault();
 
     const newShowId = await getNextShowId();
+
     const newMovie = { ...formData, show_Id: newShowId };
 
     await addMovie(newMovie);
@@ -132,11 +133,11 @@ const NewMovieForm = ({ onSuccess, onCancel }: NewMovieFormProps) => {
               >
                 <option value="">Value</option>
                 <option value="Drama">Drama</option>
-                <option value="Action">Action &  Adventure</option>
+                <option value="Comedy">Documentary & Reality</option>
+                <option value="Action">Action & Adventure</option>
                 <option value="Comedy">Comedy</option>
-                <option value="Documentary & Reality">Documentary & Reality</option>
-                <option value="Family & Kids">Family & Kids</option>
-                <option value="Other / Miscellaneous">Other / Miscellaneous</option>
+                <option value="Comedy">Family & Kids</option>
+                <option value="Comedy">Other/Miscellaneous</option>
               </select>
             </div>
             <div className="auth-input-group">
