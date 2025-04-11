@@ -53,6 +53,27 @@ namespace cineNiche.API.Controllers
             });
         }
 
+        // Get all movies without pagination
+        [HttpGet("AllMoviesUnpaginated")]
+        [AllowAnonymous]
+        public IActionResult GetAllMoviesUnpaginated([FromQuery] List<string>? movieTypes = null)
+        {
+            var query = _movieContext.MoviesTitles.AsQueryable();
+
+            if (movieTypes is { Count: > 0 })
+            {
+                query = query.Where(m => movieTypes.Contains(m.type));
+            }
+
+            var movies = query.ToList();
+
+            return Ok(new
+            {
+                Movies = movies,
+                TotalNumber = movies.Count
+            });
+        }
+
         // Get distinct movie types
         [HttpGet("GetMovieTypes")]
         public IActionResult GetMovieTypes()
@@ -166,6 +187,7 @@ namespace cineNiche.API.Controllers
 
         // Get movie details by ShowId
         [HttpGet("GetMovieById/{showId}")]
+        [AllowAnonymous]
         public IActionResult GetMovieById(string showId)
         {
             var movie = _movieContext.MoviesTitles.FirstOrDefault(m => m.show_id == showId);
@@ -305,6 +327,5 @@ namespace cineNiche.API.Controllers
 
         return Ok(movies);
     }
-
     }
 }

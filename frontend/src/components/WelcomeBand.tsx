@@ -63,7 +63,7 @@ function WelcomeBand() {
           </h2>
         </div>
 
-        <div className="search-bar-container">
+        {/* <div className="search-bar-container">
           <div className="search-bar">
             <Search size={18} className="search-icon" />
             <input
@@ -72,8 +72,8 @@ function WelcomeBand() {
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
             />
-          </div>
-        </div>
+          </div> 
+        </div>*/}
       </header>
 
       <NavDrawer isOpen={isDrawerOpen} onClose={() => setIsDrawerOpen(false)} setIsAuthenticated={function (_: SetStateAction<boolean>): void {

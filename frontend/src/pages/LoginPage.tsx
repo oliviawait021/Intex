@@ -140,24 +140,6 @@ function LoginPage({ setIsAuthenticated }: { setIsAuthenticated: (value: boolean
               />
             </div>
 
-            {/* Remember me checkbox */}
-            <div
-              className="auth-input-group"
-              style={{ fontSize: '1rem', display: 'flex', alignItems: 'left', justifyContent: 'flex-start', gap: '0.25rem' }}
-            >
-              <input
-                type="checkbox"
-                id="rememberme"
-                name="rememberme"
-                checked={rememberme}
-                onChange={handleChange}
-                style={{ transform: 'scale(0.8)' }}
-              />
-              <label htmlFor="rememberme">
-                Remember me?
-              </label>
-            </div>
-
             {/* Submit button */}
             <button type="submit" className="auth-button">
               Sign In

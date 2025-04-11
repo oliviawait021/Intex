@@ -6,8 +6,10 @@ import Pagination from '../components/Pagination';
 import NewMovieForm from '../components/NewMovieForm';
 import EditMovieForm from '../components/EditMovieForm';
 import AuthorizeView from '../components/AuthorizeView';
+import SearchBar from '../components/SearchBar';
 import './AdminMoviesPage.css';
 import Footer from '../components/Footer';
+import WelcomeBand from '../components/WelcomeBand';
 
 const AdminMoviesPage = () => {
   const [movies, setMovies] = useState<Movie[]>([]);
@@ -20,6 +22,7 @@ const AdminMoviesPage = () => {
   const [showform, setShowForm] = useState(false);
   const [editingMovie, setEditingMovie] = useState<Movie | null>(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [searchResults, setSearchResults] = useState<Movie[] | null>(null);
   const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
 
   const handlePosterClick = (showId: string) => {
@@ -104,9 +107,13 @@ const AdminMoviesPage = () => {
   const getPosterUrl = (title: string) =>
     `https://movie-posters8.s3.us-east-1.amazonaws.com/Movie+Posters/${formatTitleForS3(title)}.jpg`;
 
+  const displayedMovies = searchResults !== null ? searchResults : movies;
+
   return (
     <>
       <div className="admin-page">
+        <WelcomeBand />
+        <br />
         <AuthorizeView>
           <div className="admin-controls">
             <div className="admin-header">
@@ -126,16 +133,7 @@ const AdminMoviesPage = () => {
                     >
                       Add Movie
                     </button>
-                    <div className="search-bar-container">
-                      <div className="search-bar">
-                        <input
-                          type="text"
-                          placeholder="Search for a movie..."
-                          value={searchTerm}
-                          onChange={(e) => setSearchTerm(e.target.value)}
-                        />
-                      </div>
-                    </div>
+                        <SearchBar onSearchResults={setSearchResults} />
                   </>
                 )}
               </div>
@@ -166,7 +164,7 @@ const AdminMoviesPage = () => {
         )}
 
         <div className="movie-list">
-          {movies
+          {displayedMovies
             .filter((m) =>
               m.title.toLowerCase().includes(searchTerm.toLowerCase())
             )
