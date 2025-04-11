@@ -1,3 +1,4 @@
+import Footer from '../components/Footer';
 import WelcomeBand from '../components/WelcomeBand';
 function PrivacyPage() {
   const styles = {
@@ -6,7 +7,6 @@ function PrivacyPage() {
       padding: '4rem 2rem',
       maxWidth: '1000px',
       margin: 'auto',
-      fontFamily: "'Segoe UI', Tahoma, Geneva, Verdana, sans-serif",
       lineHeight: 1.8,
     },
     heading1: {
@@ -212,6 +212,7 @@ function PrivacyPage() {
           latest version.
         </p>
       </div>
+      <Footer />
     </>
   );
 }

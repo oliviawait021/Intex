@@ -1,13 +1,14 @@
 import { useNavigate } from 'react-router-dom';
+import { baseURL } from '../api/MoviesAPI';
 
-function Logout(props: { children: React.ReactNode }) {
+function Logout(props: { children: React.ReactNode,  style?: React.CSSProperties; }) {
   const navigate = useNavigate();
 
-  const handleLogout = async (e: React.MouseEvent<HTMLAnchorElement>) => {
+  const handleLogout = async (e: React.MouseEvent<HTMLButtonElement>) => {
     e.preventDefault();
 
     try {
-      const response = await fetch('https://localhost:5000/logout', {
+      const response = await fetch(`${baseURL}/logout`, {
         method: 'POST',
         credentials: 'include',
         headers: {
@@ -18,11 +19,15 @@ function Logout(props: { children: React.ReactNode }) {
       if (response.ok) {
         localStorage.removeItem('userRole');
         localStorage.removeItem('authToken');
-        setTimeout(() => {
-          alert('You have been logged out.');
-          navigate('/');
-          window.location.reload(); // Ensure React state resets
-        }, 300); // Delay to allow cookies/session to sync
+        localStorage.clear();
+        document.cookie.split(";").forEach((c) => {
+          document.cookie = c
+            .replace(/^ +/, "")
+            .replace(/=.*/, "=;expires=" + new Date().toUTCString() + ";path=/");
+        });
+        alert('You have been logged out.');
+        navigate('/');
+        window.location.reload(); // Ensure React state resets
       } else {
         console.error('Logout failed:', response.status);
       }
@@ -32,9 +37,9 @@ function Logout(props: { children: React.ReactNode }) {
   };
 
   return (
-    <a className="logout" href="#" onClick={handleLogout}>
+    <button type="button" onClick={handleLogout} style={props.style}>
       {props.children}
-    </a>
+    </button>
   );
 }
 

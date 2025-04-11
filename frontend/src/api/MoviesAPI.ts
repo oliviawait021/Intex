@@ -6,8 +6,9 @@ interface FetchMoviesResponse {
   totalNumMovies: number; // optional, can remove if unused
 }
 
-//export const baseURL = "https://cineniche-backend-group22-b0hjeafqeaf5fcf9.eastus-01.azurewebsites.net";
-export const baseURL = 'https://localhost:5000';
+export const baseURL = "https://cineniche-backend-group22-b0hjeafqeaf5fcf9.eastus-01.azurewebsites.net";
+//export const baseURL = "https://localhost:5000";
+
 const API_URL = `${baseURL}/Movie`;
 
 // 🔹 Fetch paginated & filtered movies
@@ -136,7 +137,7 @@ export interface UserInfo {
 }
 
 export const fetchUserInfo = async (): Promise<UserInfo> => {
-  const res = await fetch('https://localhost:5000/api/auth/userinfo', {
+  const res = await fetch(`${baseURL}/api/auth/userinfo`, {
     credentials: 'include',
   });
 

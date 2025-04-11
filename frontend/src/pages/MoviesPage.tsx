@@ -2,6 +2,7 @@ import React, { useState, useRef, useEffect } from 'react';
 import './MoviesPage.css';
 import WelcomeBand from '../components/WelcomeBand';
 import { baseURL, fetchUserInfo } from '../api/MoviesAPI';
+import { baseURL, fetchUserInfo } from '../api/MoviesAPI';
 import { useNavigate } from 'react-router-dom';
 
 const genreOptions = [

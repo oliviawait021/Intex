@@ -18,6 +18,7 @@ import PrivacyPage from './pages/PrivacyPage';
 import UserSignUp from './pages/UserSignUp';
 import NavDrawer from './components/NavDrawer';
 import AdminDetailPage from './pages/AdminDetailPage';
+import { baseURL } from './api/MoviesAPI';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(
@@ -30,7 +31,7 @@ function App() {
   useEffect(() => {
     const fetchUser = async () => {
       try {
-        const res = await fetch('https://localhost:5000/pingauth', {
+        const res = await fetch(`${baseURL}/pingauth`, {
           credentials: 'include',
         });
 
@@ -188,14 +189,13 @@ function AppContent({
         </>
       )}
       <Routes>
-        <Route
-          path="/login"
-          element={<LoginPage setIsAuthenticated={setIsAuthenticated} />}
-        />{' '}
-        <Route path="/register" element={<RegisterPage />} />
-        {isAuthenticated ? (
+        <Route path="/login" element={<LoginPage setIsAuthenticated={setIsAuthenticated} />} /> 
+        <Route path="/privacy" element={<PrivacyPage />} />
+        <Route path="/signup" element={<UserSignUp />} /> 
+        <Route path="/" element={<HomePage />} />      
+          <Route path="/register" element={<RegisterPage />} />
+          {isAuthenticated ? (
           <>
-            <Route path="/" element={<HomePage />} />
             <Route path="/movies" element={<MoviesPage />} />
             <Route path="/logout" element={<MoviesPage />} />
             <Route
@@ -220,8 +220,6 @@ function AppContent({
             />
             <Route path="/movie/:show_id" element={<MovieDetailPage />} />
             <Route path="/details" element={<MovieDetailPage />} />
-            <Route path="/privacy" element={<PrivacyPage />} />
-            <Route path="/signup" element={<UserSignUp />} />
           </>
         ) : (
           <Route path="/" element={<HomePage />} />

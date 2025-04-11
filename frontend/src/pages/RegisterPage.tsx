@@ -2,6 +2,8 @@ import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import './identity.css';
 import { GoogleLogin } from '@react-oauth/google';
+import { baseURL } from '../api/MoviesAPI';
+import Footer from '../components/Footer';
 
 function Register() {
   // state variables for email and passwords
@@ -36,12 +38,14 @@ function Register() {
       setError('Please enter a valid email address.');
     } else if (password !== confirmPassword) {
       setError('Passwords do not match.');
+    } else if ((password.length < 15) && (confirmPassword.length < 15)) {
+      setError('Password must be at least 15 characters long.');
     } else {
       // clear error message
       setError('');
 
       // post data to the /register api
-      fetch('https://localhost:5000/register', {
+      fetch(`${baseURL}/register`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -67,6 +71,7 @@ function Register() {
   };
 
   return (
+    <>
     <div className="auth-wrapper">
       <div className="auth-content">
         <div className="back-button" onClick={() => window.history.back()}>
@@ -152,6 +157,8 @@ function Register() {
         </div>
       </div>
     </div>
+    <Footer />
+    </>
   );
 }
 
