@@ -3,6 +3,7 @@ import './MoviesPage.css';
 import WelcomeBand from '../components/WelcomeBand';
 import { baseURL, fetchUserInfo } from '../api/MoviesAPI';
 import { useNavigate } from 'react-router-dom';
+import SearchBar from '../components/SearchBar';
 
 const genreOptions = [
   'Documentary & Reality',
@@ -50,7 +51,7 @@ const MoviesPage: React.FC = () => {
   const [becauseTitle, setBecauseTitle] = useState('');
   const [becauseMovies, setBecauseMovies] = useState<Movie[]>([]);
   const [userRatedMovies, setUserRatedMovies] = useState<Movie[]>([]);
-
+  const [searchResults, setSearchResults] = useState<Movie[] | null>(null);
   const navigate = useNavigate();
   const handlePosterClick = (show_id: string) => {
     navigate(`/movie/${show_id}`);
@@ -247,13 +248,20 @@ const MoviesPage: React.FC = () => {
   const formatTitleForS3 = (title: string) =>
     encodeURIComponent(title.trim()).replace(/%20/g, '+');
 
+  // const getPosterUrl = (title: string) =>
+  //   `https://movie-posters8.s3.us-east-1.amazonaws.com/Movie+ Posters/${formatTitleForS3(title)}.jpg`;
+
+  const displayedMovies =
+    searchResults !== null ? searchResults : filteredMovies;
+
   const getPosterUrl = (title: string) =>
     `https://movie-posters8.s3.us-east-1.amazonaws.com/Movie+Posters/${formatTitleForS3(title)}.jpg`;
 
   return (
     <>
       <WelcomeBand />
-
+      <br /> <br />
+      <SearchBar onSearchResults={(results) => setSearchResults(results)} />
       <div className="genre-filter-bar">
         {['Show All', ...genreOptions].map((genre) => (
           <button
@@ -397,7 +405,7 @@ const MoviesPage: React.FC = () => {
 
       <h2 className="section-title">Movies</h2>
       <div className="movie-grid">
-        {filteredMovies.map((movie) => (
+        {displayedMovies.map((movie) => (
           <div
             onClick={() => handlePosterClick(movie.show_id)}
             className="movie-item"
