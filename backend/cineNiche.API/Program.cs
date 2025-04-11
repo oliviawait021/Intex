@@ -17,14 +17,6 @@ using Microsoft.AspNetCore.Authentication.Google;
 
 var builder = WebApplication.CreateBuilder(args);
 
-// // HTTPS with your custom cert
-// builder.WebHost.ConfigureKestrel(serverOptions =>
-// {
-//     serverOptions.ListenLocalhost(5000, listenOptions =>
-//     {
-//         listenOptions.UseHttps(); // Uses your trusted dev cert
-//     });
-// });
 
 DotNetEnv.Env.Load("backend.env"); // or just .Env.Load() if it's in the root
 
