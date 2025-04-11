@@ -1,11 +1,9 @@
-import { Search } from 'lucide-react';
 import { useState, useEffect, SetStateAction } from 'react';
 import './WelcomeBand.css';
 import NavDrawer from './NavDrawer';
 import { baseURL } from '../api/MoviesAPI';
 
 function WelcomeBand() {
-  const [searchTerm, setSearchTerm] = useState('');
   const [username, setUsername] = useState<string>('');
   const [isDrawerOpen, setIsDrawerOpen] = useState(false);
 
