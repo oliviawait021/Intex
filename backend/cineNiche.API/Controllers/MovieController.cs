@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using cineNiche.API.Data;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.EntityFrameworkCore;
+using cineNiche.API.Services;
 
 namespace cineNiche.API.Controllers
 {
@@ -14,6 +15,7 @@ namespace cineNiche.API.Controllers
     public class MovieController : ControllerBase
     {
         private readonly MoviesContext _movieContext;
+        private readonly BlobService _blobService;
 
         public MovieController(MoviesContext temp)
         {
@@ -306,6 +308,17 @@ namespace cineNiche.API.Controllers
         return Ok(movies);
     }
 
+    [HttpGet("poster-url/{title}")]
+    [AllowAnonymous] // Assuming you want to allow anonymous access to the poster URLs
+    public async Task<IActionResult> GetPosterUrl(string title)
+    {
+        if (string.IsNullOrEmpty(title))
+        {
+            return BadRequest("Movie title cannot be empty.");
+        }
+        string posterUrl = await _blobService.GetMoviePosterUrlByTitleAsync(title);
+        return Ok(posterUrl);
+    }
 
 
     }

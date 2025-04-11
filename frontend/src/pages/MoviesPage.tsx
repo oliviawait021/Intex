@@ -208,13 +208,11 @@ const MoviesPage: React.FC = () => {
       const getMovieDetails = async () => {
         setForYouLoading(true);
         try {
-          const moviePromises = recommendations.map(rec => {
-            console.log("Fetching movie details for show_id:", rec.show_id);
-            console.log("Poster URL:", getPosterUrl(rec.show_id)); //Log the poster url
+          const moviePromises = recommendations.map((rec) => {
             return fetchMovieImgandTitle(rec.show_id);
           });
           const recMovies = await Promise.all(moviePromises);
-          const filteredMovies = recMovies.filter(movie => movie !== null);
+          const filteredMovies = recMovies.filter((movie) => movie !== null);
           setForYou(filteredMovies);
         } catch (error) {
           console.error('Error fetching movie details:', error);
@@ -252,12 +250,6 @@ const MoviesPage: React.FC = () => {
     selectedGenres.length === 0
       ? movies
       : movies.filter((movie) => selectedGenres.includes(movie.genre));
-
-  const formatTitleForS3 = (title: string) =>
-    encodeURIComponent(title.trim()).replace(/%20/g, '+');
-
-  const getPosterUrl = (title: string) =>
-    `https://movie-posters8.s3.us-east-1.amazonaws.com/Movie+Posters/${formatTitleForS3(title)}.jpg`;
 
   return (
     <>
@@ -299,7 +291,7 @@ const MoviesPage: React.FC = () => {
                   key={movie.show_id}
                 >
                   <img
-                    src={getPosterUrl(movie.title)}
+                    src={`/api/movie/poster-url/${encodeURIComponent(movie.title)}`}
                     alt={movie.title}
                     className="movie-poster"
                     style={{ objectFit: 'contain' }}
@@ -339,7 +331,7 @@ const MoviesPage: React.FC = () => {
                 key={movie.show_id}
               >
                 <img
-                  src={getPosterUrl(movie.title)}
+                  src={`/api/movie/poster-url/${encodeURIComponent(movie.title)}`}
                   alt={movie.title}
                   className="movie-poster"
                   style={{ objectFit: 'contain' }}
@@ -380,7 +372,7 @@ const MoviesPage: React.FC = () => {
                 key={movie.show_id}
               >
                 <img
-                  src={getPosterUrl(movie.title)}
+                  src={`/api/movie/poster-url/${encodeURIComponent(movie.title)}`}
                   alt={movie.title}
                   className="movie-poster"
                   style={{ objectFit: 'contain' }}
@@ -413,7 +405,7 @@ const MoviesPage: React.FC = () => {
             key={movie.show_id}
           >
             <img
-              src={getPosterUrl(movie.title)}
+              src={`/api/movie/poster-url/${encodeURIComponent(movie.title)}`}
               alt={movie.title}
               className="movie-poster"
               style={{ objectFit: 'contain' }}
