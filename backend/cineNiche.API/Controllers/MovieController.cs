@@ -4,6 +4,7 @@ using System.Linq;
 using Microsoft.AspNetCore.Mvc;
 using cineNiche.API.Data;
 using Microsoft.AspNetCore.Authorization;
+using Microsoft.EntityFrameworkCore;
 
 namespace cineNiche.API.Controllers
 {
@@ -218,5 +219,34 @@ namespace cineNiche.API.Controllers
                 return StatusCode(500, "Internal Server Error: " + ex.Message);
             }
         }
+
+        public class RatingRequest
+        {
+            public int user_id { get; set; }
+            public int rating { get; set; }
+        }
+        [HttpPost("{showId}/rating")] // Adjusted route to match frontend
+        public async Task<IActionResult> PostRating(string showId, [FromBody] RatingRequest request)
+        {
+            if (!ModelState.IsValid)
+            {
+                return BadRequest(ModelState);
+            }
+            var movie = await _movieContext.MoviesTitles.FirstOrDefaultAsync(m => m.show_id == showId);
+            if (movie == null)
+            {
+                return NotFound(new { message = "Movie not found" });
+            }
+            var movieRating = new MoviesRating
+            {
+                show_id = showId,
+                user_id = request.user_id,
+                rating = request.rating
+            };
+            _movieContext.MoviesRatings.Add(movieRating);
+            await _movieContext.SaveChangesAsync();
+            return Ok(movieRating); // return ok.
+        }
+
     }
 }
