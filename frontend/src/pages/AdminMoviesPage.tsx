@@ -113,6 +113,7 @@ const AdminMoviesPage = () => {
     <>
       <div className="admin-page">
         <WelcomeBand />
+        <br />
         <AuthorizeView>
           <div className="admin-controls">
             <div className="admin-header">
