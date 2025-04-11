@@ -261,8 +261,7 @@ const MoviesPage: React.FC = () => {
     <>
       <WelcomeBand />
       <br /> <br />
-      <SearchBar onSearchResults={(results) => setSearchResults(results)} />
-      <div className="genre-filter-bar">
+      <SearchBar onSearchResults={(results) => setSearchResults(results as unknown as Movie[])} />      <div className="genre-filter-bar">
         {['Show All', ...genreOptions].map((genre) => (
           <button
             key={genre}
